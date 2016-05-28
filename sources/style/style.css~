@@ -1,0 +1,218 @@
+﻿/*******************
+Ensemble
+******************/
+html
+{
+	padding:0px;
+}
+
+body
+{
+	font-family:arial;
+	margin:0px;
+	padding:0px;
+}
+
+
+/*******************
+Entete
+******************/
+
+header,#entete
+{
+	background-color:black;
+	width:100%;
+	color:white;
+	margin:0px;
+	margin-top:-10;
+	padding:0px;
+	height:100px;
+	vertical-align:middle;
+}
+
+header h1
+{
+	margin:auto;
+	color:white;
+	margin-top:0px;
+	padding-left:40px;
+}
+
+header .loginBox
+{
+	float:right;
+	font-size:small;
+	height:60px;
+	margin-top:20px;
+	margin-right:20px;
+	vertical-align:middle;
+}
+
+header .loginBox td
+{
+	font-style:italic;
+	text-align:right;
+}
+
+.loginBox #boutonLogin,.loginBox #boutonLogout
+{
+	width:64px;
+	height: 64px;
+	padding: 0 0 0 10px;
+	cursor: pointer;
+	border:0;
+}
+.loginBox #boutonLogin
+{
+	background:url("../images/boutonLogin.png") top right no-repeat;
+}
+.loginBox #boutonLogout
+{
+	background:url("../images/boutonLogout.png") top right no-repeat;
+}
+.loginBox #boutonLogin:active
+{
+	background:url("../images/boutonLogin-appuye.png") top right no-repeat;
+}
+.loginBox #boutonLogout:active
+{
+	background:url("../images/boutonLogout-appuye.png") top right no-repeat;
+}
+
+
+/*******************
+Tabs
+******************/
+#tab-onglets li
+{
+	text-align:center;
+}
+#tab-onglets li img
+{
+	height:50px;
+}
+
+
+/*******************
+USERS
+******************/
+
+
+#tableau_utilisateurs
+{
+	width:550px;
+	margin:auto;
+}
+
+.user
+{
+	background-color:#AAAAFF;
+	border-radius:5px;
+	vertical-align:center;
+}
+
+.user .nom-user,.user .prenom-user,.user .classe-user,.user .bouton-user, .user .login-user
+{
+	display:inline-block;
+	width:100px;
+	margin:0px;
+}
+
+.user .boutons_user img
+{
+	display:inline-block;
+	cursor:pointer;
+}
+
+
+
+
+/*******************
+Competences
+******************/
+
+
+
+
+
+
+
+/* GROUPE COMPETENCES */
+
+/* COMPETENCES */
+
+
+
+/* INDICATEURS */
+
+.boutonAjouterIndicateur
+{
+	float:right;
+	margin:5px;
+	text-align:center;
+	cursor:pointer;
+}
+
+.indicateurs
+{
+	width:100%;
+}
+
+.indicateurAllume, .indicateurEteint, .indicateurAllumeModifiable, .indicateurEteintModifiable
+{
+	display:inline-block;
+	/*border:solid 1px;*/
+	border-radius:5px;
+	margin:0px;
+	padding:0px;
+	line-height: 30px;
+	width:30px;
+	height:30px;
+	text-align:center;
+	vertical-align:middle;
+	box-shadow: 8px 8px 12px #AAAACC;
+}
+
+.indicateurEteint, .indicateurEteintModifiable
+{
+	border:dashed 1px;;
+}
+
+.indicateurAllumeModifiable,.indicateurEteintModifiable
+{
+	cursor:pointer;
+}
+
+.indicateurAllumeModifiable:hover,.indicateurEteintModifiable:hover
+{
+	/*background-color:black;*/
+	color:white;
+	margin-top:5px;
+	margin-left:5px;
+	margin-bottom:-5px;
+	margin-bottom:-5px;
+	box-shadow: 3px 3px 6px #777766;
+}
+
+.intituleIndicateur
+{
+	font-weight:bold;
+	font-style:italic;
+}
+
+.detailIndicateur
+{
+	width:53px;
+	padding:0px;
+}
+
+.detailIndicateur img
+{
+	margin:0px;
+	padding:0px;
+}
+
+.niveauxIndicateur
+{
+	text-align:left;
+}

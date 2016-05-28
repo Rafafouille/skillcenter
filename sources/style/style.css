@@ -1,0 +1,148 @@
+﻿/*******************
+Ensemble
+******************/
+html
+{
+	padding:0px;
+}
+
+body
+{
+	font-family:arial;
+	margin:0px;
+	padding:0px;
+}
+
+
+/*******************
+Entete
+******************/
+
+header,#entete
+{
+	background-color:black;
+	width:100%;
+	color:white;
+	margin:0px;
+	margin-top:-10;
+	padding:0px;
+	height:100px;
+	vertical-align:middle;
+}
+
+header h1
+{
+	margin:auto;
+	color:white;
+	margin-top:0px;
+	padding-left:40px;
+}
+
+header .loginBox
+{
+	float:right;
+	font-size:small;
+	height:60px;
+	margin-top:20px;
+	margin-right:20px;
+	vertical-align:middle;
+}
+
+header .loginBox td
+{
+	font-style:italic;
+	text-align:right;
+}
+
+.loginBox #boutonLogin,.loginBox #boutonLogout
+{
+	width:64px;
+	height: 64px;
+	padding: 0 0 0 10px;
+	cursor: pointer;
+	border:0;
+}
+.loginBox #boutonLogin
+{
+	background:url("../images/boutonLogin.png") top right no-repeat;
+}
+.loginBox #boutonLogout
+{
+	background:url("../images/boutonLogout.png") top right no-repeat;
+}
+.loginBox #boutonLogin:active
+{
+	background:url("../images/boutonLogin-appuye.png") top right no-repeat;
+}
+.loginBox #boutonLogout:active
+{
+	background:url("../images/boutonLogout-appuye.png") top right no-repeat;
+}
+
+
+/*******************
+Tabs
+******************/
+#tab-onglets li
+{
+	text-align:center;
+}
+#tab-onglets li img
+{
+	height:50px;
+}
+
+
+/*******************
+USERS
+******************/
+
+
+#tableau_utilisateurs
+{
+	width:550px;
+	margin:auto;
+}
+
+.user
+{
+	background-color:#AAAAFF;
+	border-radius:5px;
+	vertical-align:center;
+}
+
+.user .nom-user,.user .prenom-user,.user .classe-user,.user .bouton-user, .user .login-user
+{
+	display:inline-block;
+	width:100px;
+	margin:0px;
+}
+
+.user .boutons_user img
+{
+	display:inline-block;
+	cursor:pointer;
+}
+
+
+
+
+/*******************
+Competences
+******************/
+
+
+
+
+
+
+
+/* GROUPE COMPETENCES */
+
+/* COMPETENCES */
+
+
+
+/* INDICATEURS */
+
+

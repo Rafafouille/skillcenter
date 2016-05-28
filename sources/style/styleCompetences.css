@@ -1,0 +1,216 @@
+
+/* ************************************
+ BOUTONS "AJOUTER"
+************************************* */
+
+.bouton_ajoute/*_groupe_competences*/
+{
+	margin:auto;
+	margin:5px;
+	padding:10px;
+	width:200px;
+	text-align:center;
+	background-color:#88FF88;
+	border-radius:10px;
+	cursor:pointer;
+	box-shadow: 8px 8px 12px #aaa;
+	float:right;
+}
+
+.bouton_ajoute:hover/*_groupe_competences*/
+{
+	margin-top:7px;
+	margin-left:7px;
+	box-shadow: 4px 4px 6px #555;
+}
+
+.bouton_ajoute:active/*_groupe_competences*/
+{
+	margin-top:8px;
+	margin-left:8px;
+	box-shadow: 2px 2px 3px #222;
+}
+
+
+
+
+/* ************************************
+GENERAL
+************************************* */
+
+.liste_competences
+{
+	text-align:center;
+	width:100%;
+	margin-top:10px;
+}
+
+/* ************************************
+GROUPE COMPETENCES
+************************************* */
+
+/* GROUPE EN GENERAL */
+.groupe_competences, .groupe_competences_unselected	/* Groupe de competence classique */
+{
+	margin:auto;
+	margin-bottom:5px;
+	background-color:#DDDDFF;
+	border-radius:15px;
+	box-shadow: 8px 8px 12px #aaa;
+	width:90%;
+	overflow:hidden;
+}
+
+/* ENETES DU GROUPE */
+.entete_groupe_competences	/* Entete/Titre Groupe de competence de base */
+{
+	margin:0px;
+	padding:10px;
+	padding-top:1px;
+	padding-bottom:1px;
+	border-radius:15px;
+	cursor:pointer;
+	color:white;
+}
+.groupe_competences .entete_groupe_competences	/* Entete/Titre Groupe de competence non-selectionné*/
+{
+	background-color:#AAAAFF;
+}
+.groupe_competences_unselected .entete_groupe_competences	/* Entete/Titre Groupe de competence non-selectionné*/
+{
+	background-color:#EEEEFF;
+}
+.entete_groupe_competences h3	/* Souris sur le titre */
+{
+	cursor:pointer;
+}
+
+/* CONTENU DU GROUPE */
+.groupe_contenu
+{
+	/*display:none;*/
+}
+
+/* BOUTON AJOUTE COMPETENCES */
+.boutonAjouteCompetence
+{
+	float:right;
+	margin:5px;
+	margin-top:10px;
+	padding:5px;
+	text-align:center;
+	cursor:pointer;
+	box-shadow: 8px 8px 12px #9999BB;
+	background-color:#8888DD;
+	border-radius:10px;
+}
+.boutonAjouteCompetence:hover
+{
+	box-shadow: 4px 4px 6px #7777AA;
+	margin-top:12px;
+	margin-right:3px;
+}
+
+/* ************************************
+COMPETENCES
+************************************* */
+
+.competence
+{
+	min-height:30px;
+}
+
+.competence_unselected
+{
+	background-color:#EFEFFF;
+}
+
+.competence_unselected h3
+{
+	color:white;
+}
+
+
+/* ************************************
+INDICATEURS
+************************************* */
+
+
+.boutonAjouterIndicateur
+{
+	float:right;
+	margin:5px;
+	text-align:center;
+	cursor:pointer;
+}
+
+.indicateurs
+{
+	width:100%;
+}
+
+.indicateur_unselected
+{
+	background-color:white;
+	color:gray;
+}
+
+
+.indicateurAllume, .indicateurEteint, .indicateurAllumeModifiable, .indicateurEteintModifiable
+{
+	display:inline-block;
+	/*border:solid 1px;*/
+	border-radius:5px;
+	margin:0px;
+	padding:0px;
+	line-height: 30px;
+	width:30px;
+	height:30px;
+	text-align:center;
+	vertical-align:middle;
+	box-shadow: 8px 8px 12px #AAAACC;
+}
+
+.indicateurEteint, .indicateurEteintModifiable
+{
+	border:dashed 1px;;
+}
+
+.indicateurAllumeModifiable,.indicateurEteintModifiable
+{
+	cursor:pointer;
+}
+
+.indicateurAllumeModifiable:hover,.indicateurEteintModifiable:hover
+{
+	/*background-color:black;*/
+	color:white;
+	margin-top:5px;
+	margin-left:5px;
+	margin-bottom:-5px;
+	margin-bottom:-5px;
+	box-shadow: 3px 3px 6px #777766;
+}
+
+.intituleIndicateur
+{
+	font-weight:bold;
+	font-style:italic;
+}
+
+.detailIndicateur
+{
+	width:53px;
+	padding:0px;
+}
+
+.detailIndicateur img
+{
+	margin:0px;
+	padding:0px;
+}
+
+.niveauxIndicateur
+{
+	text-align:left;
+}
