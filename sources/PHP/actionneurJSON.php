@@ -289,12 +289,25 @@ if($action=="lierDelierIndicateurClasse")
 		$lier="";
 		if(isset($_POST['lier'])) $lier=$_POST['lier'];
 
+		$reponseJSON["indicateur"]=$indicateur;
+		$reponseJSON["classe"]=$classe;
+
 		if($classe!="" and $indicateur!=0 and $lier!="")
 		{
 			if($lier=="true")
+			{
+				$requete = $bdd->prepare('INSERT INTO liensClassesIndicateurs(indicateur, classe) VALUES(:indicateur, :classe)');
+				$requete->execute(array('indicateur' => $indicateur, 'classe' => $classe));
 				$reponseJSON["messageRetour"]=":)Lier";
-			else				
-				$reponseJSON["messageRetour"]=":)déLier";
+				$reponseJSON["lier"]=true;
+			}
+			else	
+			{
+				$requete = $bdd->prepare('DELETE FROM liensClassesIndicateurs WHERE indicateur=:indicateur AND classe=:classe');
+				$requete->execute(array('indicateur' => $indicateur, 'classe' => $classe));
+				$reponseJSON["messageRetour"]=":)Délier";
+				$reponseJSON["lier"]=false;
+			}
 		}
 		else
 		{

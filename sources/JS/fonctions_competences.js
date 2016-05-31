@@ -80,7 +80,7 @@ function ajouteIndicateur(indicateur,conteneur)
 
 
 	var rendu=""+
-"								<tr class=\""+styleClass+"\">"+
+"								<tr id=\"indicateur_"+indicateur.id+"\" class=\""+styleClass+"\">"+
 "									<td>"+
 "										<form>"+
 "											<input type=\"checkbox\" name=\"selectIndicateur"+indicateur.id+"\" value=\""+indicateur.id+"\"";

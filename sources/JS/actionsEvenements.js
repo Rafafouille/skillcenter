@@ -421,6 +421,11 @@ function lierDelierIndicateurClasse(ind,classe,lier)
 
 function lierDelierIndicateurClasse_callback(reponse)
 {
+	var styleClass="indicateur";
+	if(!reponse.lier)
+		styleClass+="_unselected";
+	$("#indicateur_"+reponse.indicateur).attr('class',styleClass);
+
 	afficheMessage(reponse.messageRetour);
 }
 
