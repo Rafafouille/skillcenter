@@ -5,7 +5,9 @@
 window.onload=function()
 {
 	//Création des onglets (jquery-ui)
-	$("#tab-onglets").tabs({active: tabDefaut});
+	$("#tab-onglets").tabs({active: tabDefaut,	//tab actif par défaut
+				activate:onChangeTab
+				});		//Fonction à exécuter lorsqu'on active une table
 	
 	//Messages
 	if(messageRetour!="")
@@ -17,6 +19,6 @@ window.onload=function()
 	if(STATUT=="admin")
 	{
 		getListeUsersAdmin("[ALL]");
-		updateListesClasses();
+		updateListesClasses();// Met a jour les listes des classes
 	}
 }

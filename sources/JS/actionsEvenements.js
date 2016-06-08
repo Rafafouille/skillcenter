@@ -1,4 +1,20 @@
 // ****************************************************
+// TABS (onglets)
+// ****************************************************
+
+// Fonction appelée quand on change de Tab
+onChangeTab=function(event,ui)
+{
+	if($('#tab-onglets').tabs('option', 'active')==3 && !ADMIN_COMPETENCES_LOADED)//Si la page 3 n'a jamais été chargée
+	{
+		ADMIN_COMPETENCES_LOADED=true;
+		var classe=$("#selectClasseCompetences").val();
+		updateCompetencesSelonClasse(classe);
+	}
+}
+
+
+// ****************************************************
 // LOGIN / LOGOUT
 // ****************************************************
 
@@ -240,7 +256,7 @@ updateListesClasses_CallBack=function(reponse)
 {
 	//Liste dans la page "Competences"
 	$("#selectClasseCompetences").empty();
-	$("#selectClasseCompetences").append("<option value=\"[ALL]\">Toutes les classes</option>");
+	//$("#selectClasseCompetences").append("<option value=\"[ALL]\">Toutes les classes</option>");
 	//Liste dans la page "Notation"
 	$("#notationListeClasses").empty();
 
@@ -288,7 +304,7 @@ updateCompetencesSelonClasse_Callback=function(reponse)
 
 
 
-	if(0)
+/*	if(0)
 	{
 		rendu+=""+
 "			<div class=\"groupe_competences\" id=\"groupe_competence_"+groupe.id+"\">"+
@@ -358,7 +374,7 @@ updateCompetencesSelonClasse_Callback=function(reponse)
 	
 
 	$("#liste_competences").append(rendu);
-	}
+	}*/
 	}//FIN DU IF 0
 }
 
@@ -425,6 +441,8 @@ function lierDelierIndicateurClasse_callback(reponse)
 	if(!reponse.lier)
 		styleClass+="_unselected";
 	$("#indicateur_"+reponse.indicateur).attr('class',styleClass);
+
+	//RAJOUTER POUR COLORER LES TITRES (COMPETENCES/GROUPES...)
 
 	afficheMessage(reponse.messageRetour);
 }

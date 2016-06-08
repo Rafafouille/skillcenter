@@ -48,6 +48,8 @@ include("./sources/PHP/actions.php");
 			ID_COURANT=<?php echo $_SESSION['id'];?>;
 			STATUT="<?php echo $_SESSION['statut'];?>";
 			NB_NIVEAUX_MAX=<?php echo $NB_NIVEAUX_MAX;?>;
+			
+			ADMIN_COMPETENCES_LOADED=false;	//Variable globale qui dit si la page "cometences (admin)" a deja été au moins une fois chargée
 		</script>
     </head>
 
