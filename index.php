@@ -50,6 +50,7 @@ include("./sources/PHP/actions.php");
 			NB_NIVEAUX_MAX=<?php echo $NB_NIVEAUX_MAX;?>;
 			
 			ADMIN_COMPETENCES_LOADED=false;	//Variable globale qui dit si la page "cometences (admin)" a deja été au moins une fois chargée
+			NOTATION_LOADED=false;	//Variable globale qui dit si la page "cometences (admin)" a deja été au moins une fois chargée
 		</script>
     </head>
 

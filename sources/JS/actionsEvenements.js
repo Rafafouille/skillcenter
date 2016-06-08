@@ -5,6 +5,14 @@
 // Fonction appelée quand on change de Tab
 onChangeTab=function(event,ui)
 {
+
+	//1er affichage de l'onglet "Notation"
+	if($('#tab-onglets').tabs('option', 'active')==2 && !NOTATION_LOADED)//Si la page 3 n'a jamais été chargée
+	{
+		NOTATION_LOADED=true;
+		var classe=$("#notationListeClasses").val();
+		NotationGetListeEleves(classe);
+	}
 	if($('#tab-onglets').tabs('option', 'active')==3 && !ADMIN_COMPETENCES_LOADED)//Si la page 3 n'a jamais été chargée
 	{
 		ADMIN_COMPETENCES_LOADED=true;
@@ -478,13 +486,13 @@ addIndicateur=function(nom,details,niveaux,idCompetence)
 
 //METTRE A JOUR LISTE ELEVES (notation)
 //Recupere la liste (ajax)
-getListeEleves=function()
+NotationGetListeEleves=function(classe)
 {
 	$.post(
 			'./sources/PHP/actionneur.php',//Requete appelée
 			{	//Les données à passer par POST
 				action:"getListeEleves",
-				classe:$("#notationListeClasses").val()
+				classe:classe//$("#notationListeClasses").val()
 			},
 			updateListeEleves,	//Fonction callback
 			"text"	//Type de réponse
@@ -495,17 +503,18 @@ getListeEleves=function()
 updateListeEleves=function(reponse)
 {
 	$("#notationListeEleves").html(reponse);
+	getNotationEleve($("#notationListeEleves").val());
 }
 
 //METTRE A JOUR LA NOTATION POUR UN ELEVE
 
-getNotationEleve=function()
+getNotationEleve=function(eleve)
 {
 	$.post(
 			'./sources/PHP/actionneur.php',//Requete appelée
 			{	//Les données à passer par POST
 				action:"getNotationEleves",
-				eleve:$("#notationListeEleves").val()
+				eleve:eleve//$("#notationListeEleves").val()
 			},
 			updateNotationEleve,	//Fonction callback
 			"text"	//Type de réponse

@@ -3,9 +3,9 @@
 					<h2>Notation</h2>
 					
 					<form>
-						<select name="notationListeClasses" id="notationListeClasses" onchange="getListeEleves();">
+						<select name="notationListeClasses" id="notationListeClasses" onchange="NotationGetListeEleves($(this).val());">
 						</select>
-						<select name="notationListeEleves" id="notationListeEleves" onchange="getNotationEleve();">
+						<select name="notationListeEleves" id="notationListeEleves" onchange="getNotationEleve($(this).val());">
 						</select>
 					</form>
 					
