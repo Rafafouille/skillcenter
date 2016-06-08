@@ -104,12 +104,12 @@ function setArcEnCiel(val,maxi)
 	n=val/maxi;
 	if(n<0.5)
 	{
-		var a=2*n*255;
+		var a=Math.floor(2*n*255);
 		return "#FF"+("00"+a.toString(16)).substr(-2,2)+"00";
 	}
 	else
 	{
-		var a=(2-2*n)*255;
+		var a=Math.floor((2-2*n)*255);
 		return "#"+("00"+a.toString(16)).substr(-2,2)+"FF00";
 	}
 }
