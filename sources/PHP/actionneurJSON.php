@@ -197,6 +197,45 @@ if($action=="updateUser")
 
 
 // =====================================================
+// NOTATION
+// =====================================================
+if($action=="getListeEleves")
+{
+	if($_SESSION['statut']=="admin")
+	{
+		connectToBDD();
+		$classe="";
+		if(isset($_POST['classe'])) $classe=$_POST['classe'];
+		if($classe!="")
+		{
+			$reponseJSON["classe"]=$classe;//On renvoie la classe (pour info)
+
+			$req = $bdd->prepare('SELECT nom,prenom,id FROM utilisateurs WHERE classe=:classe');
+			$req->execute(array('classe'=>$classe));
+			while ($donnees = $req->fetch())
+				{
+					//echo "
+					//	<option value='".$donnees['id']."'>".$donnees['nom']." ".$donnees['prenom']."</option>";
+					$id=$donnees['id'];
+					$nom=$donnees['nom'];
+					$prenom=$donnees['prenom'];
+					$reponseJSON["listeEleves"][$id]["id"]=$id;
+					$reponseJSON["listeEleves"][$id]["nom"]=$nom;
+					$reponseJSON["listeEleves"][$id]["prenom"]=$prenom;
+				}
+		}
+		else
+		{
+			$reponseJSON["messageRetour"]=":(Classe vide";
+		}
+	}
+	else
+		$reponseJSON["messageRetour"]=":(Vous ne pouvez pas faire cette action !";
+}
+
+
+
+// =====================================================
 // ADMINISTRATION COMPETENCES
 // =====================================================
 

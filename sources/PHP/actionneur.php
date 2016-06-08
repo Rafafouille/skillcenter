@@ -267,37 +267,10 @@ if($action=="addIndicateur")
 		echo ":(Vous n'avez pas le droit de créer un indicateur.";
 }
 
-//OBTIENT LA LISTE DES ELEVES=================
-if($action=="getListeEleves")
-{
-	if($_SESSION['statut']=="admin")
-	{
-		connectToBDD();
-		$classe="";
-		if(isset($_POST['classe'])) $classe=$_POST['classe'];
-		if($classe!="")
-		{
-			$req = $bdd->prepare('SELECT nom,prenom,id FROM utilisateurs WHERE classe=:classe');
-			$req->execute(array(
-						'classe'=>$classe
-					));
-			while ($donnees = $req->fetch())
-				{
-					echo "
-						<option value='".$donnees['id']."'>".$donnees['nom']." ".$donnees['prenom']."</option>";
-				}
-		}
-		else
-		{
-			echo ":(Classe vide.";
-		}
-	}
-	else
-		echo ":(Vous ne pouvez pas faire cette action.";
-}
 
 
-//OBTIEN LA NOTATION DES ELECES=================
+
+//OBTIEN LA NOTATION DES ELEVES=================
 if($action=="getNotationEleves")
 {
 	if($_SESSION['statut']=="admin")

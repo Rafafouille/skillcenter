@@ -489,20 +489,29 @@ addIndicateur=function(nom,details,niveaux,idCompetence)
 NotationGetListeEleves=function(classe)
 {
 	$.post(
-			'./sources/PHP/actionneur.php',//Requete appelée
+			'./sources/PHP/actionneurJSON.php',//Requete appelée
 			{	//Les données à passer par POST
 				action:"getListeEleves",
 				classe:classe//$("#notationListeClasses").val()
 			},
 			updateListeEleves,	//Fonction callback
-			"text"	//Type de réponse
+			"json"	//Type de réponse
 	);
 }
 
 
 updateListeEleves=function(reponse)
 {
-	$("#notationListeEleves").html(reponse);
+	//$("#notationListeEleves").html(reponse);
+	$("#notationListeEleves").empty();
+	var listeEleves=reponse.listeEleves;
+	a=reponse;
+	for(var idEleve in listeEleves)
+	{
+		var eleve=listeEleves[idEleve]
+		$("#notationListeEleves").append("<option value='"+eleve.id+"'>"+eleve.nom+" "+eleve.prenom+"</option>");
+	}
+
 	getNotationEleve($("#notationListeEleves").val());
 }
 
