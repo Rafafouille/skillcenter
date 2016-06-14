@@ -15,7 +15,6 @@ rechargePageAvecMessage=function(m)
 //Fonction qui reçoit et affiche le message retour d'une requete AJAX
 recoitValideRecharge=function(reponse)
 {
-	debug(reponse);
 	var smile=reponse.messageRetour.substring(0,2);
 	var text=reponse.messageRetour.substring(2,reponse.length);
 	

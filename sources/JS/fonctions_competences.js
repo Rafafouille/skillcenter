@@ -1,5 +1,8 @@
-//Fonction qui affiche les groupes de compétences
-function ajouteGroupeCompetences(groupe,conteneur)
+
+
+
+//Fonction qui affiche les groupes de compétences ******************************
+function ADMIN_COMPETENCES_ajouteGroupe(groupe,conteneur)
 {
 	//Choix du style (si sélectionné ou pas)
 	var styleClass="groupe_competences";
@@ -7,7 +10,7 @@ function ajouteGroupeCompetences(groupe,conteneur)
 		styleClass+="_unselected";
 
 	var rendu=""+
-"			<div class=\""+styleClass+"\" id=\"groupe_competence_"+groupe.id+"\">"+
+"			<div class=\""+styleClass+"\" id=\"ADMIN_COMPETENCES_groupe_"+groupe.id+"\">"+
 "				<div class=\"entete_groupe_competences\">"+
 "					<div class=\"boutonAjouteCompetence\" onclick=\"ouvreBoiteAddCompetence('"+groupe.nom+"',"+groupe.id+")\">"+
 "						Ajouter une compétence"+
@@ -26,14 +29,14 @@ function ajouteGroupeCompetences(groupe,conteneur)
 	for(idComp in groupe.listeCompetences)
 	{
 		var competence=groupe.listeCompetences[idComp];
-		ajouteCompetence(competence,"#groupe_competence_"+groupe.id+" .groupe_contenu");
+		ADMIN_COMPETENCES_ajouteCompetence(competence,"#ADMIN_COMPETENCES_groupe_"+groupe.id+" .groupe_contenu");
 	}
 }
 
 
 
-//Fonction qui ajoute une competence dans un groupe
-function ajouteCompetence(competence,conteneur)
+//Fonction qui ajoute une competence dans un groupe ******************************************
+function ADMIN_COMPETENCES_ajouteCompetence(competence,conteneur)
 {
 	numeroCompetence++;	//Globale
 	numeroIndicateur=0;	//Globale
@@ -45,7 +48,7 @@ function ajouteCompetence(competence,conteneur)
 
 
 	var rendu=""+
-"					<div class=\""+styleClass+"\" id=\"competence_"+competence.id+"\">"+
+"					<div class=\""+styleClass+"\" id=\"ADMIN_COMPETENCES_competence_"+competence.id+"\">"+
 "						<div class=\"boutonAjouterIndicateur\" onclick=\"ouvreBoiteAddIndicateur('"+competence.nom+"',"+competence.id+")\">"+
 "							[+Indicateur]"+
 "						</div>"+
@@ -64,12 +67,12 @@ function ajouteCompetence(competence,conteneur)
 	for(idInd in competence.listeIndicateurs)
 	{
 		var indicateur=competence.listeIndicateurs[idInd];
-		ajouteIndicateur(indicateur,"#competence_"+competence.id+" .listeIndicateurs table");
+		ADMIN_COMPETENCES_ajouteIndicateur(indicateur,"#ADMIN_COMPETENCES_competence_"+competence.id+" .listeIndicateurs table");
 	}
 }
 
-//Fonction qui ajoute une indicateur dans une compétence
-function ajouteIndicateur(indicateur,conteneur)
+//Fonction qui ajoute une indicateur dans une compétence *************************
+function ADMIN_COMPETENCES_ajouteIndicateur(indicateur,conteneur)
 {
 	numeroIndicateur++;
 
@@ -80,7 +83,7 @@ function ajouteIndicateur(indicateur,conteneur)
 
 
 	var rendu=""+
-"								<tr id=\"indicateur_"+indicateur.id+"\" class=\""+styleClass+"\">"+
+"								<tr id=\"ADMIN_COMPETENCES_indicateur_"+indicateur.id+"\" class=\""+styleClass+"\">"+
 "									<td>"+
 "										<form>"+
 "											<input type=\"checkbox\" name=\"selectIndicateur"+indicateur.id+"\" value=\""+indicateur.id+"\"";
@@ -104,15 +107,22 @@ function ajouteIndicateur(indicateur,conteneur)
 }
 
 
-function getNiveauxIndicateur(val,maxi)
+//Fonction qui crée la grille arc en ciel
+//Full : gere si les couleurs vont de rouge à vert (false) (cas de l'admin competences)
+// ou si vont de rouge à ..... la note en cours (cas de la notation - true).
+function getNiveauxIndicateur(val,maxi, full=false)
 {
+	valeurVerte=val;
+	if(full)
+		valeurVerte=maxi;
+
 	var rendu="";
 	for(var i=0;i<=maxi;i++)
 	{
 		if(i<=val)
 		{
 			rendu+=""+
-"										<div class=\"indicateurAllume\" style=\"background-color:"+setArcEnCiel(i,val)+";\">"+i+"</div>";
+"										<div class=\"indicateurAllume\" style=\"background-color:"+setArcEnCiel(i,valeurVerte)+";\">"+i+"</div>";
 		}
 		else
 		{

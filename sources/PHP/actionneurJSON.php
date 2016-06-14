@@ -235,6 +235,164 @@ if($action=="getListeEleves")
 
 
 
+
+//OBTIENT LA NOTATION DES ELEVES=================
+if($action=="getNotationEleves")
+{
+	if($_SESSION['statut']=="admin")
+	{
+		connectToBDD();
+		$eleve=0;
+		if(isset($_POST['eleve'])) $eleve=intval($_POST['eleve']);
+
+		//Recupere la classe de l'élève
+		//$reqClasse = $bdd->query('SELECT classe FROM utilisateurs WHERE id='.$eleve);
+		$reqClasse = $bdd->prepare('SELECT classe FROM utilisateurs WHERE id=:eleve');
+		$reqClasse->execute(array('eleve'=>$eleve));
+		
+		if($donneesClasse=$reqClasse->fetch())//Si pas d'eleve selectionné
+		{		
+
+			$classe=$donneesClasse['classe'];
+			
+			$req_ind="(SELECT * FROM indicateurs AS i JOIN liensClassesIndicateurs AS l ON i.id=l.indicateur WHERE classe='".$classe."')";
+			$req_comp_gr="(SELECT comp.id AS idComp, comp.nom AS nomComp, gr.id AS idGroup, gr.nom AS nomGroup FROM competences AS comp JOIN groupes_competences AS gr ON  comp.groupe=gr.id)";
+
+			$requete="SELECT  E1.idComp,  E1.nomComp, E1.idGroup, E1.nomGroup, ind.id AS idInd, ind.nom AS nomInd, ind.details AS detailsInd, ind.niveaux AS niveauxInd FROM ".$req_ind." as ind JOIN ".$req_comp_gr." AS E1 ON ind.competence = E1.idComp";
+			$req = $bdd->query($requete);
+
+			while($reponse=$req->fetch())
+			{
+				$idGroup=intval($reponse['idGroup']);
+				$nomGroup=$reponse['nomGroup'];
+
+				$idComp=intval($reponse['idComp']);
+				$nomComp=$reponse['nomComp'];
+
+				$idInd=intval($reponse['idInd']);
+				$nomInd=$reponse['nomInd'];
+				$detailsInd=$reponse['detailsInd'];
+				$niveauxInd=intval($reponse['niveauxInd']);
+
+				//Si le groupe n'existe pas, on le crée
+				if(!isset($reponseJSON['listeGroupes'][$idGroup]))
+				{
+					$reponseJSON['listeGroupes'][$idGroup]["id"]=$idGroup;
+					$reponseJSON['listeGroupes'][$idGroup]["nom"]=$nomGroup;
+					$reponseJSON['listeGroupes'][$idGroup]["selected"]=true;
+					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"]=array();
+				}
+				//Si la compétence n'existe pas...
+				if(!isset($reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]))
+				{
+					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["id"]=$idComp;
+					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["nom"]=$nomComp;
+					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["selected"]=true;
+					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"]=array();
+				}
+
+				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["id"]=$idInd;
+				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["nom"]=$nomInd;
+				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["details"]=$detailsInd;
+				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauMax"]=$niveauxInd;
+				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveMax"]=-1;//Par defaut
+				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveMoy"]=-1;//Par defaut
+				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveLast"]=-1;//Par defaut
+
+				$reqNote = $bdd->prepare("SELECT MAX(note) as max FROM notation WHERE eleve=:eleve AND indicateur=".$idInd);
+				$reqNote->execute(array('eleve'=>$eleve));
+				if($donneesNote=$reqNote->fetch())
+					{if($donneesNote["max"]==null) $donneesNote["max"]=-1;
+					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveMax"]=$donneesNote["max"];
+					}
+
+				$reqNote = $bdd->prepare("SELECT AVG(note) as moy FROM notation WHERE eleve=:eleve AND indicateur=".$idInd);
+				$reqNote->execute(array('eleve'=>$eleve));
+				if($donneesNote=$reqNote->fetch())
+					{if($donneesNote["moy"]==null) $donneesNote["moy"]=-1;
+					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveMoy"]=$donneesNote["moy"];
+					}
+
+				$reqNote = $bdd->prepare("SELECT note as last FROM notation WHERE eleve=:eleve AND indicateur=".$idInd." ORDER BY date DESC LIMIT 1");
+				$reqNote->execute(array('eleve'=>$eleve));
+				if($donneesNote=$reqNote->fetch())
+					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveLast"]=$donneesNote["last"];
+
+
+			$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["selected"]=true;
+			}	
+
+
+
+
+
+//******************************************************************************************
+
+
+			//Recupere la liste des groupes
+			/*$numCompetence=1;
+			$reponseGr = $bdd->query('SELECT * FROM groupes_competences ORDER BY position');
+			while ($donneesGr = $reponseGr->fetch())
+			{
+			echo '
+							<div class="groupe_competences">
+								<div class="entete_groupe_competences">
+									<h3 onclick="$(this).parent().parent().find(\'.groupe_contenu\').toggle(\'easings\');">
+										'.$donneesGr['nom'].'
+									</h3>
+								</div>
+								<div class="groupe_contenu">';
+				$numIndicateur=1;
+				$reponseComp = $bdd->query('SELECT * FROM competences WHERE groupe='.$donneesGr['id'].' ORDER BY position');
+				while ($donneesComp = $reponseComp->fetch())
+					{
+						echo '
+									<div class="competence">
+										<h3>'.$numCompetence++." - ".$donneesComp["nom"].'</h3>
+										<div class="listeIndicateurs">
+											<table class="indicateurs">';
+											$reponseInd = $bdd->query('SELECT * FROM indicateurs WHERE competence='.$donneesComp['id'].' ORDER BY position');
+											while ($donneesInd = $reponseInd->fetch())
+											{
+												echo '
+											<tr>
+												<td class="intituleIndicateur">
+													'.($numCompetence-1).".".$numIndicateur." - ".$donneesInd['nom'].'
+												</td>
+												<td class="detailIndicateur">
+													<img src="./sources/images/icone-info.png" alt="[i]"  style="cursor:help;" title="'.$donneesInd['details'].'"/>
+												</td>
+												<td class="niveauxIndicateur">';
+													$note=getNoteMax($eleve,$donneesInd['id']);
+													printEchelleCouleur($note,$donneesInd["niveaux"],true,$donneesInd['id']);
+												echo '
+												</td>
+											</tr>';
+											}
+						echo '
+											</table>
+										</div>
+									</div>';
+					}
+			echo '
+								</div>
+							</div>';
+			}*/
+			$reponseJSON["messageRetour"]=":)Notation récupérées.";
+		}	//Fin 'si pas d'eleve'
+		else
+			$reponseJSON["messageRetour"]=":(Pas d'élève trouvé.";
+	}
+	else
+	{
+		$reponseJSON["messageRetour"]=":(Vous ne pouvez pas récupérer cette liste de notation.";
+	}
+}
+
+
+
+
+
 // =====================================================
 // ADMINISTRATION COMPETENCES
 // =====================================================

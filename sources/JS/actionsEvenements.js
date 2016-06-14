@@ -281,7 +281,7 @@ updateListesClasses_CallBack=function(reponse)
 
 
 
-//UDAPTE COMPETENCES PAR CLASSE
+//UDAPTE COMPETENCES PAR CLASSE *********************************
 updateCompetencesSelonClasse=function(classe)
 {
 		$.post(
@@ -295,7 +295,7 @@ updateCompetencesSelonClasse=function(classe)
 	);
 }
 
-//UDAPTE COMPETENCES PAR CLASSE (CALLBACK)
+//UDAPTE COMPETENCES PAR CLASSE (CALLBACK) --------------------
 updateCompetencesSelonClasse_Callback=function(reponse)
 {
 	afficheMessage(reponse.messageRetour);
@@ -308,82 +308,8 @@ updateCompetencesSelonClasse_Callback=function(reponse)
 	for(idGr in listeGroupes)
 	{
 		var groupe=listeGroupes[idGr];
-		ajouteGroupeCompetences(groupe,"#liste_competences");
-
-
-
-/*	if(0)
-	{
-		rendu+=""+
-"			<div class=\"groupe_competences\" id=\"groupe_competence_"+groupe.id+"\">"+
-"				<div class=\"entete_groupe_competences\">"+
-"					<div class=\"boutonAjouteCompetence\" onclick=\"ouvreBoiteAddCompetence('"+groupe.nom+"',"+groupe.id+")\">"+
-"						Ajouter une compétence"+
-"					</div>"+
-"					<h3 onclick=\"$(this).parent().parent().find('.groupe_contenu').toggle('easings');\">"+
-"						"+groupe.nom+
-"					</h3>"+
-"				</div>"+
-"				<div class=\"groupe_contenu\">";
-		for(idComp in groupe.listeCompetences)
-		{
-			var competence=groupe.listeCompetences[idComp];
-			numeroCompetence++;
-			numeroIndicateur=0;
-			rendu+=""+
-"					<div class=\"competence\">"+
-"						<div class=\"boutonAjouterIndicateur\" onclick=\"ouvreBoiteAddIndicateur('"+competence.nom+"',"+competence.id+")\">"+
-"							[+Indicateur]"+
-"						</div>"+
-"						<h3>"+
-"							"+numeroCompetence+" - "+competence.nom+
-"						</h3>"+
-"						<div class=\"listeIndicateurs\">"+
-"							<table class=\"indicateurs\">";
-			for(idInd in competence.listeIndicateurs)
-			{
-				numeroIndicateur++;
-				var indicateur=competence.listeIndicateurs[idInd];
-				rendu+=""+
-"								<tr>"+
-"									<td class=\"intituleIndicateur\">"+
-"										"+numeroCompetence+"."+numeroIndicateur+" - "+indicateur.nom+
-"									</td>"+
-"									<td class=\"detailIndicateur\">"+
-"										<img src=\"./sources/images/icone-info.png\" alt=\"[i]\"  style=\"cursor:help;\" title=\""+competence.details+"\"/>"+
-"										<img src=\"./sources/images/supprime.png\" alt=\"[X]\" style=\"cursor:not-allowed;\" title=\"Supprimer l'indicateur\"/>"+
-"									</td>"+
-"									<td class=\"niveauxIndicateur\">";
-					for(i=0;i<=NB_NIVEAUX_MAX;i++)
-					{
-						if(i<=competence.niveaux)
-						{
-							rendu+=""+
-"										<div class=\"indicateurAllume\" style=\"background-color:"+setArcEnCiel(i,competences.niveaux)+";\">"+i+"</div>";
-						}
-						else
-						{
-							rendu+=""+
-"										<div class=\"indicateurEteint\">"+i+"</div>";
-						}
-					}
-					rendu+=""+
-"									</td>"+
-"								</tr>";
-				}
-			rendu+=""+
-"							</table>"+
-"						</div>"+
-"					</div>";
-		}
-		rendu+=""+
-"				</div>"+
-"			</div>";
-	
-
-	$("#liste_competences").append(rendu);
-	}*/
-	}//FIN DU IF 0
+		ADMIN_COMPETENCES_ajouteGroupe(groupe,"#liste_competences","adminComp");
+	}
 }
 
 
@@ -427,7 +353,7 @@ addCompetence=function(nom,idGroupe)
 	);
 }
 
-//Fonction qui lier ou délie une classe avec un indicateur
+//Fonction qui lier ou délie une classe avec un indicateur *********************
 function lierDelierIndicateurClasse(ind,classe,lier)
 {
 	$.post(
@@ -448,7 +374,7 @@ function lierDelierIndicateurClasse_callback(reponse)
 	var styleClass="indicateur";
 	if(!reponse.lier)
 		styleClass+="_unselected";
-	$("#indicateur_"+reponse.indicateur).attr('class',styleClass);
+	$("#ADMIN_COMPETENCES_indicateur_"+reponse.indicateur).attr('class',styleClass);
 
 	//RAJOUTER POUR COLORER LES TITRES (COMPETENCES/GROUPES...)
 
@@ -515,25 +441,38 @@ updateListeEleves=function(reponse)
 	getNotationEleve($("#notationListeEleves").val());
 }
 
-//METTRE A JOUR LA NOTATION POUR UN ELEVE
-
+//METTRE A JOUR LA NOTATION POUR UN ELEVE**********************
 getNotationEleve=function(eleve)
 {
 	$.post(
-			'./sources/PHP/actionneur.php',//Requete appelée
+			'./sources/PHP/actionneurJSON.php',//Requete appelée
 			{	//Les données à passer par POST
 				action:"getNotationEleves",
 				eleve:eleve//$("#notationListeEleves").val()
 			},
 			updateNotationEleve,	//Fonction callback
-			"text"	//Type de réponse
+			"json"	//Type de réponse
 	);
 }
 
 //Met à jour l'affichge des notes d'un élève (recu par ajax)
 updateNotationEleve=function(reponse)
 {
-	$("#RecapNotationEleve").html(reponse);
+	//$("#RecapNotationEleve").html(reponse);
+	a=reponse;
+
+	afficheMessage(reponse.messageRetour);
+	//VARIABLES GLOABLES !!
+	numeroCompetence=0;
+	numeroIndicateur=0;
+
+	$("#RecapNotationEleve").empty();
+	var listeGroupes=reponse.listeGroupes;
+	for(idGr in listeGroupes)
+	{
+		var groupe=listeGroupes[idGr];
+		NOTATION_ajouteGroupeCompetences(groupe,"#RecapNotationEleve","RecapNote");
+	}
 }
 
 

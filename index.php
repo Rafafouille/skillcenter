@@ -40,6 +40,7 @@ include("./sources/PHP/actions.php");
 		<script type="text/javascript" src="./sources/JS/libraries/jquery-ui/jquery-ui.min.js"></script>
 		<script type="text/javascript" src="./sources/JS/fonctions.js"></script>
 		<script type="text/javascript" src="./sources/JS/fonctions_competences.js"></script>
+		<script type="text/javascript" src="./sources/JS/fonctions_notation.js"></script>
 		<script type="text/javascript" src="./sources/JS/actionsEvenements.js"></script>
 		<script type="text/javascript" src="./sources/JS/main.js"></script>
 		<script>
