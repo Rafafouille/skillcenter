@@ -343,7 +343,7 @@ if($action=="getNotationEleves")
 
 
 //NOUVELLE NOTE =================
-if($action=="newNote")
+/*if($action=="newNote")
 {
 	if($_SESSION['statut']=="admin")
 	{
@@ -367,5 +367,5 @@ if($action=="newNote")
 	{
 		echo ":(Vous ne pouvez pas ajouter une note.";
 	}
-}
+}*/
 ?>

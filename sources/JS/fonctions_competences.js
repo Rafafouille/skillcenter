@@ -100,7 +100,7 @@ function ADMIN_COMPETENCES_ajouteIndicateur(indicateur,conteneur)
 "										<img src=\"./sources/images/supprime.png\" alt=\"[X]\" style=\"cursor:not-allowed;\" title=\"Supprimer l'indicateur\"/>"+
 "									</td>"+
 "									<td class=\"niveauxIndicateur\">"+
-"									"+getNiveauxIndicateur(indicateur.niveaux,NB_NIVEAUX_MAX)
+"									"+ADMIN_COMPETENCES_getNiveauxIndicateur(indicateur.niveaux,NB_NIVEAUX_MAX)
 "									</td>"+
 "								</tr>";
 	$(conteneur).append(rendu);
@@ -110,7 +110,7 @@ function ADMIN_COMPETENCES_ajouteIndicateur(indicateur,conteneur)
 //Fonction qui crée la grille arc en ciel
 //Full : gere si les couleurs vont de rouge à vert (false) (cas de l'admin competences)
 // ou si vont de rouge à ..... la note en cours (cas de la notation - true).
-function getNiveauxIndicateur(val,maxi, full=false)
+function ADMIN_COMPETENCES_getNiveauxIndicateur(val,maxi, full=false)
 {
 	valeurVerte=val;
 	if(full)

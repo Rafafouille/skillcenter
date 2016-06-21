@@ -458,9 +458,6 @@ getNotationEleve=function(eleve)
 //Met à jour l'affichge des notes d'un élève (recu par ajax)
 updateNotationEleve=function(reponse)
 {
-	//$("#RecapNotationEleve").html(reponse);
-	a=reponse;
-
 	afficheMessage(reponse.messageRetour);
 	//VARIABLES GLOABLES !!
 	numeroCompetence=0;
@@ -476,11 +473,12 @@ updateNotationEleve=function(reponse)
 }
 
 
+//********************************************************
 //Envoie une nouvelle note au serveur
 donneNote=function(note,eleve,indicateur)
 {
 	$.post(
-			'./sources/PHP/actionneur.php',//Requete appelée
+			'./sources/PHP/actionneurJSON.php',//Requete appelée
 			{	//Les données à passer par POST
 				action:"newNote",
 				eleve:eleve,
@@ -488,7 +486,7 @@ donneNote=function(note,eleve,indicateur)
 				indicateur:indicateur
 			},
 			valideNouvelleNote,	//Fonction callback
-			"text"	//Type de réponse
+			"json"	//Type de réponse
 	);
 }
 
@@ -496,7 +494,12 @@ donneNote=function(note,eleve,indicateur)
 //Met à jour l'affichge des notes d'un élève (recu par ajax)
 valideNouvelleNote=function(reponse)
 {
-	getNotationEleve();
+	a=reponse;
+	afficheMessage(reponse.messageRetour);
+
+	//MAJ de l'arc en ciel
+	var html_barre_arc_en_ciel=NOTATION_getNiveauxIndicateur(reponse.note.max,reponse.note.niveauMax,reponse.note.idIndicateur,true);
+	$("#NOTATION_indicateur_"+reponse.note.idIndicateur+" .niveauxIndicateur").html(html_barre_arc_en_ciel);
 }
 
 

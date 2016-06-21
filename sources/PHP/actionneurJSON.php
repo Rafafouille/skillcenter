@@ -322,62 +322,6 @@ if($action=="getNotationEleves")
 			$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["selected"]=true;
 			}	
 
-
-
-
-
-//******************************************************************************************
-
-
-			//Recupere la liste des groupes
-			/*$numCompetence=1;
-			$reponseGr = $bdd->query('SELECT * FROM groupes_competences ORDER BY position');
-			while ($donneesGr = $reponseGr->fetch())
-			{
-			echo '
-							<div class="groupe_competences">
-								<div class="entete_groupe_competences">
-									<h3 onclick="$(this).parent().parent().find(\'.groupe_contenu\').toggle(\'easings\');">
-										'.$donneesGr['nom'].'
-									</h3>
-								</div>
-								<div class="groupe_contenu">';
-				$numIndicateur=1;
-				$reponseComp = $bdd->query('SELECT * FROM competences WHERE groupe='.$donneesGr['id'].' ORDER BY position');
-				while ($donneesComp = $reponseComp->fetch())
-					{
-						echo '
-									<div class="competence">
-										<h3>'.$numCompetence++." - ".$donneesComp["nom"].'</h3>
-										<div class="listeIndicateurs">
-											<table class="indicateurs">';
-											$reponseInd = $bdd->query('SELECT * FROM indicateurs WHERE competence='.$donneesComp['id'].' ORDER BY position');
-											while ($donneesInd = $reponseInd->fetch())
-											{
-												echo '
-											<tr>
-												<td class="intituleIndicateur">
-													'.($numCompetence-1).".".$numIndicateur." - ".$donneesInd['nom'].'
-												</td>
-												<td class="detailIndicateur">
-													<img src="./sources/images/icone-info.png" alt="[i]"  style="cursor:help;" title="'.$donneesInd['details'].'"/>
-												</td>
-												<td class="niveauxIndicateur">';
-													$note=getNoteMax($eleve,$donneesInd['id']);
-													printEchelleCouleur($note,$donneesInd["niveaux"],true,$donneesInd['id']);
-												echo '
-												</td>
-											</tr>';
-											}
-						echo '
-											</table>
-										</div>
-									</div>';
-					}
-			echo '
-								</div>
-							</div>';
-			}*/
 			$reponseJSON["messageRetour"]=":)Notation récupérées.";
 		}	//Fin 'si pas d'eleve'
 		else
@@ -386,6 +330,40 @@ if($action=="getNotationEleves")
 	else
 	{
 		$reponseJSON["messageRetour"]=":(Vous ne pouvez pas récupérer cette liste de notation.";
+	}
+}
+
+
+
+// Action qui ajoute une nouvelle note **************************************
+if($action=="newNote")
+{
+	if($_SESSION['statut']=="admin")
+	{
+		connectToBDD();
+		$eleve=0;
+			if(isset($_POST['eleve'])) $eleve=intval($_POST['eleve']);
+		$indicateur=0;
+			if(isset($_POST['indicateur'])) $indicateur=intval($_POST['indicateur']);
+		$note=0;
+			if(isset($_POST['note'])) $note=intval($_POST['note']);
+		
+		//Ajoute de la note
+		$req = $bdd->prepare('INSERT INTO notation (note,date,eleve,indicateur,examinateur) VALUES(:note,NOW(),:eleve,:indicateur,'.$_SESSION['id'].')');
+		$req->execute(array(
+						'note' => $note,
+						'eleve' => $eleve,
+						'indicateur' => $indicateur
+					));
+					
+		//On récupère la note pour MAJ coté client
+		$reponseJSON["note"]=getNotationPourJSON($eleve,$indicateur);
+				
+		$reponseJSON["messageRetour"]=":)La note a été ajoutée.";
+	}
+	else
+	{
+		$reponseJSON["messageRetour"]=":(Vous ne pouvez pas ajouter une note.";
 	}
 }
 
@@ -475,6 +453,7 @@ if($action=="updateCompetencesSelonClasse")
 			$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["selected"]=true;
 			$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["selected"]=true;
 		}
+		$reponseJSON["messageRetour"]=":)Liste des compétences récupérées";
 	}
 	else
 		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit d'obtenir la liste des compétences !";

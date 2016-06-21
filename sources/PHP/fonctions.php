@@ -31,6 +31,75 @@ function connectToBDD()
 }
 
 
+
+// ==============================================
+// NOTATION 
+// ================================================
+
+
+
+
+
+//Fonction renvoie la note max associéé à un indicateur et un éleve
+//$eleve = id de l'eleve
+//$indicateur = id de l'indicateur
+function getNoteMax($eleve,$indicateur)
+{
+	global $bdd;
+	$reqNote = $bdd->prepare('SELECT MAX(note) AS maxi FROM notation WHERE indicateur=:indicateur AND eleve=:eleve');
+	$reqNote->execute(array('eleve'=>$eleve,'indicateur'=>$indicateur));
+	if($donneesNote = $reqNote->fetch())
+		return $donneesNote["maxi"];
+	else
+		return -1;//En cas de "pas de note"
+}
+
+//Fonction renvoie la note moyenne (arrondi à l'entier inférieur) associée à un indicateur et un éleve
+//$eleve = id de l'eleve
+//$indicateur = id de l'indicateur
+function getNoteMoy($eleve,$indicateur)
+{
+	global $bdd;
+	$reqNote = $bdd->prepare('SELECT AVG(note) AS moy FROM notation WHERE indicateur=:indicateur AND eleve=:eleve');
+	$reqNote->execute(array('eleve'=>$eleve,'indicateur'=>$indicateur));
+	if($donneesNote = $reqNote->fetch())
+		return $donneesNote["moy"];
+	else
+		return -1;//En cas de "pas de note"
+}
+
+//Fonction renvoie la dernière note associée à un indicateur et un éleve
+//$eleve = id de l'eleve
+//$indicateur = id de l'indicateur
+function getNoteLast($eleve,$indicateur)
+{
+	global $bdd;
+	$reqNote = $bdd->prepare('SELECT note as last FROM notation WHERE eleve=:eleve AND indicateur=:indicateur ORDER BY date DESC LIMIT 1');
+	$reqNote->execute(array('eleve'=>$eleve,'indicateur'=>$indicateur));
+	if($donneesNote = $reqNote->fetch())
+		return $donneesNote["last"];
+	else
+		return -1;//En cas de "pas de note"
+}
+
+
+//Fonction qui renvoie un tableau avec la note max, moyenne et dernière d'un élève pour un indicateur donnée (renvoie également le n°id de l'élève et de l'indicateur)
+//($eleve et $indicateur sont les numéro id, entiers)
+function getNotationPourJSON($eleve,$indicateur)
+{
+	global $bdd;
+	$note=array(	"max"=>getNoteMax($eleve,$indicateur),
+					"moy"=>getNoteMoy($eleve,$indicateur),
+					"last"=>getNoteLast($eleve,$indicateur),
+					"niveauMax"=>getNiveauMaxIndicateur($indicateur),
+					"idEleve"=>$eleve,
+					"idIndicateur"=>$indicateur);//Tableau à renvoyé, initialisé à -1
+
+	return $note;
+}
+
+// =================================
+// A SUPPRIMER ?????
 //Renvoie une couleur de l'arc en ciel entre rouge et vert (pour les compétences)
 function setArcEnCiel($val,$maxi)
 {
@@ -46,31 +115,9 @@ function setArcEnCiel($val,$maxi)
 }
 
 
-//Fonction renvoie la note max associéé à un indicateur et un éleve
-//$eleve = id de l'eleve
-//$indicateur = id de l'indicateur
-function getNoteMax($eleve,$indicateur)
-{
-	global $bdd;
-	$reponseNote = $bdd->query('SELECT MAX(note) AS note FROM notation WHERE indicateur='.$indicateur.' AND eleve='.$eleve);
-	if($donneesNote = $reponseNote->fetch())
-		return $donneesNote["note"];
-	else
-		return 0;//En cas de "pas de note"
-}
 
-//Fonction renvoie la note moyenne (arrondi à l'entier inférieur) associée à un indicateur et un éleve
-//$eleve = id de l'eleve
-//$indicateur = id de l'indicateur
-function getNoteMoy($eleve,$indicateur)
-{
-	global $bdd;
-	$reponseNote = $bdd->query('SELECT AVG(note) AS note FROM notation WHERE indicateur='.$indicateur.' AND eleve='.$eleve);
-	if($donneesNote = $reponseNote->fetch())
-		return $donneesNote["note"];
-	else
-		return 0;//En cas de "pas de note"
-}
+// =================================
+// A SUPPRIMER ?????
 
 //Ecrit le code html pour afficher
 //l'échelle de couleur
@@ -109,6 +156,32 @@ function printEchelleCouleur($note,$maxi,$modifiable=false,$indicateur=0)
 
 
 
+
+
+// ==============================================
+// COMPETENCES
+// ================================================
+
+
+
+//Fonction renvoie la note maximale qu'on peut obtenir pour l'indicateur voulu*
+//$indicateur = id de l'indicateur
+function getNiveauMaxIndicateur($idIndicateur)
+{
+	global $bdd;
+	$req = $bdd->prepare('SELECT niveaux FROM indicateurs WHERE id=:id');
+	$req->execute(array('id'=>$idIndicateur));
+	if($donnees = $req->fetch())
+		return $donnees["niveaux"];
+	else
+		return -1;//En cas de "pas d'indicateur"
+}
+
+
+
+
+
+//==================================================
 //A SUPPRIMER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //Fonction qui initialise la réponse XML en Ajax
 function initReponseXML()
