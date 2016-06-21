@@ -55,7 +55,7 @@ include("./sources/PHP/actions.php");
 		</script>
     </head>
 
-	<body>
+	<body style="display:none;">
 	
 		<?php
 			if($messageRetour!="" && 0)

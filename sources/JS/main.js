@@ -2,13 +2,15 @@
 		MAIN
 ====================================== */
 
-window.onload=function()
+$(function()
 {
 	//Création des onglets (jquery-ui)
 	$("#tab-onglets").tabs({active: tabDefaut,	//tab actif par défaut
 				activate:onChangeTab
 				});		//Fonction à exécuter lorsqu'on active une table
 	
+
+
 	//Messages
 	if(messageRetour!="")
 		afficheMessage(messageRetour);
@@ -21,4 +23,12 @@ window.onload=function()
 		getListeUsersAdmin("[ALL]");
 		updateListesClasses();// Met a jour les listes des classes
 	}
-}
+
+	//Affichage de la page, une fois chargée
+	$('body').css("display","block")
+});
+
+
+//window.onload=function()
+//{
+//}
