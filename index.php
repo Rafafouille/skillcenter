@@ -38,10 +38,23 @@ include("./sources/PHP/actions.php");
 		<link rel="stylesheet" href="./sources/JS/libraries/jquery-ui/jquery-ui.css">
 		<script type="text/javascript" src="./sources/JS/libraries/jquery-ui/external/jquery/jquery.js"></script>
 		<script type="text/javascript" src="./sources/JS/libraries/jquery-ui/jquery-ui.min.js"></script>
+
 		<script type="text/javascript" src="./sources/JS/fonctions.js"></script>
-		<script type="text/javascript" src="./sources/JS/fonctions_competences.js"></script>
-		<script type="text/javascript" src="./sources/JS/fonctions_notation.js"></script>
+
 		<script type="text/javascript" src="./sources/JS/actionsEvenements.js"></script>
+
+		<?php if($_SESSION["id"]>0) { //Si connecté ?>
+		<script type="text/javascript" src="./sources/JS/fonctions_notation.js"></script>
+		<script type="text/javascript" src="./sources/JS/actionsEvenements_notation.js"></script>
+		<?php }
+
+		if($_SESSION["statut"]=="admin") { //Si admin?>
+		<script type="text/javascript" src="./sources/JS/fonctions_competences.js"></script>
+		<script type="text/javascript" src="./sources/JS/actionsEvenements_utilisateurs.js"></script>
+		<script type="text/javascript" src="./sources/JS/actionsEvenements_competences.js"></script>
+		<?php } ?>
+
+
 		<script type="text/javascript" src="./sources/JS/main.js"></script>
 		<script>
 			listeOnglets=Array();	//Liste des onglets dans un tableau
