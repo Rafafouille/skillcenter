@@ -110,7 +110,7 @@ function ADMIN_COMPETENCES_ajouteIndicateur(indicateur,conteneur)
 //Fonction qui crée la grille arc en ciel
 //Full : gere si les couleurs vont de rouge à vert (false) (cas de l'admin competences)
 // ou si vont de rouge à ..... la note en cours (cas de la notation - true).
-function ADMIN_COMPETENCES_getNiveauxIndicateur(val,maxi, full=false)
+function ADMIN_COMPETENCES_getNiveauxIndicateur(val,maxi, full)
 {
 	valeurVerte=val;
 	if(full)

@@ -21,6 +21,9 @@ $action="";
 if(isset($_POST['action'])) $action=$_POST['action'];
 
 
+// =====================================================
+// CONNECTION / SESSION
+// =====================================================
 
 //CONNECTION =================
 // Action qui connecte (i.e. met à jour les variables de session)
@@ -64,6 +67,7 @@ if($action=="logout")
 	$_SESSION['nom']="";
 	$_SESSION['prenom']="";
 	$_SESSION['statut']="";
+	$_SESSION['id']=0;
 	$reponseJSON["messageRetour"]=":)Vous êtes déconnecté. Au revoir !";
 }
 
@@ -239,11 +243,13 @@ if($action=="getListeEleves")
 //OBTIENT LA NOTATION DES ELEVES=================
 if($action=="getNotationEleves")
 {
-	if($_SESSION['statut']=="admin")
+	$eleve=0;
+	if(isset($_POST['eleve'])) $eleve=intval($_POST['eleve']);
+
+	if($_SESSION['statut']=="admin" || $eleve==$_SESSION['id'] && $eleve>0)	//Si admin, ou utilisateur connecté qui demande sa propre notation
 	{
 		connectToBDD();
-		$eleve=0;
-		if(isset($_POST['eleve'])) $eleve=intval($_POST['eleve']);
+
 
 		//Recupere la classe de l'élève
 		//$reqClasse = $bdd->query('SELECT classe FROM utilisateurs WHERE id='.$eleve);

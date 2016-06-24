@@ -71,7 +71,7 @@ function NOTATION_ajouteIndicateur(indicateur,conteneur)
 "										<img src=\"./sources/images/icone-info.png\" alt=\"[i]\"  style=\"cursor:help;\" title=\""+indicateur.details+"\"/>"+
 "									</td>"+
 "									<td class=\"niveauxIndicateur\">"+
-"									"+NOTATION_getNiveauxIndicateur(indicateur.niveauEleveMax,indicateur.niveauMax,indicateur.id,true)
+"									"+NOTATION_getNiveauxIndicateur(indicateur.niveauEleveMax,indicateur.niveauMax,indicateur.id,STATUT=="admin")
 "									</td>"+
 "								</tr>";
 	$(conteneur).append(rendu);
@@ -82,21 +82,33 @@ function NOTATION_ajouteIndicateur(indicateur,conteneur)
 //Fonction qui crée la grille arc en ciel
 //Full : gere si les couleurs vont de rouge à vert (false) (cas de l'admin competences)
 // ou si vont de rouge à ..... la note en cours (cas de la notation - true).
-function NOTATION_getNiveauxIndicateur(val,maxi,indicateur, clickable=false)
+function NOTATION_getNiveauxIndicateur(val,maxi,indicateur, clickable)
 {
+
+
 
 	var rendu="";
 	for(var i=0;i<=maxi;i++)
 	{
+		var actionOnClick="";
+		if(clickable)
+			actionOnClick="donneNote("+i+",$('#notationListeEleves').val(),"+indicateur+")";
+
 		if(i<=val)
 		{
+			var cl="indicateurAllume";
+			if(clickable)
+				cl+="Modifiable";
 			rendu+=""+
-"										<div class=\"indicateurAllumeModifiable\" style=\"background-color:"+setArcEnCiel(i,maxi)+";\" onclick=\"donneNote("+i+",$('#notationListeEleves').val(),"+indicateur+")\" >"+i+"</div>";
+"										<div class=\""+cl+"\" style=\"background-color:"+setArcEnCiel(i,maxi)+";\" onclick=\""+actionOnClick+"\" >"+i+"</div>";
 		}
 		else
 		{
+			var cl="indicateurEteint";
+			if(clickable)
+				cl+="Modifiable";
 			rendu+=""+
-"										<div class=\"indicateurEteintModifiable\" onclick=\"donneNote("+i+",$('#notationListeEleves').val(),"+indicateur+")\">"+i+"</div>";
+"										<div class=\""+cl+"\" onclick=\""+actionOnClick+"\">"+i+"</div>";
 		}
 	}
 	return rendu;

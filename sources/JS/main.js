@@ -2,13 +2,14 @@
 		MAIN
 ====================================== */
 
-$(function()
+$(function()//Fonction lancée au chargement de la page
 {
+	//Liste des onglets
+	$("#tab-onglets ul li").each(function(){listeOnglets.push($(this).text());});
 	//Création des onglets (jquery-ui)
 	$("#tab-onglets").tabs({active: tabDefaut,	//tab actif par défaut
-				activate:onChangeTab
-				});		//Fonction à exécuter lorsqu'on active une table
-	
+				activate:onChangeTab	//Fonction à exécuter lorsqu'on active une table
+				});		
 
 
 	//Messages
@@ -29,6 +30,4 @@ $(function()
 });
 
 
-//window.onload=function()
-//{
-//}
+

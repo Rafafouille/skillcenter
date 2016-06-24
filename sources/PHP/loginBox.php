@@ -1,6 +1,6 @@
 		<div class="loginBox">
 		<?php
-		if($_SESSION['statut']=="")
+		if(!$_SESSION['id'])	//Si personne n'est connecté
 		{
 		?>
 			<form>

@@ -10,7 +10,7 @@ function initSession()
 		$_SESSION['statut']="";
 		$_SESSION['nom']="";
 		$_SESSION['prenom']="";
-		$_SESSION['id']=0;
+		$_SESSION['id']=0;	//ATTENTION : 0 = pas connecté.
 	}
 }
 
