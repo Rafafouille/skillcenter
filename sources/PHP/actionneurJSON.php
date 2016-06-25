@@ -468,6 +468,43 @@ if($action=="updateCompetencesSelonClasse")
 
 
 
+
+//AJOUT D'UN GROUPE=================
+if($action=="addGroupeCompetences")
+{
+	if($_SESSION['statut']=="admin")
+	{
+		connectToBDD();
+		$nom="";
+		if(isset($_POST['nom'])) $nom=$_POST['nom'];
+		if($nom!="")
+		{
+			//Écriture
+			$req = $bdd->prepare('INSERT INTO groupes_competences (nom) VALUES(:nom)');
+			$req->execute(array('nom' => $nom));
+
+			//Vérification
+			$req2 =  $bdd->prepare('SELECT id FROM groupes_competences WHERE nom=:nom ORDER BY id DESC LIMIT 1');
+			$req2->execute(array('nom' => $nom));
+
+			if($donnees=$req2->fetch())
+			{
+				$reponseJSON["messageRetour"]=":)Le domaine ".$nom." a bien été créé.";
+				$reponseJSON["groupe"]["nom"]=$nom;
+				$reponseJSON["groupe"]["id"]=intval($donnees['id']);
+			}
+			else
+				$reponseJSON["messageRetour"]=":(Le domaine n'a pas été enregistré pour une raison inconnue";
+		}
+		else
+			$reponseJSON["messageRetour"]=":(Le nom du domaine est vide.";
+	}
+	else
+		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de créer un domaine.";
+}
+
+
+
 //Update liste des compétences
 if($action=="lierDelierIndicateurClasse")
 {

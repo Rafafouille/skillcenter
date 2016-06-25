@@ -207,6 +207,7 @@ if($action=="addGroupeCompetences")
 	else
 		echo ":(Vous n'avez pas le droit de créer un groupe.";
 }
+
 //AJOUT D'UNE COMPETENCE=================
 if($action=="addCompetence")
 {

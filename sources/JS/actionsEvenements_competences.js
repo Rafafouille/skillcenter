@@ -77,16 +77,23 @@ updateCompetencesSelonClasse_Callback=function(reponse)
 addGroupeCompetences=function(nom)
 {
 	$.post(
-			'./sources/PHP/actionneur.php',//Requete appelée
+			'./sources/PHP/actionneurJSON.php',//Requete appelée
 			{	//Les données à passer par POST
 				action:"addGroupeCompetences",
 				nom:nom
 			},
-			recoitValideRecharge,	//Fonction callback
-			"text"	//Type de réponse
+			addGroupeCompetences_callback,	//Fonction callback
+			"json"	//Type de réponse
 	);
 }
-
+//Callback qui ajoute la compétence dans la page
+addGroupeCompetences_callback=function(reponse)
+{
+	var groupe=reponse.groupe;
+	afficheMessage(reponse.messageRetour);
+	var rendu=ADMIN_COMPETENCES_rendu_HTML_groupe(groupe.nom,groupe.id,"groupe_competences_unselected");
+	$("#liste_competences").append(rendu);
+}
 
 
 //AJOUTE COMPETENCES

@@ -118,9 +118,9 @@
 		</script>
 		
 		<!-- BOITE POUR AJOUTER UN GROUPE DE COMPETENCES ------------------- -->
-		<div id="dialog-addGroupeCompetences" title="Ajouter un groupe de compétences">
+		<div id="dialog-addGroupeCompetences" title="Ajouter un domaine">
 			<form>
-				<label for="dialog-addGroupeCompetences-nom">Nom du groupe :</label>
+				<label for="dialog-addGroupeCompetences-nom">Nom du nouveau domaine :</label>
 				<input type="text" name="dialog-addGroupeCompetences-nom" id="dialog-addGroupeCompetences-nom" />
 			</form>
 		</div>
