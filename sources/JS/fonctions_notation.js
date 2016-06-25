@@ -9,8 +9,8 @@ function NOTATION_ajouteGroupeCompetences(groupe,conteneur,modeNotation)
 {
 	var rendu=""+
 "			<div class=\"groupe_competences\" id=\"NOTATION_groupe_"+groupe.id+"\">"+
-"				<div class=\"entete_groupe_competences\">"+
-"					<h3 onclick=\"$(this).parent().parent().find('.groupe_contenu').toggle('easings');\">"+
+"				<div class=\"entete_groupe_competences\" onclick=\"$(this).parent().find('.groupe_contenu').toggle('easings');\">"+
+"					<h3>"+
 "						"+groupe.nom+
 "					</h3>"+
 "				</div>"+
