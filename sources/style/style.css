@@ -92,6 +92,16 @@ Tabs
 	height:50px;
 }
 
+/*******************
+Entete dans les tables
+******************/
+
+.selecteurs_haut_de_page
+{
+	text-align:center;
+	margin-bottom:10px;
+}
+
 
 /*******************
 USERS
