@@ -9,19 +9,7 @@ function ADMIN_COMPETENCES_ajouteGroupe(groupe,conteneur)
 	if(!groupe.selected)
 		styleClass+="_unselected";
 
-	var rendu=""+
-"			<div class=\""+styleClass+"\" id=\"ADMIN_COMPETENCES_groupe_"+groupe.id+"\">"+
-"				<div class=\"entete_groupe_competences\">"+
-"					<div class=\"boutonAjouteCompetence\" onclick=\"ouvreBoiteAddCompetence('"+groupe.nom+"',"+groupe.id+")\">"+
-"						Ajouter une compétence"+
-"					</div>"+
-"					<h3 onclick=\"$(this).parent().parent().find('.groupe_contenu').toggle('easings');\">"+
-"						"+groupe.nom+
-"					</h3>"+
-"				</div>"+
-"				<div class=\"groupe_contenu\">"+
-"				</div>"+
-"			</div>";
+	var rendu=ADMIN_COMPETENCES_rendu_HTML_groupe(groupe.nom,groupe.id,styleClass);
 
 	$(conteneur).append(rendu);
 
@@ -31,6 +19,24 @@ function ADMIN_COMPETENCES_ajouteGroupe(groupe,conteneur)
 		var competence=groupe.listeCompetences[idComp];
 		ADMIN_COMPETENCES_ajouteCompetence(competence,"#ADMIN_COMPETENCES_groupe_"+groupe.id+" .groupe_contenu");
 	}
+}
+
+// -------------------------
+function ADMIN_COMPETENCES_rendu_HTML_groupe(nom,id,styleClass)
+{
+	return ""+
+"			<div class=\""+styleClass+"\" id=\"ADMIN_COMPETENCES_groupe_"+id+"\">"+
+"				<div class=\"entete_groupe_competences\">"+
+"					<div class=\"boutonAjouteCompetence\" onclick=\"ouvreBoiteAddCompetence('"+nom+"',"+id+")\">"+
+"						Ajouter une compétence"+
+"					</div>"+
+"					<h3 onclick=\"$(this).parent().parent().find('.groupe_contenu').toggle('easings');\">"+
+"						"+nom+
+"					</h3>"+
+"				</div>"+
+"				<div class=\"groupe_contenu\">"+
+"				</div>"+
+"			</div>";
 }
 
 
@@ -110,7 +116,7 @@ function ADMIN_COMPETENCES_ajouteIndicateur(indicateur,conteneur)
 //Fonction qui crée la grille arc en ciel
 //Full : gere si les couleurs vont de rouge à vert (false) (cas de l'admin competences)
 // ou si vont de rouge à ..... la note en cours (cas de la notation - true).
-function ADMIN_COMPETENCES_getNiveauxIndicateur(val,maxi, full=false)
+function ADMIN_COMPETENCES_getNiveauxIndicateur(val,maxi, full)
 {
 	valeurVerte=val;
 	if(full)

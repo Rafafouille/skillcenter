@@ -21,6 +21,9 @@ $action="";
 if(isset($_POST['action'])) $action=$_POST['action'];
 
 
+// =====================================================
+// CONNECTION / SESSION
+// =====================================================
 
 //CONNECTION =================
 // Action qui connecte (i.e. met à jour les variables de session)
@@ -64,6 +67,7 @@ if($action=="logout")
 	$_SESSION['nom']="";
 	$_SESSION['prenom']="";
 	$_SESSION['statut']="";
+	$_SESSION['id']=0;
 	$reponseJSON["messageRetour"]=":)Vous êtes déconnecté. Au revoir !";
 }
 
@@ -239,11 +243,13 @@ if($action=="getListeEleves")
 //OBTIENT LA NOTATION DES ELEVES=================
 if($action=="getNotationEleves")
 {
-	if($_SESSION['statut']=="admin")
+	$eleve=0;
+	if(isset($_POST['eleve'])) $eleve=intval($_POST['eleve']);
+
+	if($_SESSION['statut']=="admin" || $eleve==$_SESSION['id'] && $eleve>0)	//Si admin, ou utilisateur connecté qui demande sa propre notation
 	{
 		connectToBDD();
-		$eleve=0;
-		if(isset($_POST['eleve'])) $eleve=intval($_POST['eleve']);
+
 
 		//Recupere la classe de l'élève
 		//$reqClasse = $bdd->query('SELECT classe FROM utilisateurs WHERE id='.$eleve);
@@ -458,6 +464,43 @@ if($action=="updateCompetencesSelonClasse")
 	else
 		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit d'obtenir la liste des compétences !";
 
+}
+
+
+
+
+//AJOUT D'UN GROUPE=================
+if($action=="addGroupeCompetences")
+{
+	if($_SESSION['statut']=="admin")
+	{
+		connectToBDD();
+		$nom="";
+		if(isset($_POST['nom'])) $nom=$_POST['nom'];
+		if($nom!="")
+		{
+			//Écriture
+			$req = $bdd->prepare('INSERT INTO groupes_competences (nom) VALUES(:nom)');
+			$req->execute(array('nom' => $nom));
+
+			//Vérification
+			$req2 =  $bdd->prepare('SELECT id FROM groupes_competences WHERE nom=:nom ORDER BY id DESC LIMIT 1');
+			$req2->execute(array('nom' => $nom));
+
+			if($donnees=$req2->fetch())
+			{
+				$reponseJSON["messageRetour"]=":)Le domaine ".$nom." a bien été créé.";
+				$reponseJSON["groupe"]["nom"]=$nom;
+				$reponseJSON["groupe"]["id"]=intval($donnees['id']);
+			}
+			else
+				$reponseJSON["messageRetour"]=":(Le domaine n'a pas été enregistré pour une raison inconnue";
+		}
+		else
+			$reponseJSON["messageRetour"]=":(Le nom du domaine est vide.";
+	}
+	else
+		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de créer un domaine.";
 }
 
 
