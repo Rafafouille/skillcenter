@@ -398,48 +398,56 @@ if($action=="updateCompetencesSelonClasse")
 		//	$requete="SELECT  E1.idComp,  E1.nomComp, E1.idGroup, E1.nomGroup, ind.id AS idInd, ind.nom AS nomInd, ind.details AS detailsInd, ind.niveaux AS niveauxInd FROM (SELECT * FROM indicateurs AS i JOIN liensClassesIndicateurs AS l ON i.id=l.indicateur WHERE classe='".$classe."') as ind JOIN (SELECT co.id AS idComp, co.nom AS nomComp, gr.id AS idGroup, gr.nom AS nomGroup FROM competences AS co JOIN groupes_competences AS gr ON  co.groupe=gr.id) AS E1 ON ind.competence = E1.idComp";
 		//else
 
-		//On recupere toutes les compétences
-			$req_comp_gr="(SELECT comp.id AS idComp, comp.nom AS nomComp, gr.id AS idGroup, gr.nom AS nomGroup FROM competences AS comp JOIN groupes_competences AS gr ON  comp.groupe=gr.id)";
-
-			$requete="SELECT  comp_gr.idComp,  comp_gr.nomComp, comp_gr.idGroup, comp_gr.nomGroup, ind.id AS idInd, ind.nom AS nomInd, ind.details AS detailsInd, ind.niveaux AS niveauxInd FROM indicateurs as ind JOIN ".$req_comp_gr." AS comp_gr ON ind.competence = comp_gr.idComp";
-
-		$req = $bdd->query($requete);
-		while($reponse=$req->fetch())
+		//NOUVEAU
+		
+		//Liste des groupes ******
+		$reqGr = $bdd->query("SELECT * FROM groupes_competences ORDER BY position");
+		while($reponseGr=$reqGr->fetch())
 		{
-			$idGroup=intval($reponse['idGroup']);
-			$nomGroup=$reponse['nomGroup'];
-
-			$idComp=intval($reponse['idComp']);
-			$nomComp=$reponse['nomComp'];
-
-			$idInd=intval($reponse['idInd']);
-			$nomInd=$reponse['nomInd'];
-			$detailsInd=$reponse['detailsInd'];
-			$niveauxInd=intval($reponse['niveauxInd']);
-
-			//Si le groupe n'existe pas, on le crée
-			if(!isset($reponseJSON['listeGroupes'][$idGroup]))
+			$idGroup=intval($reponseGr['id']);
+			$nomGroup=$reponseGr['nom'];
+			$positionGroup=intval($reponseGr['position']);
+			
+			$reponseJSON['listeGroupes'][$idGroup]["id"]=$idGroup;
+			$reponseJSON['listeGroupes'][$idGroup]["nom"]=$nomGroup;
+			$reponseJSON['listeGroupes'][$idGroup]["position"]=$positionGroup;
+			$reponseJSON['listeGroupes'][$idGroup]["selected"]=false;
+			$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"]=array();
+			
+			//Liste des compétences ******
+			$reqComp=$bdd->query("SELECT * FROM competences WHERE groupe=".$idGroup." ORDER BY position");
+			while($reponseComp=$reqComp->fetch())
 			{
-				$reponseJSON['listeGroupes'][$idGroup]["id"]=$idGroup;
-				$reponseJSON['listeGroupes'][$idGroup]["nom"]=$nomGroup;
-				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"]=array();
-				$reponseJSON['listeGroupes'][$idGroup]["selected"]=false;
-			}
-			//Si la compétence n'existe pas...
-			if(!isset($reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]))
-			{
+				$idComp=intval($reponseComp['id']);
+				$nomComp=$reponseComp['nom'];
+				$positionComp=intval($reponseComp['position']);
+				
 				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["id"]=$idComp;
 				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["nom"]=$nomComp;
-				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"]=array();
+				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["position"]=$positionComp;
 				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["selected"]=false;
+				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"]=array();
+				
+				//Liste des indicateurs ******
+				$reqInd=$bdd->query("SELECT * FROM indicateurs WHERE competence=".$idComp." ORDER BY position");
+				while($reponseInd=$reqInd->fetch())
+				{
+					$idInd=intval($reponseInd['id']);
+					$nomInd=$reponseInd['nom'];
+					$detailsInd=$reponseInd['details'];
+					$niveauxInd=intval($reponseInd['niveaux']);
+					$positionInd=intval($reponseInd['position']);
+					
+					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["id"]=$idInd;
+					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["nom"]=$nomInd;
+					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["details"]=$detailsInd;
+					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveaux"]=$niveauxInd;
+					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["position"]=$positionInd;
+					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["selected"]=false;
+				}
+				
 			}
-
-			$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["id"]=$idInd;
-			$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["nom"]=$nomInd;
-			$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["details"]=$detailsInd;
-			$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveaux"]=$niveauxInd;
-			$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["selected"]=false;
-		}	
+		}
 
 
 		//On tag celles qui sont dans la classe souhaitée
