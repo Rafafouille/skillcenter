@@ -86,7 +86,7 @@ addGroupeCompetences=function(nom)
 			"json"	//Type de réponse
 	);
 }
-//Callback qui ajoute la compétence dans la page
+//Callback qui ajoute le groupe dans la page
 addGroupeCompetences_callback=function(reponse)
 {
 	var groupe=reponse.groupe;
@@ -107,15 +107,24 @@ ouvreBoiteAddCompetence=function(groupe,i)
 addCompetence=function(nom,idGroupe)
 {
 	$.post(
-			'./sources/PHP/actionneur.php',//Requete appelée
+			'./sources/PHP/actionneurJSON.php',//Requete appelée
 			{	//Les données à passer par POST
 				action:"addCompetence",
 				nom:nom,
 				idGroupe:idGroupe
 			},
-			recoitValideRecharge,	//Fonction callback
-			"text"	//Type de réponse
+			addCompetence_callback,	//Fonction callback
+			"json"	//Type de réponse
 	);
+}
+
+//Callback qui ajoute la compétence dans la page
+addCompetence_callback=function(reponse)
+{
+	var comp=reponse.competence;
+	afficheMessage(reponse.messageRetour);
+	var rendu=ADMIN_COMPETENCES_rendu_HTML_competence(comp.nom,comp.id,0,"competence_unselected");
+	$("#ADMIN_COMPETENCES_groupe_"+comp.groupe+" .groupe_contenu").append(rendu);
 }
 
 //Fonction qui lier ou délie une classe avec un indicateur *********************

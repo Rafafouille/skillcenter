@@ -513,6 +513,46 @@ if($action=="addGroupeCompetences")
 
 
 
+//AJOUT D'UNE COMPETENCE=================
+if($action=="addCompetence")
+{
+	if($_SESSION['statut']=="admin")
+	{
+		connectToBDD();
+		$nom="";
+		if(isset($_POST['nom'])) $nom=$_POST['nom'];
+		$idGroupe=0;
+		if(isset($_POST['idGroupe'])) $idGroupe=intval($_POST['idGroupe']);
+		if($nom!="")
+		{
+			$req = $bdd->prepare('INSERT INTO competences (nom,groupe) VALUES(:nom,:idGroupe)');
+			$req->execute(array(
+						'nom' => $nom,
+						'idGroupe' => $idGroupe
+					));
+
+			//Vérification
+			$req2 =  $bdd->prepare('SELECT id FROM competences WHERE nom=:nom ORDER BY id DESC LIMIT 1');
+			$req2->execute(array('nom' => $nom));
+
+			if($donnees=$req2->fetch())
+			{
+				$reponseJSON["messageRetour"]=":)La compétence ".$nom." a bien été créé.";
+				$reponseJSON["competence"]["nom"]=$nom;
+				$reponseJSON["competence"]["id"]=intval($donnees['id']);
+				$reponseJSON["competence"]["groupe"]=$idGroupe;
+			}
+			else
+				$reponseJSON["messageRetour"]=":(La compétence n'a pas été enregistrée pour une raison inconnue";
+		}
+		else
+			$reponseJSON["messageRetour"]=":(Le nom de la compétence est vide.";
+	}
+	else
+		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de créer une compétence.";
+}
+
+
 //Update liste des compétences
 if($action=="lierDelierIndicateurClasse")
 {

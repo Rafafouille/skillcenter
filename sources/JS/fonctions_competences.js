@@ -53,7 +53,9 @@ function ADMIN_COMPETENCES_ajouteCompetence(competence,conteneur)
 		styleClass+="_unselected";
 
 
-	var rendu=""+
+	var rendu=ADMIN_COMPETENCES_rendu_HTML_competence(competence.nom,competence.id,numeroCompetence,styleClass)
+	
+/*	""+
 "					<div class=\""+styleClass+"\" id=\"ADMIN_COMPETENCES_competence_"+competence.id+"\">"+
 "						<div class=\"boutonAjouterIndicateur\" onclick=\"ouvreBoiteAddIndicateur('"+competence.nom+"',"+competence.id+")\">"+
 "							[+Indicateur]"+
@@ -65,7 +67,7 @@ function ADMIN_COMPETENCES_ajouteCompetence(competence,conteneur)
 "							<table class=\"indicateurs\">"+
 "							</table>"+
 "						</div>"+
-"					</div>";
+"					</div>";*/
 	$(conteneur).append(rendu);
 
 
@@ -76,6 +78,28 @@ function ADMIN_COMPETENCES_ajouteCompetence(competence,conteneur)
 		ADMIN_COMPETENCES_ajouteIndicateur(indicateur,"#ADMIN_COMPETENCES_competence_"+competence.id+" .listeIndicateurs table");
 	}
 }
+
+
+// -------------------------
+function ADMIN_COMPETENCES_rendu_HTML_competence(nom,id,numeroCompetence,styleClass)
+{
+	return ""+
+"					<div class=\""+styleClass+"\" id=\"ADMIN_COMPETENCES_competence_"+id+"\">"+
+"						<div class=\"boutonAjouterIndicateur\" onclick=\"ouvreBoiteAddIndicateur('"+nom+"',"+id+")\">"+
+"							[+Indicateur]"+
+"						</div>"+
+"						<h3>"+
+"							"+numeroCompetence+" - "+nom+
+"						</h3>"+
+"						<div class=\"listeIndicateurs\">"+
+"							<table class=\"indicateurs\">"+
+"							</table>"+
+"						</div>"+
+"					</div>";
+}
+
+
+
 
 //Fonction qui ajoute une indicateur dans une compétence *************************
 function ADMIN_COMPETENCES_ajouteIndicateur(indicateur,conteneur)

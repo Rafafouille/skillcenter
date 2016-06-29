@@ -186,7 +186,7 @@ if($action=="downgradeUser")
 
 
 //AJOUT D'UN GROUPE=================
-if($action=="addGroupeCompetences")
+/*if($action=="addGroupeCompetences")
 {
 	if($_SESSION['statut']=="admin")
 	{
@@ -206,10 +206,10 @@ if($action=="addGroupeCompetences")
 	}
 	else
 		echo ":(Vous n'avez pas le droit de créer un groupe.";
-}
+}*/
 
 //AJOUT D'UNE COMPETENCE=================
-if($action=="addCompetence")
+/*if($action=="addCompetence")
 {
 	if($_SESSION['statut']=="admin")
 	{
@@ -232,7 +232,7 @@ if($action=="addCompetence")
 	}
 	else
 		echo ":(Vous n'avez pas le droit de créer une compétence.";
-}
+}*/
 
 
 
