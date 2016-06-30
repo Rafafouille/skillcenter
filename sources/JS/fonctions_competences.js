@@ -54,20 +54,7 @@ function ADMIN_COMPETENCES_ajouteCompetence(competence,conteneur)
 
 
 	var rendu=ADMIN_COMPETENCES_rendu_HTML_competence(competence.nom,competence.id,numeroCompetence,styleClass)
-	
-/*	""+
-"					<div class=\""+styleClass+"\" id=\"ADMIN_COMPETENCES_competence_"+competence.id+"\">"+
-"						<div class=\"boutonAjouterIndicateur\" onclick=\"ouvreBoiteAddIndicateur('"+competence.nom+"',"+competence.id+")\">"+
-"							[+Indicateur]"+
-"						</div>"+
-"						<h3>"+
-"							"+numeroCompetence+" - "+competence.nom+
-"						</h3>"+
-"						<div class=\"listeIndicateurs\">"+
-"							<table class=\"indicateurs\">"+
-"							</table>"+
-"						</div>"+
-"					</div>";*/
+
 	$(conteneur).append(rendu);
 
 
@@ -112,6 +99,38 @@ function ADMIN_COMPETENCES_ajouteIndicateur(indicateur,conteneur)
 		styleClass+="_unselected";
 
 
+	var rendu = ADMIN_COMPETENCES_rendu_HTML_indicateur(indicateur,numeroCompetence,numeroIndicateur,styleClass);
+	
+	/*""+
+"								<tr id=\"ADMIN_COMPETENCES_indicateur_"+indicateur.id+"\" class=\""+styleClass+"\">"+
+"									<td>"+
+"										<form>"+
+"											<input type=\"checkbox\" name=\"selectIndicateur"+indicateur.id+"\" value=\""+indicateur.id+"\"";
+	if(indicateur.selected)
+		rendu+=" checked";
+	rendu+=" onChange=\"lierDelierIndicateurClasse("+indicateur.id+",$('#selectClasseCompetences').val(),$(this).is(':checked'))\">"+
+"										</form>"+
+"									</td>"+
+"									<td class=\"intituleIndicateur\">"+
+"										"+numeroCompetence+"."+numeroIndicateur+" - "+indicateur.nom+
+"									</td>"+
+"									<td class=\"detailIndicateur\">"+
+"										<img src=\"./sources/images/icone-info.png\" alt=\"[i]\"  style=\"cursor:help;\" title=\""+indicateur.details+"\"/>"+
+"										<img src=\"./sources/images/supprime.png\" alt=\"[X]\" style=\"cursor:not-allowed;\" title=\"Supprimer l'indicateur\"/>"+
+"									</td>"+
+"									<td class=\"niveauxIndicateur\">"+
+"									"+ADMIN_COMPETENCES_getNiveauxIndicateur(indicateur.niveaux,NB_NIVEAUX_MAX)
+"									</td>"+
+"								</tr>";*/
+	$(conteneur).append(rendu);
+}
+
+
+
+
+// -------------------------
+function ADMIN_COMPETENCES_rendu_HTML_indicateur(indicateur,numeroCompetence,numeroIndicateur,styleClass)
+{
 	var rendu=""+
 "								<tr id=\"ADMIN_COMPETENCES_indicateur_"+indicateur.id+"\" class=\""+styleClass+"\">"+
 "									<td>"+
@@ -133,8 +152,10 @@ function ADMIN_COMPETENCES_ajouteIndicateur(indicateur,conteneur)
 "									"+ADMIN_COMPETENCES_getNiveauxIndicateur(indicateur.niveaux,NB_NIVEAUX_MAX)
 "									</td>"+
 "								</tr>";
-	$(conteneur).append(rendu);
+return rendu;
 }
+
+
 
 
 //Fonction qui crée la grille arc en ciel

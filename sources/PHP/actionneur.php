@@ -14,7 +14,7 @@ $action="";
 if(isset($_POST['action'])) $action=$_POST['action'];
 
 
-/* ===================================================
+/* ====================================================
 			LOG / UNLOG
 =======================================================*/
 
@@ -185,59 +185,8 @@ if($action=="downgradeUser")
 
 
 
-//AJOUT D'UN GROUPE=================
-/*if($action=="addGroupeCompetences")
-{
-	if($_SESSION['statut']=="admin")
-	{
-		connectToBDD();
-		$nom="";
-		if(isset($_POST['nom'])) $nom=$_POST['nom'];
-		if($nom!="")
-		{
-			$req = $bdd->prepare('INSERT INTO groupes_competences (nom) VALUES(:nom)');
-			$req->execute(array(
-						'nom' => $nom
-					));
-			echo ":)Le groupe ".$nom." a bien été créé.";
-		}
-		else
-			echo ":(Le nom du groupe est vide.";
-	}
-	else
-		echo ":(Vous n'avez pas le droit de créer un groupe.";
-}*/
-
-//AJOUT D'UNE COMPETENCE=================
-/*if($action=="addCompetence")
-{
-	if($_SESSION['statut']=="admin")
-	{
-		connectToBDD();
-		$nom="";
-		if(isset($_POST['nom'])) $nom=$_POST['nom'];
-		$idGroupe=0;
-		if(isset($_POST['idGroupe'])) $idGroupe=intval($_POST['idGroupe']);
-		if($nom!="")
-		{
-			$req = $bdd->prepare('INSERT INTO competences (nom,groupe) VALUES(:nom,:idGroupe)');
-			$req->execute(array(
-						'nom' => $nom,
-						'idGroupe' => $idGroupe
-					));
-			echo ":)La compétence ".$nom." a bien été créé.";
-		}
-		else
-			echo ":(Le nom de la compétence est vide.";
-	}
-	else
-		echo ":(Vous n'avez pas le droit de créer une compétence.";
-}*/
-
-
-
 //AJOUT D'UN INDICATEUR=================
-if($action=="addIndicateur")
+/*if($action=="addIndicateur")
 {
 	if($_SESSION['statut']=="admin")
 	{
@@ -266,12 +215,12 @@ if($action=="addIndicateur")
 	}
 	else
 		echo ":(Vous n'avez pas le droit de créer un indicateur.";
-}
+}*/
 
 
 
 
-//OBTIEN LA NOTATION DES ELEVES=================
+//OBTIENT LA NOTATION DES ELEVES=================
 if($action=="getNotationEleves")
 {
 	if($_SESSION['statut']=="admin")

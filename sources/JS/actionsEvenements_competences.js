@@ -3,6 +3,10 @@
 // ****************************************************
 
 
+
+// LISTES CLASSE ET ELEVES
+// ****************************************************
+
 // Fonction qui met à jour les listes de classe
 // (sur plusieurs pages)
 updateListesClasses=function()
@@ -36,6 +40,14 @@ updateListesClasses_CallBack=function(reponse)
 	}
 	
 }
+
+
+
+
+
+
+// AFFICHAGE GROUPE / COMPETENCES / INDICATEURS
+// ****************************************************
 
 
 
@@ -73,7 +85,7 @@ updateCompetencesSelonClasse_Callback=function(reponse)
 
 
 
-//AJOUTE GROUPE COMPETENCES
+//AJOUTE GROUPE COMPETENCES --------------------------
 addGroupeCompetences=function(nom)
 {
 	$.post(
@@ -86,7 +98,7 @@ addGroupeCompetences=function(nom)
 			"json"	//Type de réponse
 	);
 }
-//Callback qui ajoute le groupe dans la page
+//Callback qui ajoute le groupe dans la page ---------------
 addGroupeCompetences_callback=function(reponse)
 {
 	var groupe=reponse.groupe;
@@ -96,7 +108,7 @@ addGroupeCompetences_callback=function(reponse)
 }
 
 
-//AJOUTE COMPETENCES
+//BOITE AJOUTE COMPETENCES -----------------------------
 ouvreBoiteAddCompetence=function(groupe,i)
 {
 	$( "#dialog-addCompetence .dialog-addCompetence_nomGroupe").text(groupe);
@@ -104,6 +116,7 @@ ouvreBoiteAddCompetence=function(groupe,i)
 	$( "#dialog-addCompetence").dialog( "open" );
 }
 
+//AJOUTE COMPETENCE -----------------------------
 addCompetence=function(nom,idGroupe)
 {
 	$.post(
@@ -118,7 +131,7 @@ addCompetence=function(nom,idGroupe)
 	);
 }
 
-//Callback qui ajoute la compétence dans la page
+//Callback qui ajoute la compétence dans la page -----
 addCompetence_callback=function(reponse)
 {
 	var comp=reponse.competence;
@@ -126,6 +139,45 @@ addCompetence_callback=function(reponse)
 	var rendu=ADMIN_COMPETENCES_rendu_HTML_competence(comp.nom,comp.id,0,"competence_unselected");
 	$("#ADMIN_COMPETENCES_groupe_"+comp.groupe+" .groupe_contenu").append(rendu);
 }
+
+
+
+
+//AJOUTE UN INDICATEUR - BOITE -------------------
+ouvreBoiteAddIndicateur=function(competence,i)
+{
+	$( "#dialog-addIndicateur .dialog-addCompetence_nomCompetence").text(competence);
+	$( "#dialog-addIndicateur-idCompetence").val(i);
+	$( "#dialog-addIndicateur").dialog("open");
+}
+//AJOUTE UN INDICATEUR - BOITE -------------------
+addIndicateur=function(nom,details,niveaux,idCompetence,classe)
+{
+	$.post(
+			'./sources/PHP/actionneurJSON.php',//Requete appelée
+			{	//Les données à passer par POST
+				action:"addIndicateur",
+				nom:nom,
+				details:details,
+				niveaux:niveaux,
+				idCompetence:idCompetence,
+				classe: classe//Pour lier tout de suite la classe au nouvel indicateur
+			},
+			addIndicateur_callback,	//Fonction callback
+			"json"	//Type de réponse
+	);
+}
+//Callback qui ajoute l'indicateur dans la page -----
+addIndicateur_callback=function(reponse)
+{
+	afficheMessage(reponse.messageRetour);
+	var indicateur=reponse.indicateur;
+	var rendu=ADMIN_COMPETENCES_rendu_HTML_indicateur(indicateur,0,0,"indicateur");
+	$("#ADMIN_COMPETENCES_competence_"+indicateur.competence+" .listeIndicateurs .indicateurs").append(rendu);
+	
+}
+
+
 
 //Fonction qui lier ou délie une classe avec un indicateur *********************
 function lierDelierIndicateurClasse(ind,classe,lier)

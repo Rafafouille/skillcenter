@@ -3,29 +3,7 @@
 // ****************************************************
 
 
-//AJOUTE UN INDICATEUR
-ouvreBoiteAddIndicateur=function(competence,i)
-{
-	$( "#dialog-addIndicateur .dialog-addCompetence_nomCompetence").text(competence);
-	$( "#dialog-addIndicateur-idCompetence").val(i);
-	$( "#dialog-addIndicateur").dialog("open");
-}
 
-addIndicateur=function(nom,details,niveaux,idCompetence)
-{
-	$.post(
-			'./sources/PHP/actionneur.php',//Requete appelée
-			{	//Les données à passer par POST
-				action:"addIndicateur",
-				nom:nom,
-				details:details,
-				niveaux:niveaux,
-				idCompetence:idCompetence
-			},
-			recoitValideRecharge,	//Fonction callback
-			"text"	//Type de réponse
-	);
-}
 
 //METTRE A JOUR LISTE ELEVES (notation)
 //Recupere la liste (ajax)

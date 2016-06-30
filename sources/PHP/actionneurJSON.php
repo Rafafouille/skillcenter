@@ -553,6 +553,72 @@ if($action=="addCompetence")
 }
 
 
+
+//AJOUT D'UN INDICATEUR =================
+if($action=="addIndicateur")
+{
+	if($_SESSION['statut']=="admin")
+	{
+		connectToBDD();
+		$nom="";
+		if(isset($_POST['nom'])) $nom=$_POST['nom'];
+		$details="";
+		if(isset($_POST['details'])) $details=$_POST['details'];
+		$niveaux=1;
+		if(isset($_POST['niveaux'])) $niveaux=intval($_POST['niveaux']);
+		$idCompetence=0;
+		if(isset($_POST['idCompetence'])) $idCompetence=intval($_POST['idCompetence']);
+		$classe="";
+		if(isset($_POST['classe'])) $classe=$_POST['classe'];
+		
+		if($nom!="")
+		{
+			$req = $bdd->prepare('INSERT INTO indicateurs (nom,details,niveaux,competence) VALUES(:nom,:details,:niveaux,:idCompetence)');
+			$req->execute(array(
+						'nom' => $nom,
+						'details' => $details,
+						'niveaux' => $niveaux,
+						'idCompetence' => $idCompetence
+					));
+					
+					
+			//Vérification
+			$req2 =  $bdd->prepare('SELECT id FROM indicateurs WHERE nom=:nom ORDER BY id DESC LIMIT 1');
+			$req2->execute(array('nom' => $nom));
+
+			if($donnees=$req2->fetch())
+			{
+				$reponseJSON["indicateur"]["nom"]=$nom;
+				$reponseJSON["indicateur"]["details"]=$details;
+				$reponseJSON["indicateur"]["niveaux"]=$niveaux;
+				$reponseJSON["indicateur"]["id"]=intval($donnees['id']);
+				$reponseJSON["indicateur"]["competence"]=$idCompetence;
+				$reponseJSON["indicateur"]["selected"]=false; //Par défaut
+				
+				
+				//Ajout du lien du nouvel indicateur avec la classe sélectionnée
+				if($classe!="")
+				{
+					$requeteLier = $bdd->prepare('INSERT INTO liensClassesIndicateurs(indicateur, classe) VALUES(:indicateur, :classe)');
+					$requeteLier->execute(array('indicateur' => intval($donnees['id']), 'classe' => $classe));
+					$reponseJSON["indicateur"]["selected"]=true;
+				}
+				
+				$reponseJSON["messageRetour"]=":)L'indicateur ".$nom." a bien été créé.";
+				
+			}
+			else
+				$reponseJSON["messageRetour"]=":(L'indicateur n'a pas été enregistrée pour une raison inconnue";
+					
+		}
+		else
+			$reponseJSON["messageRetour"]=":(Le nom de l'indicateur est vide.";
+	}
+	else
+		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de créer un indicateur.";
+}
+
+
 //Update liste des compétences
 if($action=="lierDelierIndicateurClasse")
 {
