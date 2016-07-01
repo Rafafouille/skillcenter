@@ -150,7 +150,7 @@ ouvreBoiteAddIndicateur=function(competence,i)
 	$( "#dialog-addIndicateur-idCompetence").val(i);
 	$( "#dialog-addIndicateur").dialog("open");
 }
-//AJOUTE UN INDICATEUR - BOITE -------------------
+//AJOUTE UN INDICATEUR -------------------
 addIndicateur=function(nom,details,niveaux,idCompetence,classe)
 {
 	$.post(
@@ -178,6 +178,47 @@ addIndicateur_callback=function(reponse)
 }
 
 
+
+ //SUPPRIME UN INDICATEUR - BOITE-------------------------------------------
+ouvreBoiteSupprimeIndicateur=function(nomIndicateur,i)
+{
+	iii=i;
+	nnn=nomIndicateur;
+	$( "#dialog-supprimeIndicateur .dialog-supprimeIndicateur_nomIndicateur").text(nomIndicateur);
+	$( "#dialog-supprimeIndicateur-idIndicateur").val(i);
+	$( "#dialog-supprimeIndicateur").dialog("open");
+}
+
+//SUPPRIMER UN INDICATEUR  -------------------
+supprimeIndicateur=function(idIndicateur)
+{
+	$.post(
+			'./sources/PHP/actionneurJSON.php',//Requete appelée
+			{	//Les données à passer par POST
+				action:"supprimeIndicateur",
+				idIndicateur:idIndicateur
+			},
+			supprimeIndicateur_callback,	//Fonction callback
+			"json"	//Type de réponse
+	);
+}
+//Callback qui supprime l'indicateur dans la page -----
+supprimeIndicateur_callback=function(reponse)
+{
+	afficheMessage(reponse.messageRetour);
+	var id=reponse.indicateur.id;
+	
+	$("#ADMIN_COMPETENCES_indicateur_"+id).remove();
+	
+}
+
+
+
+
+
+
+// PARAMETRE DES COMPETENCES 
+//============================================
 
 //Fonction qui lier ou délie une classe avec un indicateur *********************
 function lierDelierIndicateurClasse(ind,classe,lier)
@@ -207,3 +248,6 @@ function lierDelierIndicateurClasse_callback(reponse)
 	afficheMessage(reponse.messageRetour);
 }
  
+
+ 
+

@@ -194,6 +194,27 @@
 		</script>
 		
 		
+		
+		
+		<!-- BOITE POUR SUPPRIMER UN INDICATEUR------------------- -->
+		<div id="dialog-supprimeIndicateur" title="Supprimer un Indicateur">
+			<p>Êtes-vous sur de vouloir supprimer l'indicateur: "<span class="dialog-supprimeIndicateur_nomIndicateur"></span>")</p>
+			<form>
+				<input type="hidden" name="dialog-supprimeIndicateur-idIndicateur" id="dialog-supprimeIndicateur-idIndicateur"/>
+			</form>
+		</div>
+		<script>
+			$( "#dialog-supprimeIndicateur").dialog({
+				autoOpen: false,
+				modal: true,
+				buttons: {
+							"Supprimer": function() {$("#dialog-supprimeIndicateur").dialog( "close" );supprimeIndicateur(parseInt($("#dialog-supprimeIndicateur-idIndicateur").val()));},
+							"Annuler": function() {$("#dialog-supprimeIndicateur").dialog( "close" );}
+						}
+			});
+		</script>
+		
+		
 		<!-- BOITE ERREUR ------------------- -->
 		<div id="dialog-error" title="Erreur">
 			Erreur.

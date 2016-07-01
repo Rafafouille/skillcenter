@@ -619,6 +619,37 @@ if($action=="addIndicateur")
 }
 
 
+
+//SUPPRESSION D'UN INDICATEUR =================
+if($action=="supprimeIndicateur")
+{
+	if($_SESSION['statut']=="admin")
+	{
+		connectToBDD();
+		
+		$idIndicateur=0;
+		if(isset($_POST['idIndicateur'])) $idIndicateur=intval($_POST['idIndicateur']);
+
+		
+		if($idIndicateur!=0)
+		{
+			$req = $bdd->prepare('DELETE FROM indicateurs WHERE id=:idIndicateur');
+			$req->execute(array('idIndicateur' => $idIndicateur));
+			$reponseJSON["messageRetour"]=":)L'indicateur a bien été supprimé.";
+			$reponseJSON["indicateur"]["id"]=$idIndicateur;
+		}
+		else
+			$reponseJSON["messageRetour"]=":(Aucun indicateur à supprimer n'a été transmis.";
+	}
+	else
+		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de supprimer un indicateur.";
+}
+	
+	
+
+
+
+
 //Update liste des compétences
 if($action=="lierDelierIndicateurClasse")
 {
