@@ -80,7 +80,7 @@ GROUPE COMPETENCES
 }
 .groupe_competences_unselected .entete_groupe_competences	/* Entete/Titre Groupe de competence non-selectionné*/
 {
-	background-color:#EEEEFF;
+	background-color:#DDDDEE;
 }
 .entete_groupe_competences h3	/* Souris sur le titre */
 {
@@ -95,6 +95,7 @@ GROUPE COMPETENCES
 .groupe_contenu
 {
 	display:none;
+	padding:10px;
 }
 
 /* BOUTON AJOUTE COMPETENCES */
@@ -128,7 +129,7 @@ COMPETENCES
 
 .competence_unselected
 {
-	background-color:#EFEFFF;
+	background-color:#DDDDEE;
 }
 
 .competence_unselected h3
