@@ -1,6 +1,7 @@
 		<header>
 			<?php include("./sources/PHP/loginBox.php");?>
+
 			<h1>
-				Evaluation par compétences
+				SkillCenter
 			</h1>
 		</header>

@@ -24,10 +24,9 @@ header,#entete
 	width:100%;
 	color:white;
 	margin:0px;
-	margin-top:-10;
+	margin-top:0;
 	padding:0px;
 	height:100px;
-	vertical-align:middle;
 }
 
 header h1
@@ -36,6 +35,7 @@ header h1
 	color:white;
 	margin-top:0px;
 	padding-left:40px;
+	padding-top:30px;
 }
 
 header .loginBox

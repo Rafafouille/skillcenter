@@ -32,7 +32,7 @@ include("./sources/PHP/actions.php");
     <head>
         <!-- En-tête de la page -->
         <meta charset="utf-8" />
-        <title>Compétences</title>
+        <title>Skillcenter</title>
 		<link rel="stylesheet" href="./sources/style/style.css" />
 		<link rel="stylesheet" href="./sources/style/styleCompetences.css" />
 		<link rel="stylesheet" href="./sources/JS/libraries/jquery-ui/jquery-ui.css">

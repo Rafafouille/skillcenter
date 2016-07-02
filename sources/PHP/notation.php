@@ -10,7 +10,7 @@
 
 					<div class="bouton_top" onclick="$('#RecapNotationEleve .groupe_contenu,#RecapNotationEleve .listeIndicateurs').slideDown();">
 						<img src="./sources/images/icone-etendre.png" alt="[&#8609;]"/>
-						<strong>Tout étendre</strong>
+						<strong>Tout Étendre</strong>
 					</div>
 
 

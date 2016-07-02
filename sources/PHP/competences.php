@@ -14,7 +14,7 @@
 
 					<div class="bouton_top" onclick="$('#liste_competences .groupe_contenu,#liste_competences .listeIndicateurs').slideDown();">
 						<img src="./sources/images/icone-etendre.png" alt="[&#8609;]"/>
-						<strong>Tout étendre</strong>
+						<strong>Tout Étendre</strong>
 					</div>
 					
 					
