@@ -136,6 +136,13 @@ COMPETENCES
 	color:white;
 }
 
+.competence h3,.competence_unselected h3
+{
+	cursor:pointer;
+}
+
+
+
 
 /* ************************************
 INDICATEURS
@@ -150,7 +157,11 @@ INDICATEURS
 	cursor:pointer;
 }
 
-/*Lignes indicateurs*/
+.listeIndicateurs
+{
+	display:none;
+}
+
 .listeIndicateurs table
 {
 	border-collapse: collapse;

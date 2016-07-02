@@ -30,7 +30,7 @@ function ADMIN_COMPETENCES_rendu_HTML_groupe(nom,id,styleClass)
 "					<div class=\"boutonAjouteCompetence\" onclick=\"ouvreBoiteAddCompetence('"+nom+"',"+id+")\">"+
 "						Ajouter une compétence"+
 "					</div>"+
-"					<h3 onclick=\"$(this).parent().parent().find('.groupe_contenu').toggle('easings');\">"+
+"					<h3 onclick=\"$(this).parent().parent().find('.groupe_contenu').slideToggle('easings');\">"+
 "						"+nom+
 "					</h3>"+
 "				</div>"+
@@ -75,7 +75,7 @@ function ADMIN_COMPETENCES_rendu_HTML_competence(nom,id,numeroCompetence,styleCl
 "						<div class=\"boutonAjouterIndicateur\" onclick=\"ouvreBoiteAddIndicateur('"+nom+"',"+id+")\">"+
 "							[+Indicateur]"+
 "						</div>"+
-"						<h3>"+
+"						<h3 onclick=\"$(this).parent().find('.listeIndicateurs').slideToggle('easings');\">"+
 "							"+numeroCompetence+" - "+nom+
 "						</h3>"+
 "						<div class=\"listeIndicateurs\">"+

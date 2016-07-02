@@ -7,12 +7,12 @@
 						<strong>Ajouter un domaine</strong>
 					</div>
 
-					<div class="bouton_ajoute" onclick="$('#liste_competences .groupe_contenu').hide('easings');">
+					<div class="bouton_ajoute" onclick="$('#liste_competences .groupe_contenu,#liste_competences .listeIndicateurs').slideUp();">
 						<img src="./sources/images/icone-reduire.png" alt="[&#8607;]"/>
 						<strong>Tout Réduire</strong>
 					</div>
 
-					<div class="bouton_ajoute" onclick="$('#liste_competences .groupe_contenu').show('easings');">
+					<div class="bouton_ajoute" onclick="$('#liste_competences .groupe_contenu,#liste_competences .listeIndicateurs').slideDown();">
 						<img src="./sources/images/icone-etendre.png" alt="[&#8609;]"/>
 						<strong>Tout étendre</strong>
 					</div>
