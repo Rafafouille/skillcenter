@@ -1,5 +1,19 @@
 			
 				<div id="tab-notation">
+
+
+
+					<div class="bouton_top" onclick="$('#RecapNotationEleve .groupe_contenu,#RecapNotationEleve .listeIndicateurs').slideUp();">
+						<img src="./sources/images/icone-reduire.png" alt="[&#8607;]"/>
+						<strong>Tout Réduire</strong>
+					</div>
+
+					<div class="bouton_top" onclick="$('#RecapNotationEleve .groupe_contenu,#RecapNotationEleve .listeIndicateurs').slideDown();">
+						<img src="./sources/images/icone-etendre.png" alt="[&#8609;]"/>
+						<strong>Tout étendre</strong>
+					</div>
+
+
 					<h2>Notation</h2>
 					
 

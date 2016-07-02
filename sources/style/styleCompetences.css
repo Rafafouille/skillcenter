@@ -1,9 +1,9 @@
 
 /* ************************************
- BOUTONS "AJOUTER"
+ BOUTONS en entete
 ************************************* */
 
-.bouton_ajoute/*_groupe_competences*/
+.bouton_top/*_groupe_competences*/
 {
 	margin:auto;
 	margin:5px;
@@ -17,7 +17,7 @@
 	float:right;
 }
 
-.bouton_ajoute:hover/*_groupe_competences*/
+.bouton_top:hover/*_groupe_competences*/
 {
 	margin-top:7px;
 	margin-right:3px;
@@ -26,7 +26,7 @@
 	box-shadow: 4px 4px 6px #555;
 }
 
-.bouton_ajoute:active/*_groupe_competences*/
+.bouton_top:active/*_groupe_competences*/
 {
 	margin-top:8px;
 	margin-left:8px;
@@ -96,6 +96,7 @@ GROUPE COMPETENCES
 {
 	display:none;
 	padding:10px;
+	overflow:hidden;
 }
 
 /* BOUTON AJOUTE COMPETENCES */
@@ -161,6 +162,7 @@ INDICATEURS
 .listeIndicateurs
 {
 	display:none;
+	overflow:hidden;
 }
 
 .listeIndicateurs table
