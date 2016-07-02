@@ -1,9 +1,20 @@
 
 				<div id="tab-competences">
 					
+
 					<div class="bouton_ajoute" onclick="$('#dialog-addGroupeCompetences').dialog('open');">
 						<img src="./sources/images/icone-plus.png" alt="[+]"/>
 						<strong>Ajouter un domaine</strong>
+					</div>
+
+					<div class="bouton_ajoute" onclick="$('#liste_competences .groupe_contenu').hide('easings');">
+						<img src="./sources/images/icone-reduire.png" alt="[&#8607;]"/>
+						<strong>Tout Réduire</strong>
+					</div>
+
+					<div class="bouton_ajoute" onclick="$('#liste_competences .groupe_contenu').show('easings');">
+						<img src="./sources/images/icone-etendre.png" alt="[&#8609;]"/>
+						<strong>Tout étendre</strong>
 					</div>
 					
 					
