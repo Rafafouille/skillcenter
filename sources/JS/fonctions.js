@@ -96,11 +96,17 @@ getBoutonUpAndDowngradeUserFromJSON=function(user)
 //Renvoie une couleur de l'arc en ciel entre rouge et vert (pour les compétences)
 function setArcEnCiel(val,maxi)
 {
+	//Extrêmes
 	if(val<0)
 		return "#FF0000";
 	if(val>maxi)
 		return "#00FF00";
+
+	//Valeurs intermédiaires
 	n=val/maxi;
+	non_linearite=0.15;//Compris entre 0 et 1/(2pi)
+	n+=Math.sin(n*2*3.1415926535)*0.1;	//Création d'une non-linéarité
+
 	if(n<0.5)
 	{
 		var a=Math.floor(2*n*255);
