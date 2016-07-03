@@ -190,7 +190,7 @@ if($action=="updateUser")
 			else
 				$req = $bdd->prepare('UPDATE utilisateurs SET nom=:nom, prenom=:prenom, login=:login, classe=:classe WHERE id=:id');
 			$req->execute($tableau);
-			$reponseJSON["messageRetour"]=":)L'uutilisateur << ".$_POST["newUser_prenom"]." ".$_POST['newUser_nom']." >> a bien été mis à jour !";
+			$reponseJSON["messageRetour"]=":)L'utilisateur << ".$_POST["newUser_prenom"]." ".$_POST['newUser_nom']." >> a bien été mis à jour !";
 		}
 	}
 	else
