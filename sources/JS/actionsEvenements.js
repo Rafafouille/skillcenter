@@ -14,7 +14,7 @@ onChangeTab=function(event,ui)
 	var iOnglet=$('#tab-onglets').tabs('option', 'active');
 
 	//1er affichage de l'onglet "Notation"
-	if(listeOnglets[iOnglet]=="Notation" && !NOTATION_LOADED)//Si la page "notation" n'a jamais été chargée
+	if(listeOnglets[iOnglet]=="Évaluation" && !NOTATION_LOADED)//Si la page "notation" n'a jamais été chargée
 	{
 		NOTATION_LOADED=true;
 		if(STATUT=="admin")	//Si c'est un prof qui est connecté

@@ -14,7 +14,7 @@
 					</div>
 
 
-					<h2>Notation</h2>
+					<h2>Évaluations</h2>
 					
 
 
