@@ -71,7 +71,7 @@ function NOTATION_ajouteIndicateur(indicateur,conteneur)
 "										<img src=\"./sources/images/icone-info.png\" alt=\"[i]\"  style=\"cursor:help;\" title=\""+indicateur.details+"\"/>"+
 "									</td>"+
 "									<td class=\"niveauxIndicateur\">"+
-"									"+NOTATION_getNiveauxIndicateur(indicateur.niveauEleveMax,indicateur.niveauMax,indicateur.id,STATUT=="admin")
+"									"+NOTATION_getNiveauxIndicateur(indicateur.niveauEleveMax,indicateur.niveauMax,indicateur.id,STATUT=="admin",false)
 "									</td>"+
 "								</tr>";
 	$(conteneur).append(rendu);
@@ -82,7 +82,8 @@ function NOTATION_ajouteIndicateur(indicateur,conteneur)
 //Fonction qui crée la grille arc en ciel
 //Full : gere si les couleurs vont de rouge à vert (false) (cas de l'admin competences)
 // ou si vont de rouge à ..... la note en cours (cas de la notation - true).
-function NOTATION_getNiveauxIndicateur(val,maxi,indicateur, clickable)
+// degrade = true si couleur dégradée, ou false si toutes les cases prennent la couleur de la case maximum
+function NOTATION_getNiveauxIndicateur(val,maxi,indicateur, clickable=false,degrade=false)
 {
 
 
@@ -90,17 +91,25 @@ function NOTATION_getNiveauxIndicateur(val,maxi,indicateur, clickable)
 	var rendu="";
 	for(var i=0;i<=maxi;i++)
 	{
+		
+		//Ajout du javascript (onClick)
 		var actionOnClick="";
 		if(clickable)
 			actionOnClick="donneNote("+i+",$('#notationListeEleves').val(),"+indicateur+")";
 
+		
 		if(i<=val)
 		{
 			var cl="indicateurAllume";
 			if(clickable)
 				cl+="Modifiable";
+			if(degrade)
+				var couleur=setArcEnCiel(i,maxi);
+			else
+				var couleur=setArcEnCiel(val,maxi);
+
 			rendu+=""+
-"										<div class=\""+cl+"\" style=\"background-color:"+setArcEnCiel(i,maxi)+";\" onclick=\""+actionOnClick+"\" >"+i+"</div>";
+"										<div class=\""+cl+"\" style=\"background-color:"+couleur+";\" onclick=\""+actionOnClick+"\" >"+i+"</div>";
 		}
 		else
 		{
