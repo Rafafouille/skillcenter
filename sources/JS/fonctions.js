@@ -104,8 +104,8 @@ function setArcEnCiel(val,maxi)
 
 	//Valeurs intermédiaires
 	n=val/maxi;
-	non_linearite=0.15;//Compris entre 0 et 1/(2pi)
-	n+=Math.sin(n*2*3.1415926535)*0.1;	//Création d'une non-linéarité
+	non_linearite=0.1;//Compris entre 0 et 1/(2pi)
+	n+=Math.sin(n*2*3.1415926535)*non_linearite;	//Création d'une non-linéarité
 
 	if(n<0.5)
 	{
