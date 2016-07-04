@@ -33,6 +33,8 @@ updateListeEleves=function(reponse)
 		$("#notationListeEleves").append("<option value='"+eleve.id+"'>"+eleve.nom+" "+eleve.prenom+"</option>");
 	}
 
+	$("#notationFormulaireListesClasseEtEleves #notationListeEleves").data("selectBox-selectBoxIt").refresh();//Mise a jour SelectBoxIT
+	
 	getNotationEleve($("#notationListeEleves").val());
 }
 

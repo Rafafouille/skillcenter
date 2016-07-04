@@ -35,12 +35,17 @@ include("./sources/PHP/actions.php");
         <title>Skillcenter</title>
 		<link rel="stylesheet" href="./sources/style/style.css" />
 		<link rel="stylesheet" href="./sources/style/styleCompetences.css" />
+		
+		<!-- JQUERY -->
 		<link rel="stylesheet" href="./sources/JS/libraries/jquery-ui/jquery-ui.css">
 		<script type="text/javascript" src="./sources/JS/libraries/jquery-ui/external/jquery/jquery.js"></script>
 		<script type="text/javascript" src="./sources/JS/libraries/jquery-ui/jquery-ui.min.js"></script>
+		
+		<!-- Menus déroulants -->
+		<link type="text/css" rel="stylesheet" href="http://gregfranko.com/jquery.selectBoxIt.js/css/jquery.selectBoxIt.css" />
+		<script src="http://gregfranko.com/jquery.selectBoxIt.js/js/jquery.selectBoxIt.min.js"></script>
 
 		<script type="text/javascript" src="./sources/JS/fonctions.js"></script>
-
 		<script type="text/javascript" src="./sources/JS/actionsEvenements.js"></script>
 
 

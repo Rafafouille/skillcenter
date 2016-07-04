@@ -25,6 +25,10 @@ $(function()//Fonction lancée au chargement de la page
 		updateListesClasses();// Met a jour les listes des classes
 	}
 
+	//Mise en page des menus déroulants
+	 $("#notationFormulaireListesClasseEtEleves select").selectBoxIt();
+	
+	
 	//Affichage de la page, une fois chargée
 	$('body').css("display","block")
 });

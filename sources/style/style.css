@@ -136,23 +136,12 @@ USERS
 
 
 
-
-/*******************
-Competences
-******************/
-
-
-
-
-
-
-
-/* GROUPE COMPETENCES */
-
-/* COMPETENCES */
-
-
-
-/* INDICATEURS */
-
-
+/*****************************
+ NOTATIONS
+ ***************************/
+ 
+ 
+ #RecapNotationEleve
+ {
+	 margin-top:10px;
+ }
