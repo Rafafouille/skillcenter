@@ -28,6 +28,7 @@ function ADMIN_COMPETENCES_rendu_HTML_groupe(nom,id,styleClass)
 "			<div class=\""+styleClass+"\" id=\"ADMIN_COMPETENCES_groupe_"+id+"\">"+
 "				<div class=\"entete_groupe_competences\">"+
 "					<div class=\"boutonAjouteCompetence\" onclick=\"ouvreBoiteAddCompetence('"+nom+"',"+id+")\">"+
+"						<img src=\"./sources/images/icone-plus.png\" alt=\"[+]\"/>"+
 "						Ajouter une compétence"+
 "					</div>"+
 "					<h3 onclick=\"$(this).parent().parent().find('.groupe_contenu').slideToggle('easings');\">"+
@@ -73,7 +74,8 @@ function ADMIN_COMPETENCES_rendu_HTML_competence(nom,id,numeroCompetence,styleCl
 	return ""+
 "					<div class=\""+styleClass+"\" id=\"ADMIN_COMPETENCES_competence_"+id+"\">"+
 "						<div class=\"boutonAjouterIndicateur\" onclick=\"ouvreBoiteAddIndicateur('"+nom+"',"+id+")\">"+
-"							[+Indicateur]"+
+"							<img src=\"./sources/images/icone-plus.png\" alt=\"[+]\"/>"+
+"							Indicateur"+
 "						</div>"+
 "						<h3 onclick=\"$(this).parent().find('.listeIndicateurs').slideToggle('easings');\">"+
 "							"+numeroCompetence+" - "+nom+

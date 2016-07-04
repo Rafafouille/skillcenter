@@ -3,21 +3,31 @@
  BOUTONS en entete
 ************************************* */
 
-.bouton_top/*_groupe_competences*/
+.bouton_top, .bouton_ajoute/*_groupe_competences*/
 {
 	margin:auto;
 	margin:5px;
 	padding:10px;
 	width:200px;
 	text-align:center;
-	background-color:#88FF88;
 	border-radius:10px;
 	cursor:pointer;
 	box-shadow: 8px 8px 12px #aaa;
 	float:right;
 }
 
-.bouton_top:hover/*_groupe_competences*/
+.bouton_top
+{
+	background-color:#8edbff;
+}
+
+.bouton_ajoute
+{
+	background-color:#88FF88;
+}
+
+
+.bouton_top:hover, .bouton_ajoute:hover
 {
 	margin-top:7px;
 	margin-right:3px;
@@ -26,7 +36,7 @@
 	box-shadow: 4px 4px 6px #555;
 }
 
-.bouton_top:active/*_groupe_competences*/
+.bouton_top:active, .bouton_ajoute:active
 {
 	margin-top:8px;
 	margin-left:8px;
@@ -109,9 +119,17 @@ GROUPE COMPETENCES
 	text-align:center;
 	cursor:pointer;
 	box-shadow: 8px 8px 12px #9999BB;
-	background-color:#8888DD;
+	background-color:#88FF88;/*#8888DD;*/
 	border-radius:10px;
+	color:black;
+	font-weight:bold;
+	font-size:small;
+	vertical-align:middle;
 }
+
+.boutonAjouteCompetence img
+{	vertical-align:middle;}
+
 .boutonAjouteCompetence:hover
 {
 	box-shadow: 4px 4px 6px #7777AA;
@@ -156,8 +174,28 @@ INDICATEURS
 	float:right;
 	margin:5px;
 	text-align:center;
+	vertical-align:middle;
+	padding:3px;
 	cursor:pointer;
+	box-shadow: 8px 8px 12px #9999BB;
+	background-color:#88FF88;/*#8888DD;*/
+	border-radius:10px;
+	color:black;
+	font-weight:bold;
+	font-size:x-small;
 }
+.boutonAjouterIndicateur img
+{	vertical-align:middle;}
+
+.boutonAjouterIndicateur:hover
+{
+	margin-right:2px;
+	margin-left:8px;
+	margin-top:8px;
+	margin-bottom:2px;
+	box-shadow: 4px 4px 5px #777799;
+}
+
 
 .listeIndicateurs
 {

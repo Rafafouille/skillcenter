@@ -328,7 +328,7 @@ if($action=="getNotationEleves")
 			$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["selected"]=true;
 			}	
 
-			$reponseJSON["messageRetour"]=":)Notation récupérées.";
+			$reponseJSON["messageRetour"]=":)Evaluation récupérées.";
 		}	//Fin 'si pas d'eleve'
 		else
 			$reponseJSON["messageRetour"]=":(Pas d'élève trouvé.";
