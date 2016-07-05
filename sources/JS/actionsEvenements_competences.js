@@ -40,6 +40,7 @@ updateListesClasses_CallBack=function(reponse)
 	}
 	
 	$("#notationFormulaireListesClasseEtEleves #notationListeClasses").data("selectBox-selectBoxIt").refresh();//Mise a jour SelectBoxIT
+	$("#userAdminSelectClasse").data("selectBox-selectBoxIt").refresh();//Mise a jour SelectBoxIT
 	
 }
 

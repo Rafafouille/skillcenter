@@ -110,15 +110,30 @@ USERS
 
 #tableau_utilisateurs
 {
-	width:550px;
+	width:600px;
 	margin:auto;
 }
 
 .user
 {
-	background-color:#AAAAFF;
+	background-color:#DDDDFF;
 	border-radius:5px;
-	vertical-align:center;
+	vertical-align:middle;
+	padding:5px;
+	margin:2px;
+	box-shadow: 6px 6px 8px #ccc;
+	cursor:pointer;
+	height:32px;
+}
+
+.user:hover
+{
+	background-color:#AAAAFF;
+	margin-top:4px;
+	margin-bottom:-2px;
+	margin-left:4px;
+	margin-right:0px;
+	box-shadow: 3px 3px 3px #999;
 }
 
 .user .nom-user,.user .prenom-user,.user .classe-user,.user .bouton-user, .user .login-user
@@ -126,12 +141,27 @@ USERS
 	display:inline-block;
 	width:100px;
 	margin:0px;
+	vertical-align:middle;
 }
 
+.nom-user,.prenom-user
+{
+	font-weight:bold;
+}
+
+.user .nom-user
+{
+	width:150px;
+}
+.user .boutons_user
+{
+	visibility:hidden;
+}
 .user .boutons_user img
 {
 	display:inline-block;
 	cursor:pointer;
+	vertical-align:middle;
 }
 
 

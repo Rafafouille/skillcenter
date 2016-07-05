@@ -18,7 +18,6 @@ getListeUsersAdmin=function(classe)
 
 updateListeUsersAdmin=function(reponse)
 {
-	debug(reponse);//Debug la réponse
 	afficheMessage(reponse.messageRetour);
 	$("#tableau_utilisateurs").empty();//On vide la liste des utilisateurs
 	for(i=0;i<reponse.listeUsers.length;i++)
@@ -26,18 +25,17 @@ updateListeUsersAdmin=function(reponse)
 		var user=reponse.listeUsers[i];
 		$("#tableau_utilisateurs").append(getUserHTMLfromJSON(user));
 	}
-
 }
 //Transforme les donées users de JSON en code HTML
 getUserHTMLfromJSON=function(user)
 {
 	retour= ""
-+"										<div class=\"user\" id=\"user_"+user.id+"\">"
-+"											<span class=\"nom-user\">"+user.nom+"</span>"
-+"											<span class=\"prenom-user\">"+user.prenom+"</span>"
-+"											<span class=\"classe-user\">"+user.classe+"</span>"
-+"											<span class=\"login-user\">"+user.login+"</span>"
-+"											<span class=\"boutons_user\">"
++"										<div class=\"user\" id=\"user_"+user.id+"\"  onmouseenter =\"$(this).find('.boutons_user').css('visibility','visible');\" onmouseleave=\"$(this).find('.boutons_user').css('visibility','hidden');\">"
++"											<span class=\"nom-user\" onclick=\"ouvreBoiteModifieUser("+user.id+")\">"+user.nom+"</span>"
++"											<span class=\"prenom-user\" onclick=\"ouvreBoiteModifieUser("+user.id+")\">"+user.prenom+"</span>"
++"											<span class=\"classe-user\" onclick=\"ouvreBoiteModifieUser("+user.id+")\">"+user.classe+"</span>"
++"											<span class=\"login-user\" onclick=\"ouvreBoiteModifieUser("+user.id+")\" >"+user.login+"</span>"
++"											<span class=\"boutons_user\" >"
 +"												<img id=\"boutonModifieInfosUser_"+user.id+"\" src=\"./sources/images/icone-modif.png\" title=\"Modifier l'utilisateur\" alt=\"[Modif]\" onclick=\"ouvreBoiteModifieUser("+user.id+")\"/>"
 +"												"+getBoutonSupprimeUserFromJSON(user)
 +"												"+getBoutonUpAndDowngradeUserFromJSON(user)
