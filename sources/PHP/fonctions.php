@@ -1,5 +1,5 @@
 <?php
-
+include_once('options.php');
 
 //Lance la session et initialise les variables associées
 function initSession()
@@ -45,8 +45,8 @@ function connectToBDD()
 //$indicateur = id de l'indicateur
 function getNoteMax($eleve,$indicateur)
 {
-	global $bdd;
-	$reqNote = $bdd->prepare('SELECT MAX(note) AS maxi FROM notation WHERE indicateur=:indicateur AND eleve=:eleve');
+	global $bdd,$BDD_PREFIXE;
+	$reqNote = $bdd->prepare('SELECT MAX(note) AS maxi FROM '.$BDD_PREFIXE.'notation WHERE indicateur=:indicateur AND eleve=:eleve');
 	$reqNote->execute(array('eleve'=>$eleve,'indicateur'=>$indicateur));
 	if($donneesNote = $reqNote->fetch())
 		return $donneesNote["maxi"];
@@ -59,8 +59,8 @@ function getNoteMax($eleve,$indicateur)
 //$indicateur = id de l'indicateur
 function getNoteMoy($eleve,$indicateur)
 {
-	global $bdd;
-	$reqNote = $bdd->prepare('SELECT AVG(note) AS moy FROM notation WHERE indicateur=:indicateur AND eleve=:eleve');
+	global $bdd,$BDD_PREFIXE;
+	$reqNote = $bdd->prepare('SELECT AVG(note) AS moy FROM '.$BDD_PREFIXE.'notation WHERE indicateur=:indicateur AND eleve=:eleve');
 	$reqNote->execute(array('eleve'=>$eleve,'indicateur'=>$indicateur));
 	if($donneesNote = $reqNote->fetch())
 		return $donneesNote["moy"];
@@ -73,8 +73,8 @@ function getNoteMoy($eleve,$indicateur)
 //$indicateur = id de l'indicateur
 function getNoteLast($eleve,$indicateur)
 {
-	global $bdd;
-	$reqNote = $bdd->prepare('SELECT note as last FROM notation WHERE eleve=:eleve AND indicateur=:indicateur ORDER BY date DESC LIMIT 1');
+	global $bdd,$BDD_PREFIXE;
+	$reqNote = $bdd->prepare('SELECT note as last FROM '.$BDD_PREFIXE.'notation WHERE eleve=:eleve AND indicateur=:indicateur ORDER BY date DESC LIMIT 1');
 	$reqNote->execute(array('eleve'=>$eleve,'indicateur'=>$indicateur));
 	if($donneesNote = $reqNote->fetch())
 		return $donneesNote["last"];
@@ -87,7 +87,7 @@ function getNoteLast($eleve,$indicateur)
 //($eleve et $indicateur sont les numéro id, entiers)
 function getNotationPourJSON($eleve,$indicateur)
 {
-	global $bdd;
+	//global $bdd;
 	$note=array(	"max"=>getNoteMax($eleve,$indicateur),
 					"moy"=>getNoteMoy($eleve,$indicateur),
 					"last"=>getNoteLast($eleve,$indicateur),
@@ -168,8 +168,8 @@ function printEchelleCouleur($note,$maxi,$modifiable=false,$indicateur=0)
 //$indicateur = id de l'indicateur
 function getNiveauMaxIndicateur($idIndicateur)
 {
-	global $bdd;
-	$req = $bdd->prepare('SELECT niveaux FROM indicateurs WHERE id=:id');
+	global $bdd,$BDD_PREFIXE;
+	$req = $bdd->prepare('SELECT niveaux FROM '.$BDD_PREFIXE.'indicateurs WHERE id=:id');
 	$req->execute(array('id'=>$idIndicateur));
 	if($donnees = $req->fetch())
 		return $donnees["niveaux"];

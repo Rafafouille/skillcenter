@@ -40,7 +40,7 @@ if($action=="login")
 	
 	if($login!="" && $mdp!="")	//Si les paramètres ne sont pas vides
 	{
-		$req = $bdd->prepare('SELECT * FROM utilisateurs WHERE login=:login  AND mdp = :mdp');
+		$req = $bdd->prepare('SELECT * FROM '.$BDD_PREFIXE.'utilisateurs WHERE login=:login  AND mdp = :mdp');
 		$req->execute(array('login' => $login, 'mdp' => $mdp));
 		if($donnees = $req->fetch())	//Si l'utilisateur est dans la BDD, avec le bon mot de passe
 		{
@@ -81,7 +81,7 @@ if($action=="getListeClasses")
 {
 	connectToBDD();
 	$reponseJSON['listeClasses']=array();
-	$reponse = $bdd->query('SELECT DISTINCT(classe) FROM utilisateurs WHERE classe<>""');
+	$reponse = $bdd->query('SELECT DISTINCT(classe) FROM '.$BDD_PREFIXE.'utilisateurs WHERE classe<>""');
 	while ($donnees = $reponse->fetch())
 		array_push($reponseJSON["listeClasses"],$donnees["classe"]);
 }
@@ -106,7 +106,7 @@ if($action=="getUsersList")
 
 		//Requete SQL
 		connectToBDD();
-		$reponse = $bdd->query('SELECT * FROM utilisateurs'.$critere);
+		$reponse = $bdd->query('SELECT * FROM '.$BDD_PREFIXE.'utilisateurs'.$critere);
 		$reponseJSON["listeUsers"]=array();
 		while ($donnees = $reponse->fetch())
 		{
@@ -141,13 +141,13 @@ if($action=="addUser")
 				'mdp' => $_POST['newUser_psw'],
 				'classe' => $_POST['newUser_classe']
 			);
-		$req = $bdd->prepare('SELECT id FROM utilisateurs WHERE login=:login');
+		$req = $bdd->prepare('SELECT id FROM '.$BDD_PREFIXE.'utilisateurs WHERE login=:login');
 		$req->execute(array('login'=>$_POST['newUser_login']));
 		if($donnees=$req->fetch())//Si le login existe déjà
 			$reponseJSON["messageRetour"]=":(Le login \"".$_POST["newUser_login"]."\" existe déjà !";
 		else
 		{
-			$req2 = $bdd->prepare('INSERT INTO utilisateurs(nom, prenom, login, mdp, classe) VALUES(:nom, :prenom, :login, :mdp, :classe)');
+			$req2 = $bdd->prepare('INSERT INTO '.$BDD_PREFIXE.'utilisateurs(nom, prenom, login, mdp, classe) VALUES(:nom, :prenom, :login, :mdp, :classe)');
 			$req2->execute($tableau);
 			$reponseJSON["messageRetour"]=":)L'utilisateur << ".$_POST["newUser_prenom"]." ".$_POST['newUser_nom']." >> a bien été ajouté !";
 		}
@@ -178,7 +178,7 @@ if($action=="updateUser")
 		
 		//Vérification que le login n'existe pas déja en cas de changement
 		$reponseJSON["debug"]=$_POST['newUser_login'];
-		$req = $bdd->prepare('SELECT * FROM utilisateurs WHERE login=":login"');// AND id<>:id');
+		$req = $bdd->prepare('SELECT * FROM '.$BDD_PREFIXE.'utilisateurs WHERE login=":login"');// AND id<>:id');
 		$req->execute($tableau);
 		if($donnees=$req->fetch())
 			$reponseJSON["messageRetour"]=":(Le nom d'utilisateur existe déjà";
@@ -186,9 +186,9 @@ if($action=="updateUser")
 		{
 			//Modifications
 			if($_POST['newUser_psw']!="")//Si un nouveau mot de passe est proposé
-				$req = $bdd->prepare('UPDATE utilisateurs SET nom=:nom, prenom=:prenom, mdp=:mdp login=:login, classe=:classe WHERE id=:id');
+				$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'utilisateurs SET nom=:nom, prenom=:prenom, mdp=:mdp login=:login, classe=:classe WHERE id=:id');
 			else
-				$req = $bdd->prepare('UPDATE utilisateurs SET nom=:nom, prenom=:prenom, login=:login, classe=:classe WHERE id=:id');
+				$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'utilisateurs SET nom=:nom, prenom=:prenom, login=:login, classe=:classe WHERE id=:id');
 			$req->execute($tableau);
 			$reponseJSON["messageRetour"]=":)L'utilisateur << ".$_POST["newUser_prenom"]." ".$_POST['newUser_nom']." >> a bien été mis à jour !";
 		}
@@ -214,7 +214,7 @@ if($action=="getListeEleves")
 		{
 			$reponseJSON["classe"]=$classe;//On renvoie la classe (pour info)
 
-			$req = $bdd->prepare('SELECT nom,prenom,id FROM utilisateurs WHERE classe=:classe');
+			$req = $bdd->prepare('SELECT nom,prenom,id FROM '.$BDD_PREFIXE.'utilisateurs WHERE classe=:classe');
 			$req->execute(array('classe'=>$classe));
 			while ($donnees = $req->fetch())
 				{
@@ -252,8 +252,8 @@ if($action=="getNotationEleves")
 
 
 		//Recupere la classe de l'élève
-		//$reqClasse = $bdd->query('SELECT classe FROM utilisateurs WHERE id='.$eleve);
-		$reqClasse = $bdd->prepare('SELECT classe FROM utilisateurs WHERE id=:eleve');
+		//$reqClasse = $bdd->query('SELECT classe FROM '.$BDD_PREFIXE.'utilisateurs WHERE id='.$eleve);
+		$reqClasse = $bdd->prepare('SELECT classe FROM '.$BDD_PREFIXE.'utilisateurs WHERE id=:eleve');
 		$reqClasse->execute(array('eleve'=>$eleve));
 		
 		if($donneesClasse=$reqClasse->fetch())//Si pas d'eleve selectionné
@@ -261,8 +261,8 @@ if($action=="getNotationEleves")
 
 			$classe=$donneesClasse['classe'];
 			
-			$req_ind="(SELECT * FROM indicateurs AS i JOIN liensClassesIndicateurs AS l ON i.id=l.indicateur WHERE classe='".$classe."')";
-			$req_comp_gr="(SELECT comp.id AS idComp, comp.nom AS nomComp, gr.id AS idGroup, gr.nom AS nomGroup FROM competences AS comp JOIN groupes_competences AS gr ON  comp.groupe=gr.id)";
+			$req_ind="(SELECT * FROM ".$BDD_PREFIXE."indicateurs AS i JOIN ".$BDD_PREFIXE."liensClassesIndicateurs AS l ON i.id=l.indicateur WHERE classe='".$classe."')";
+			$req_comp_gr="(SELECT comp.id AS idComp, comp.nom AS nomComp, gr.id AS idGroup, gr.nom AS nomGroup FROM ".$BDD_PREFIXE."competences AS comp JOIN ".$BDD_PREFIXE."groupes_competences AS gr ON  comp.groupe=gr.id)";
 
 			$requete="SELECT  E1.idComp,  E1.nomComp, E1.idGroup, E1.nomGroup, ind.id AS idInd, ind.nom AS nomInd, ind.details AS detailsInd, ind.niveaux AS niveauxInd FROM ".$req_ind." as ind JOIN ".$req_comp_gr." AS E1 ON ind.competence = E1.idComp";
 			$req = $bdd->query($requete);
@@ -305,21 +305,21 @@ if($action=="getNotationEleves")
 				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveMoy"]=-1;//Par defaut
 				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveLast"]=-1;//Par defaut
 
-				$reqNote = $bdd->prepare("SELECT MAX(note) as max FROM notation WHERE eleve=:eleve AND indicateur=".$idInd);
+				$reqNote = $bdd->prepare("SELECT MAX(note) as max FROM ".$BDD_PREFIXE."notation WHERE eleve=:eleve AND indicateur=".$idInd);
 				$reqNote->execute(array('eleve'=>$eleve));
 				if($donneesNote=$reqNote->fetch())
 					{if($donneesNote["max"]==null) $donneesNote["max"]=-1;
 					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveMax"]=$donneesNote["max"];
 					}
 
-				$reqNote = $bdd->prepare("SELECT AVG(note) as moy FROM notation WHERE eleve=:eleve AND indicateur=".$idInd);
+				$reqNote = $bdd->prepare("SELECT AVG(note) as moy FROM ".$BDD_PREFIXE."notation WHERE eleve=:eleve AND indicateur=".$idInd);
 				$reqNote->execute(array('eleve'=>$eleve));
 				if($donneesNote=$reqNote->fetch())
 					{if($donneesNote["moy"]==null) $donneesNote["moy"]=-1;
 					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveMoy"]=$donneesNote["moy"];
 					}
 
-				$reqNote = $bdd->prepare("SELECT note as last FROM notation WHERE eleve=:eleve AND indicateur=".$idInd." ORDER BY date DESC LIMIT 1");
+				$reqNote = $bdd->prepare("SELECT note as last FROM ".$BDD_PREFIXE."notation WHERE eleve=:eleve AND indicateur=".$idInd." ORDER BY date DESC LIMIT 1");
 				$reqNote->execute(array('eleve'=>$eleve));
 				if($donneesNote=$reqNote->fetch())
 					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveLast"]=$donneesNote["last"];
@@ -355,7 +355,7 @@ if($action=="newNote")
 			if(isset($_POST['note'])) $note=intval($_POST['note']);
 		
 		//Ajoute de la note
-		$req = $bdd->prepare('INSERT INTO notation (note,date,eleve,indicateur,examinateur) VALUES(:note,NOW(),:eleve,:indicateur,'.$_SESSION['id'].')');
+		$req = $bdd->prepare('INSERT INTO '.$BDD_PREFIXE.'notation (note,date,eleve,indicateur,examinateur) VALUES(:note,NOW(),:eleve,:indicateur,'.$_SESSION['id'].')');
 		$req->execute(array(
 						'note' => $note,
 						'eleve' => $eleve,
@@ -401,7 +401,7 @@ if($action=="updateCompetencesSelonClasse")
 		//NOUVEAU
 		
 		//Liste des groupes ******
-		$reqGr = $bdd->query("SELECT * FROM groupes_competences ORDER BY position");
+		$reqGr = $bdd->query("SELECT * FROM ".$BDD_PREFIXE."groupes_competences ORDER BY position");
 		while($reponseGr=$reqGr->fetch())
 		{
 			$idGroup=intval($reponseGr['id']);
@@ -415,7 +415,7 @@ if($action=="updateCompetencesSelonClasse")
 			$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"]=array();
 			
 			//Liste des compétences ******
-			$reqComp=$bdd->query("SELECT * FROM competences WHERE groupe=".$idGroup." ORDER BY position");
+			$reqComp=$bdd->query("SELECT * FROM ".$BDD_PREFIXE."competences WHERE groupe=".$idGroup." ORDER BY position");
 			while($reponseComp=$reqComp->fetch())
 			{
 				$idComp=intval($reponseComp['id']);
@@ -429,7 +429,7 @@ if($action=="updateCompetencesSelonClasse")
 				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"]=array();
 				
 				//Liste des indicateurs ******
-				$reqInd=$bdd->query("SELECT * FROM indicateurs WHERE competence=".$idComp." ORDER BY position");
+				$reqInd=$bdd->query("SELECT * FROM ".$BDD_PREFIXE."indicateurs WHERE competence=".$idComp." ORDER BY position");
 				while($reponseInd=$reqInd->fetch())
 				{
 					$idInd=intval($reponseInd['id']);
@@ -452,8 +452,8 @@ if($action=="updateCompetencesSelonClasse")
 
 		//On tag celles qui sont dans la classe souhaitée
 
-		$req_ind="(SELECT * FROM indicateurs AS i JOIN liensClassesIndicateurs AS l ON i.id=l.indicateur WHERE classe='".$classe."')";
-		$req_comp_gr="(SELECT comp.id AS idComp, comp.nom AS nomComp, gr.id AS idGroup, gr.nom AS nomGroup FROM competences AS comp JOIN groupes_competences AS gr ON  comp.groupe=gr.id)";
+		$req_ind="(SELECT * FROM ".$BDD_PREFIXE."indicateurs AS i JOIN ".$BDD_PREFIXE."liensClassesIndicateurs AS l ON i.id=l.indicateur WHERE classe='".$classe."')";
+		$req_comp_gr="(SELECT comp.id AS idComp, comp.nom AS nomComp, gr.id AS idGroup, gr.nom AS nomGroup FROM ".$BDD_PREFIXE."competences AS comp JOIN ".$BDD_PREFIXE."groupes_competences AS gr ON  comp.groupe=gr.id)";
 
 		$requete="SELECT  E1.idComp,  E1.nomComp, E1.idGroup, E1.nomGroup, ind.id AS idInd, ind.nom AS nomInd, ind.details AS detailsInd, ind.niveaux AS niveauxInd FROM ".$req_ind." as ind JOIN ".$req_comp_gr." AS E1 ON ind.competence = E1.idComp";
 		$req = $bdd->query($requete);
@@ -488,11 +488,11 @@ if($action=="addGroupeCompetences")
 		if($nom!="")
 		{
 			//Écriture
-			$req = $bdd->prepare('INSERT INTO groupes_competences (nom) VALUES(:nom)');
+			$req = $bdd->prepare('INSERT INTO '.$BDD_PREFIXE.'groupes_competences (nom) VALUES(:nom)');
 			$req->execute(array('nom' => $nom));
 
 			//Vérification
-			$req2 =  $bdd->prepare('SELECT id FROM groupes_competences WHERE nom=:nom ORDER BY id DESC LIMIT 1');
+			$req2 =  $bdd->prepare('SELECT id FROM '.$BDD_PREFIXE.'groupes_competences WHERE nom=:nom ORDER BY id DESC LIMIT 1');
 			$req2->execute(array('nom' => $nom));
 
 			if($donnees=$req2->fetch())
@@ -525,14 +525,14 @@ if($action=="addCompetence")
 		if(isset($_POST['idGroupe'])) $idGroupe=intval($_POST['idGroupe']);
 		if($nom!="")
 		{
-			$req = $bdd->prepare('INSERT INTO competences (nom,groupe) VALUES(:nom,:idGroupe)');
+			$req = $bdd->prepare('INSERT INTO '.$BDD_PREFIXE.'competences (nom,groupe) VALUES(:nom,:idGroupe)');
 			$req->execute(array(
 						'nom' => $nom,
 						'idGroupe' => $idGroupe
 					));
 
 			//Vérification
-			$req2 =  $bdd->prepare('SELECT id FROM competences WHERE nom=:nom ORDER BY id DESC LIMIT 1');
+			$req2 =  $bdd->prepare('SELECT id FROM '.$BDD_PREFIXE.'competences WHERE nom=:nom ORDER BY id DESC LIMIT 1');
 			$req2->execute(array('nom' => $nom));
 
 			if($donnees=$req2->fetch())
@@ -573,7 +573,7 @@ if($action=="addIndicateur")
 		
 		if($nom!="")
 		{
-			$req = $bdd->prepare('INSERT INTO indicateurs (nom,details,niveaux,competence) VALUES(:nom,:details,:niveaux,:idCompetence)');
+			$req = $bdd->prepare('INSERT INTO '.$BDD_PREFIXE.'indicateurs (nom,details,niveaux,competence) VALUES(:nom,:details,:niveaux,:idCompetence)');
 			$req->execute(array(
 						'nom' => $nom,
 						'details' => $details,
@@ -583,7 +583,7 @@ if($action=="addIndicateur")
 					
 					
 			//Vérification
-			$req2 =  $bdd->prepare('SELECT id FROM indicateurs WHERE nom=:nom ORDER BY id DESC LIMIT 1');
+			$req2 =  $bdd->prepare('SELECT id FROM '.$BDD_PREFIXE.'indicateurs WHERE nom=:nom ORDER BY id DESC LIMIT 1');
 			$req2->execute(array('nom' => $nom));
 
 			if($donnees=$req2->fetch())
@@ -599,7 +599,7 @@ if($action=="addIndicateur")
 				//Ajout du lien du nouvel indicateur avec la classe sélectionnée
 				if($classe!="")
 				{
-					$requeteLier = $bdd->prepare('INSERT INTO liensClassesIndicateurs(indicateur, classe) VALUES(:indicateur, :classe)');
+					$requeteLier = $bdd->prepare('INSERT INTO '.$BDD_PREFIXE.'liensClassesIndicateurs(indicateur, classe) VALUES(:indicateur, :classe)');
 					$requeteLier->execute(array('indicateur' => intval($donnees['id']), 'classe' => $classe));
 					$reponseJSON["indicateur"]["selected"]=true;
 				}
@@ -633,7 +633,7 @@ if($action=="supprimeIndicateur")
 		
 		if($idIndicateur!=0)
 		{
-			$req = $bdd->prepare('DELETE FROM indicateurs WHERE id=:idIndicateur');
+			$req = $bdd->prepare('DELETE FROM '.$BDD_PREFIXE.'indicateurs WHERE id=:idIndicateur');
 			$req->execute(array('idIndicateur' => $idIndicateur));
 			$reponseJSON["messageRetour"]=":)L'indicateur a bien été supprimé.";
 			$reponseJSON["indicateur"]["id"]=$idIndicateur;
@@ -670,14 +670,14 @@ if($action=="lierDelierIndicateurClasse")
 		{
 			if($lier=="true")
 			{
-				$requete = $bdd->prepare('INSERT INTO liensClassesIndicateurs(indicateur, classe) VALUES(:indicateur, :classe)');
+				$requete = $bdd->prepare('INSERT INTO '.$BDD_PREFIXE.'liensClassesIndicateurs(indicateur, classe) VALUES(:indicateur, :classe)');
 				$requete->execute(array('indicateur' => $indicateur, 'classe' => $classe));
 				$reponseJSON["messageRetour"]=":)Lier";
 				$reponseJSON["lier"]=true;
 			}
 			else	
 			{
-				$requete = $bdd->prepare('DELETE FROM liensClassesIndicateurs WHERE indicateur=:indicateur AND classe=:classe');
+				$requete = $bdd->prepare('DELETE FROM '.$BDD_PREFIXE.'liensClassesIndicateurs WHERE indicateur=:indicateur AND classe=:classe');
 				$requete->execute(array('indicateur' => $indicateur, 'classe' => $classe));
 				$reponseJSON["messageRetour"]=":)Délier";
 				$reponseJSON["lier"]=false;

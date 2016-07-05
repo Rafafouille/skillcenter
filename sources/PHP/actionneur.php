@@ -33,7 +33,7 @@ if($action=="login")
 	
 	if($login!="" && $mdp!="")	//Si les paramètres ne sont pas vides
 	{
-		$req = $bdd->prepare('SELECT * FROM utilisateurs WHERE login=:login  AND mdp = :mdp');
+		$req = $bdd->prepare('SELECT * FROM '.$BDD_PREFIXE.'utilisateurs WHERE login=:login  AND mdp = :mdp');
 		$req->execute(array('login' => $login, 'mdp' => $mdp));
 		if($donnees = $req->fetch())	//Si l'utilisateur est dans la BDD, avec le bon mot de passe
 		{
@@ -81,13 +81,13 @@ if($action=="addUser")
 				'mdp' => $_POST['newUser_psw'],
 				'classe' => $_POST['newUser_classe']
 			);
-		$req = $bdd->prepare('SELECT id FROM utilisateurs WHERE login=:login');
+		$req = $bdd->prepare('SELECT id FROM '.$BDD_PREFIXE.'utilisateurs WHERE login=:login');
 		$req->execute(array('login'=>$_POST['newUser_login']));
 		if($donnees=$req->fetch())//Si le login existe déjà
 			echo ":(Le login \"".$_POST["newUser_login"]."\" existe déjà !";
 		else
 		{
-			$req2 = $bdd->prepare('INSERT INTO utilisateurs(nom, prenom, login, mdp, classe) VALUES(:nom, :prenom, :login, :mdp, :classe)');
+			$req2 = $bdd->prepare('INSERT INTO '.$BDD_PREFIXE.'utilisateurs(nom, prenom, login, mdp, classe) VALUES(:nom, :prenom, :login, :mdp, :classe)');
 			$req2->execute($tableau);
 			echo ":)L'utilisateur << ".$_POST["newUser_prenom"]." ".$_POST['newUser_nom']." >> a bien été ajouté !";
 		}
@@ -110,7 +110,7 @@ if($action=="delUser")
 		{
 			if($id!=$_SESSION['id'])
 			{
-				$req = $bdd->prepare('DELETE FROM utilisateurs WHERE id = :id');
+				$req = $bdd->prepare('DELETE FROM '.$BDD_PREFIXE.'utilisateurs WHERE id = :id');
 				$req->execute(array(
 							'id' => $id
 						));
@@ -139,7 +139,7 @@ if($action=="upgradeUser")
 		{
 			if($id!=$_SESSION['id'])
 			{
-				$req = $bdd->prepare('UPDATE utilisateurs SET statut="admin" WHERE id = :id');
+				$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'utilisateurs SET statut="admin" WHERE id = :id');
 				$req->execute(array(
 							'id' => $id
 						));
@@ -167,7 +167,7 @@ if($action=="downgradeUser")
 		{
 			if($id!=$_SESSION['id'])
 			{
-				$req = $bdd->prepare('UPDATE utilisateurs SET statut="" WHERE id = :id');
+				$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'utilisateurs SET statut="" WHERE id = :id');
 				$req->execute(array(
 							'id' => $id
 						));
@@ -233,7 +233,7 @@ if($action=="getNotationEleves")
 		{		
 			//Recupere la liste des groupes
 			$numCompetence=1;
-			$reponseGr = $bdd->query('SELECT * FROM groupes_competences ORDER BY position');
+			$reponseGr = $bdd->query('SELECT * FROM '.$BDD_PREFIXE.'groupes_competences ORDER BY position');
 			while ($donneesGr = $reponseGr->fetch())
 			{
 			echo '
@@ -245,7 +245,7 @@ if($action=="getNotationEleves")
 								</div>
 								<div class="groupe_contenu">';
 				$numIndicateur=1;
-				$reponseComp = $bdd->query('SELECT * FROM competences WHERE groupe='.$donneesGr['id'].' ORDER BY position');
+				$reponseComp = $bdd->query('SELECT * FROM '.$BDD_PREFIXE.'competences WHERE groupe='.$donneesGr['id'].' ORDER BY position');
 				while ($donneesComp = $reponseComp->fetch())
 					{
 						echo '
@@ -253,7 +253,7 @@ if($action=="getNotationEleves")
 										<h3>'.$numCompetence++." - ".$donneesComp["nom"].'</h3>
 										<div class="listeIndicateurs">
 											<table class="indicateurs">';
-											$reponseInd = $bdd->query('SELECT * FROM indicateurs WHERE competence='.$donneesComp['id'].' ORDER BY position');
+											$reponseInd = $bdd->query('SELECT * FROM '.$BDD_PREFIXE.'indicateurs WHERE competence='.$donneesComp['id'].' ORDER BY position');
 											while ($donneesInd = $reponseInd->fetch())
 											{
 												echo '

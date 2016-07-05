@@ -26,8 +26,8 @@ $(function()//Fonction lancée au chargement de la page
 	}
 
 	//Mise en page des menus déroulants
-	 $("#userAdminSelectClasse").selectBoxIt();
-	 $("#notationFormulaireListesClasseEtEleves select").selectBoxIt();
+	/* $("#userAdminSelectClasse").selectBoxIt();
+	 $("#notationFormulaireListesClasseEtEleves select").selectBoxIt();*/
 	
 	
 	//Affichage de la page, une fois chargée

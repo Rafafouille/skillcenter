@@ -39,8 +39,8 @@ updateListesClasses_CallBack=function(reponse)
 		$("#notationListeClasses").append("<option value=\""+classe+"\">"+classe+"</option>");
 	}
 	
-	$("#notationFormulaireListesClasseEtEleves #notationListeClasses").data("selectBox-selectBoxIt").refresh();//Mise a jour SelectBoxIT
-	$("#userAdminSelectClasse").data("selectBox-selectBoxIt").refresh();//Mise a jour SelectBoxIT
+	/*$("#notationFormulaireListesClasseEtEleves #notationListeClasses").data("selectBox-selectBoxIt").refresh();//Mise a jour SelectBoxIT
+	$("#userAdminSelectClasse").data("selectBox-selectBoxIt").refresh();//Mise a jour SelectBoxIT*/
 	
 }
 
@@ -149,7 +149,7 @@ addCompetence_callback=function(reponse)
 //AJOUTE UN INDICATEUR - BOITE -------------------
 ouvreBoiteAddIndicateur=function(competence,i)
 {
-	$( "#dialog-addIndicateur .dialog-addCompetence_nomCompetence").text(competence);
+	$( "#dialog-addIndicateur .dialog-addIndicateur_nomCompetence").text(competence);
 	$( "#dialog-addIndicateur-idCompetence").val(i);
 	$( "#dialog-addIndicateur").dialog("open");
 }

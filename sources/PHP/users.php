@@ -12,7 +12,7 @@
 							<select name="userAdminSelectClasse" id="userAdminSelectClasse" onchange="getListeUsersAdmin($(this).val());">
 								<option value="[ALL]">Tous les utilisateurs</option>
 								<?php
-								$reponse = $bdd->query('SELECT DISTINCT classe FROM utilisateurs');
+								$reponse = $bdd->query('SELECT DISTINCT classe FROM '.$BDD_PREFIXE.'utilisateurs');
 								while($donnees=$reponse->fetch())
 								{
 									if($donnees['classe']!="")

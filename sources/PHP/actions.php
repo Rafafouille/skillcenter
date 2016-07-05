@@ -1,5 +1,5 @@
 <?php
-
+include_once('options.php');
 
 // ==============================================
 // LOG
@@ -44,7 +44,7 @@ if($action=="newUser")
 {
 	if($_SESSION['statut']=="admin")
 	{
-		$req = $bdd->prepare('INSERT INTO utilisateurs(nom, prenom, login, mdp, classe) VALUES(:nom, :prenom, :login, :mdp, :classe)');
+		$req = $bdd->prepare('INSERT INTO '.$BDD_PREFIXE.'utilisateurs(nom, prenom, login, mdp, classe) VALUES(:nom, :prenom, :login, :mdp, :classe)');
 		$req->execute(array(
 				'nom' => $_POST["newUser_nom"],
 				'prenom' => $_POST['newUser_prenom'],

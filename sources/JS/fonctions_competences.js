@@ -53,7 +53,8 @@ function ADMIN_COMPETENCES_ajouteCompetence(competence,conteneur)
 	if(!competence.selected)
 		styleClass+="_unselected";
 
-
+	
+	debug(competence);
 	var rendu=ADMIN_COMPETENCES_rendu_HTML_competence(competence.nom,competence.id,numeroCompetence,styleClass)
 
 	$(conteneur).append(rendu);
@@ -75,7 +76,7 @@ function ADMIN_COMPETENCES_rendu_HTML_competence(nom,id,numeroCompetence,styleCl
 "					<div class=\""+styleClass+"\" id=\"ADMIN_COMPETENCES_competence_"+id+"\">"+
 "						<div class=\"boutonAjouterIndicateur\" onclick=\"ouvreBoiteAddIndicateur('"+nom+"',"+id+");$(this).parent().find('.listeIndicateurs').slideDown('easings');\">"+
 "							<img src=\"./sources/images/icone-plus.png\" alt=\"[+]\"/>"+
-"							Critère"+
+"							Ajouter un critère"+
 "						</div>"+
 "						<h3 onclick=\"$(this).parent().find('.listeIndicateurs').slideToggle('easings');\">"+
 "							"+numeroCompetence+" - "+nom+
