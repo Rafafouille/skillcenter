@@ -39,8 +39,8 @@ updateListesClasses_CallBack=function(reponse)
 		$("#notationListeClasses").append("<option value=\""+classe+"\">"+classe+"</option>");
 	}
 	
-	/*$("#notationFormulaireListesClasseEtEleves #notationListeClasses").data("selectBox-selectBoxIt").refresh();//Mise a jour SelectBoxIT
-	$("#userAdminSelectClasse").data("selectBox-selectBoxIt").refresh();//Mise a jour SelectBoxIT*/
+	$("#notationFormulaireListesClasseEtEleves #notationListeClasses").data("selectBox-selectBoxIt").refresh();//Mise a jour SelectBoxIT
+	$("#userAdminSelectClasse").data("selectBox-selectBoxIt").refresh();//Mise a jour SelectBoxIT
 	
 }
 
