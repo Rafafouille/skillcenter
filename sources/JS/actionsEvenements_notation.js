@@ -23,6 +23,7 @@ NotationGetListeEleves=function(classe)
 
 updateListeEleves=function(reponse)
 {
+
 	//$("#notationListeEleves").html(reponse);
 	$("#notationListeEleves").empty();
 	var listeEleves=reponse.listeEleves;
@@ -35,6 +36,7 @@ updateListeEleves=function(reponse)
 
 	$("#notationFormulaireListesClasseEtEleves #notationListeEleves").data("selectBox-selectBoxIt").refresh();//Mise a jour SelectBoxIT
 	
+	NOTATION_REDESSINE_DE_ZERO=true;	//Pour effacer puis tout redessiner
 	getNotationEleve($("#notationListeEleves").val());
 }
 
@@ -55,18 +57,23 @@ getNotationEleve=function(eleve)
 //Met à jour l'affichge des notes d'un élève (recu par ajax)
 updateNotationEleve=function(reponse)
 {
+
 	afficheMessage(reponse.messageRetour);
 	//VARIABLES GLOABLES !!
 	numeroCompetence=0;
 	numeroIndicateur=0;
 
-	$("#RecapNotationEleve").empty();
+	if(NOTATION_REDESSINE_DE_ZERO)
+		$("#RecapNotationEleve").empty();
+
 	var listeGroupes=reponse.listeGroupes;
+
 	for(idGr in listeGroupes)
 	{
 		var groupe=listeGroupes[idGr];
-		NOTATION_ajouteGroupeCompetences(groupe,"#RecapNotationEleve","RecapNote");
+		NOTATION_ajouteGroupeCompetences(groupe,"#RecapNotationEleve","RecapNote",NOTATION_REDESSINE_DE_ZERO);
 	}
+	NOTATION_REDESSINE_DE_ZERO=false;//Si on change d'élève, on ne redessine pas tout
 }
 
 

@@ -5,9 +5,16 @@
 //groupe : Groupe a ajouter (objet JSON)
 //conteneur : conteneur (HTML) dans lequel ajouter le groupe
 //modeNotation : true si c'est un prof (qui note), false si c'est un élève (qui consulte)
-function NOTATION_ajouteGroupeCompetences(groupe,conteneur,modeNotation)
+function NOTATION_ajouteGroupeCompetences(groupe,conteneur,modeNotation,recreeDeZero)
 {
-	var rendu=""+
+	//Paramètres par défaut (ancien)
+	var recreeDeZero = typeof recreeDeZero !== 'undefined' ? recreeDeZero : false;
+
+
+	//Si le groupe n'existe pas (ou si il faut recréer de zéro) --> on le crée
+	if(recreeDeZero || !$("#NOTATION_groupe_"+groupe.id).length)
+	{
+		var rendu=""+
 "			<div class=\"groupe_competences\" id=\"NOTATION_groupe_"+groupe.id+"\">"+
 "				<div class=\"entete_groupe_competences\" onclick=\"$(this).parent().find('.groupe_contenu').slideToggle('easings');\">"+
 "					<h3>"+
@@ -18,25 +25,33 @@ function NOTATION_ajouteGroupeCompetences(groupe,conteneur,modeNotation)
 "				</div>"+
 "			</div>";
 
-	$(conteneur).append(rendu);
+		$(conteneur).append(rendu);
+	}
 
 	//Ajout des competences
 	for(idComp in groupe.listeCompetences)
 	{
 		var competence=groupe.listeCompetences[idComp];
-		NOTATION_ajouteCompetence(competence,"#NOTATION_groupe_"+groupe.id+" .groupe_contenu",modeNotation);
+		NOTATION_ajouteCompetence(competence,"#NOTATION_groupe_"+groupe.id+" .groupe_contenu",modeNotation,recreeDeZero);
 	}
 }
 
 
 
 //Fonction qui ajoute une competence dans un groupe
-function NOTATION_ajouteCompetence(competence,conteneur,modeNotation)
+function NOTATION_ajouteCompetence(competence,conteneur,modeNotation,recreeDeZero)
 {
+	//Paramètres par défaut (ancien)
+	var recreeDeZero = typeof recreeDeZero !== 'undefined' ? recreeDeZero : false;
+
+
 	numeroCompetence++;	//Globale
 	numeroIndicateur=0;	//Globale
 
-	var rendu=""+
+	//Si la compétence n'existe pas (ou si il faut recréer de zéro) --> on la crée
+	if(recreeDeZero || !$("#NOTATION_competence_"+competence.id).length)
+	{
+		var rendu=""+
 "					<div class=\"competence\" id=\"NOTATION_competence_"+competence.id+"\">"+
 "						<h3 onclick=\"$(this).parent().find('.listeIndicateurs').slideToggle('easings');\">"+
 "							"+numeroCompetence+" - "+competence.nom+
@@ -46,8 +61,8 @@ function NOTATION_ajouteCompetence(competence,conteneur,modeNotation)
 "							</table>"+
 "						</div>"+
 "					</div>";
-	$(conteneur).append(rendu);
-
+		$(conteneur).append(rendu);
+	}
 
 	//Ajout des indicateurs
 	for(idInd in competence.listeIndicateurs)
@@ -62,6 +77,7 @@ function NOTATION_ajouteIndicateur(indicateur,conteneur)
 {
 	numeroIndicateur++;
 
+
 	var rendu=""+
 "								<tr class=\"indicateur\" id=\"NOTATION_indicateur_"+indicateur.id+"\" >"+
 "									<td class=\"intituleIndicateur\">"+
@@ -74,7 +90,12 @@ function NOTATION_ajouteIndicateur(indicateur,conteneur)
 "									"+NOTATION_getNiveauxIndicateur(indicateur.niveauEleveMax,indicateur.niveauMax,indicateur.id,STATUT=="admin",false)
 "									</td>"+
 "								</tr>";
-	$(conteneur).append(rendu);
+
+	//Si l'indicateur existe deja, on le remplace
+	if($("#NOTATION_indicateur_"+indicateur.id).length)
+		$("#NOTATION_indicateur_"+indicateur.id).replaceWith(rendu);
+	else	//Sinon on l'ajoute
+		$(conteneur).append(rendu);
 }
 
 
@@ -83,9 +104,11 @@ function NOTATION_ajouteIndicateur(indicateur,conteneur)
 //Full : gere si les couleurs vont de rouge à vert (false) (cas de l'admin competences)
 // ou si vont de rouge à ..... la note en cours (cas de la notation - true).
 // degrade = true si couleur dégradée, ou false si toutes les cases prennent la couleur de la case maximum
-function NOTATION_getNiveauxIndicateur(val,maxi,indicateur, clickable=false,degrade=false)
+function NOTATION_getNiveauxIndicateur(val,maxi,indicateur, clickable,degrade)
 {
-
+	//Paramètres par défaut (anciennes versions)
+	var clickable = typeof clickable !== 'undefined' ? clickable : false;
+	var degrade = typeof degrade !== 'undefined' ? degrade : false;
 
 
 	var rendu="";

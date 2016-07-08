@@ -73,6 +73,7 @@ include("./sources/PHP/actions.php");
 			
 			ADMIN_COMPETENCES_LOADED=false;	//Variable globale qui dit si la page "cometences (admin)" a deja été au moins une fois chargée
 			NOTATION_LOADED=false;	//Variable globale qui dit si la page "cometences (admin)" a deja été au moins une fois chargée
+			NOTATION_REDESSINE_DE_ZERO=true;
 		</script>
     </head>
 
