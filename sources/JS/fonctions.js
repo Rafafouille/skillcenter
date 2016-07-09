@@ -81,14 +81,17 @@ getBoutonUpAndDowngradeUserFromJSON=function(user)
 	if(user['statut']=="admin")//Si l'utilisateur est admin...
 	{
 		if(parseInt(user['id'])!=ID_COURANT)//...et que c'est pas nous
-			return "<img id=\"boutonModifieStatut_"+user['id']+"\" src=\"./sources/images/super.png\" title=\"Super utilisateur (rendre normal)\" alt=\"[SU]\" onclick=\"ouvreBoiteDowngradeUser("+user['id']+",'"+user['prenom']+" "+user['nom']+" ("+user['login']+")');\"/>";
+			return "<img id=\"boutonModifieStatut_"+user['id']+"\" src=\"./sources/images/super.png\" title=\"Super utilisateur\" alt=\"[SU]\" onclick=\"ADMIN_USER_change_statut("+user['id']+",'"+user['statut']+"');\"/>";			
+			//return "<img id=\"boutonModifieStatut_"+user['id']+"\" src=\"./sources/images/super.png\" title=\"Super utilisateur\" alt=\"[SU]\" onclick=\"ouvreBoiteDowngradeUser("+user['id']+",'"+user['prenom']+" "+user['nom']+" ("+user['login']+")');\"/>";
 		else//...Si c'est nous : pas le droit de s'auto-downgrader
-			return "<img id=\"boutonModifieStatut_"+user['id']+"\" style=\"cursor:auto;\" src=\"./sources/images/super-OFF.png\" title=\"Vous ne pouvez pas vous auto-rétrograder\" alt=\"[SU]\" />";
+			return "<img id=\"boutonModifieStatut_"+user['id']+"\" style=\"cursor:auto;\" src=\"./sources/images/super-OFF.png\" title=\"Vous ne pouvez pas modifier votre propre statut\" alt=\"[SU]\" />";
 	}
+	else if(user['statut']=="autoeval")
+		return "<img id=\"boutonModifieStatut_"+user['id']+"\" src=\"./sources/images/student_autoeval.png\" title=\"Utilisateur en autoévaluation\" alt=\"[V]\" onclick=\"ADMIN_USER_change_statut("+user['id']+",'"+user['statut']+"');\"/>";
+	else if(user['statut']=="evaluateur")
+		return "<img id=\"boutonModifieStatut_"+user['id']+"\" src=\"./sources/images/teaching.png\" title=\"Evaluateur\" alt=\"[V]\" onclick=\"ADMIN_USER_change_statut("+user['id']+",'"+user['statut']+"');\"/>";
 	else
-	{
-		return "<img id=\"boutonModifieStatut_"+user['id']+"\" src=\"./sources/images/student.png\" title=\"Utilisateur normal (rendre SuperUtilisateur)\" alt=\"[o_o]\" onclick=\"ouvreBoiteUpgradeUser("+user['id']+",'"+user['prenom']+" "+user['nom']+" ("+user['login']+")');\"/>";
-	}
+		return "<img id=\"boutonModifieStatut_"+user['id']+"\" src=\"./sources/images/student.png\" title=\"Utilisateur normal\" alt=\"[o_o]\" onclick=\"ADMIN_USER_change_statut("+user['id']+",'"+user['statut']+"');\"/>";
 	return "";
 }
 

@@ -199,6 +199,36 @@ if($action=="updateUser")
 
 
 
+//CHANGE LE STATUT D'UN UTILISATEUR*************************
+if($action=="changeStatutUser")
+{
+	if($_SESSION['statut']=="admin")
+	{
+		connectToBDD();
+
+		$id=-1;
+		if(isset($_POST['id'])) $id=$_POST['id'];
+		$statut="";
+		if(isset($_POST['statut'])) $statut=$_POST['statut'];
+
+		$tabl_rotations_statuts=array(	""=>"autoeval",
+					"autoeval"=>"evaluateur",
+					"evaluateur"=>"admin",
+					"admin"=>""
+				);
+
+		$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'utilisateurs SET statut=:statut WHERE id=:id');
+		$req->execute(array(
+			"id"=>$id,
+			"statut"=>$tabl_rotations_statuts[$statut]
+			));
+		$reponseJSON["messageRetour"]=":)Le statut a bien été mis à jour";
+		$reponseJSON["user"]["statut"]=$tabl_rotations_statuts[$statut];
+		$reponseJSON["user"]["id"]=$id;
+	}
+	else
+		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de modifier le statut d'un utilisateur !";
+}
 
 // =====================================================
 // NOTATION

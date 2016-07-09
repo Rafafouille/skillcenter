@@ -78,7 +78,6 @@ ajouteUpdateUser=function()
 //Fonction qui met à jour la liste des utilisateur
 valideNewUpdateUser=function(reponse)
 {
-	debug(reponse);//Debug la réponse
 	afficheMessage(reponse.messageRetour);
 	getListeUsersAdmin($("#userAdminSelectClasse").val());
 }
@@ -118,6 +117,7 @@ supprimeUser=function(i)
 }
 
 
+// A SUPPRIMER <<<<<
 //UPGRADE USER
 ouvreBoiteUpgradeUser=function(id,nom)
 {
@@ -176,7 +176,27 @@ callBackDowngradeUser=function(reponse)
 	$("#boutonModifieStatut_"+$("#boiteDowngrade-id").text()).replaceWith(getBoutonUpAndDowngradeUserFromJSON({id:$("#boiteDowngrade-id").text(),statut:"",nom:$("#boiteDowngrade-nom").text(),prenom:$("#boiteDowngrade-prenom").text()}));
 //	$("#boutonModifieStatut_"+$("#boiteDowngrade-id").text()).attr('src', './sources/images/student.png');
 }
+//>>>>>>>>>>>>>>>>>>>>>>>>
 
 
 
- 
+ADMIN_USER_change_statut=function(id,statut)
+{
+	$.post(
+			'./sources/PHP/actionneurJSON.php',//Requete appelée
+			{	//Les données à passer par POST
+				action:"changeStatutUser",
+				id:id,
+				statut:statut
+			},
+			callBack_changeStatut,	//Fonction callback
+			"json"	//Type de réponse
+	);
+}
+
+callBack_changeStatut=function(reponse)
+{
+	afficheMessage(reponse.messageRetour);
+	var user=reponse.user;
+	$("#boutonModifieStatut_"+user.id).replaceWith(getBoutonUpAndDowngradeUserFromJSON(user));
+}

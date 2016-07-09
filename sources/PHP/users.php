@@ -1,11 +1,12 @@
 
 				<div id="tab-users">
-					<h2>Liste des utilisateurs</h2>
 					
 					<div class="bouton_ajoute" onclick="$('#newUser_id').val(-1);$('#dialog-addUser').dialog('open');">
 						<img src="./sources/images/icone-plus.png" alt="[+]"/>
 						<strong>Ajouter un utilisateur</strong>
 					</div>
+
+					<h2>Liste des utilisateurs</h2>
 					
 					<div>
 						<form>
