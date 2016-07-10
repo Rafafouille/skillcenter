@@ -30,7 +30,8 @@ updateListeUsersAdmin=function(reponse)
 getUserHTMLfromJSON=function(user)
 {
 	retour= ""
-+"										<div class=\"user\" id=\"user_"+user.id+"\"  onmouseenter =\"$(this).find('.boutons_user').css('visibility','visible');\" onmouseleave=\"$(this).find('.boutons_user').css('visibility','hidden');\">"
++"										<div class=\"user "+user.statut+"\" id=\"user_"+user.id+"\"  onmouseenter =\"$(this).find('.boutons_user').css('visibility','visible');\" onmouseleave=\"$(this).find('.boutons_user').css('visibility','hidden');\">"
++"											<span class=\"iconeUser\"></span>"
 +"											<span class=\"nom-user\" onclick=\"ouvreBoiteModifieUser("+user.id+")\">"+user.nom+"</span>"
 +"											<span class=\"prenom-user\" onclick=\"ouvreBoiteModifieUser("+user.id+")\">"+user.prenom+"</span>"
 +"											<span class=\"classe-user\" onclick=\"ouvreBoiteModifieUser("+user.id+")\">"+user.classe+"</span>"
@@ -199,4 +200,5 @@ callBack_changeStatut=function(reponse)
 	afficheMessage(reponse.messageRetour);
 	var user=reponse.user;
 	$("#boutonModifieStatut_"+user.id).replaceWith(getBoutonUpAndDowngradeUserFromJSON(user));
+	$("#user_"+user.id).attr('class', 'user '+user.statut);
 }
