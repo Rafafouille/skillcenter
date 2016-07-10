@@ -29,17 +29,29 @@ updateListeUsersAdmin=function(reponse)
 //Transforme les donées users de JSON en code HTML
 getUserHTMLfromJSON=function(user)
 {
+	var sousClasse=user.statut;
+	var onClickBoutonModif="ouvreBoiteSupprimeUser("+user.id+",'"+user.prenom+" "+user.nom+" ("+user.login+")');";
+	var onClickBoutonStatut="ADMIN_USER_change_statut("+user.id+");"
+
+
+	if(user.id==ID_COURANT)//Si c'est nous qu'on affiche...
+	{
+		sousClasse+=" connecte";
+		onClickBoutonModif="";
+		var onClickBoutonStatut="";
+	}
+
 	retour= ""
-+"										<div class=\"user "+user.statut+"\" id=\"user_"+user.id+"\"  onmouseenter =\"$(this).find('.boutons_user').css('visibility','visible');\" onmouseleave=\"$(this).find('.boutons_user').css('visibility','hidden');\">"
++"										<div class=\"user "+sousClasse+"\" id=\"user_"+user.id+"\"  onmouseenter =\"$(this).find('.boutons_user').css('visibility','visible');\" onmouseleave=\"$(this).find('.boutons_user').css('visibility','hidden');\">"
 +"											<span class=\"iconeUser\"></span>"
 +"											<span class=\"nom-user\" onclick=\"ouvreBoiteModifieUser("+user.id+")\">"+user.nom+"</span>"
 +"											<span class=\"prenom-user\" onclick=\"ouvreBoiteModifieUser("+user.id+")\">"+user.prenom+"</span>"
 +"											<span class=\"classe-user\" onclick=\"ouvreBoiteModifieUser("+user.id+")\">"+user.classe+"</span>"
 +"											<span class=\"login-user\" onclick=\"ouvreBoiteModifieUser("+user.id+")\" >"+user.login+"</span>"
 +"											<span class=\"boutons_user\" >"
-+"												<img id=\"boutonModifieInfosUser_"+user.id+"\" src=\"./sources/images/icone-modif.png\" title=\"Modifier l'utilisateur\" alt=\"[Modif]\" onclick=\"ouvreBoiteModifieUser("+user.id+")\"/>"
-+"												"+getBoutonSupprimeUserFromJSON(user)
-+"												"+getBoutonUpAndDowngradeUserFromJSON(user)
++"												<span class=\"bouton_user ADMIN_USER_bouton_Modif\" title=\"Modifier l'utilisateur\" onclick=\"ouvreBoiteModifieUser("+user.id+")\"></span>"
++"												<span class=\"bouton_user ADMIN_USER_bouton_Supprime\" title=\"Supprimer l'utilisateur\" onclick=\""+onClickBoutonModif+"\"></span>"
++"												<span class=\"bouton_user ADMIN_USER_bouton_Change_Statut\" title=\"Modifier le statut de l'utilisateur\" onclick=\""+onClickBoutonStatut+"\"></span>"
 +"											</span>"
 +"										</div>";
 
@@ -187,8 +199,7 @@ ADMIN_USER_change_statut=function(id,statut)
 			'./sources/PHP/actionneurJSON.php',//Requete appelée
 			{	//Les données à passer par POST
 				action:"changeStatutUser",
-				id:id,
-				statut:statut
+				id:id
 			},
 			callBack_changeStatut,	//Fonction callback
 			"json"	//Type de réponse
@@ -199,6 +210,6 @@ callBack_changeStatut=function(reponse)
 {
 	afficheMessage(reponse.messageRetour);
 	var user=reponse.user;
-	$("#boutonModifieStatut_"+user.id).replaceWith(getBoutonUpAndDowngradeUserFromJSON(user));
+	//$("#boutonModifieStatut_"+user.id).replaceWith(getBoutonUpAndDowngradeUserFromJSON(user));
 	$("#user_"+user.id).attr('class', 'user '+user.statut);
 }

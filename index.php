@@ -34,8 +34,7 @@ include("./sources/PHP/actions.php");
         <meta charset="utf-8" />
         <title>Skillcenter</title>
 		<link rel="stylesheet" href="./sources/style/style.css" />
-		<?php if($_SESSION["statut"]=="admin")
-			{?>
+		<?php if($_SESSION["statut"]=="admin") { ?>
 		<link rel="stylesheet" href="./sources/style/styleUsers.css" />
 		<?php } ?>
 		<link rel="stylesheet" href="./sources/style/styleCompetences.css" />

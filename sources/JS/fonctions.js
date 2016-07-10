@@ -63,37 +63,6 @@ debug=function(rep)
 }
 
 
-//Fonctions qui affichent les bouton admin user
-
-getBoutonSupprimeUserFromJSON=function(user)
-{
-	var id=parseInt(user["id"]);
-	var nom=user["nom"];
-	var prenom=user["prenom"];
-	var login=user["login"];
-	if(id!=ID_COURANT)//si c'est pas nous...
-		return "<img style=\"cursor:pointer;\" src=\"./sources/images/icone-supprime_utilisateur.png\" title=\"Supprimer l'utilisateur\" alt=\"[Suppr]\" onclick=\"ouvreBoiteSupprimeUser("+id+",'"+prenom+" "+nom+" ("+login+")');\"/>";
-	else
-		return "<img style=\"cursor:auto;\" src=\"./sources/images/icone-supprime_utilisateur-OFF.png\" title=\"Vous ne pouvez pas vous auto-supprimer\" alt=\"[Suppr]\" />";
-}
-getBoutonUpAndDowngradeUserFromJSON=function(user)
-{
-	if(user['statut']=="admin")//Si l'utilisateur est admin...
-	{
-		if(parseInt(user['id'])!=ID_COURANT)//...et que c'est pas nous
-			return "<img id=\"boutonModifieStatut_"+user['id']+"\" src=\"./sources/images/super.png\" title=\"Super utilisateur\" alt=\"[SU]\" onclick=\"ADMIN_USER_change_statut("+user['id']+",'"+user['statut']+"');\"/>";			
-			//return "<img id=\"boutonModifieStatut_"+user['id']+"\" src=\"./sources/images/super.png\" title=\"Super utilisateur\" alt=\"[SU]\" onclick=\"ouvreBoiteDowngradeUser("+user['id']+",'"+user['prenom']+" "+user['nom']+" ("+user['login']+")');\"/>";
-		else//...Si c'est nous : pas le droit de s'auto-downgrader
-			return "<img id=\"boutonModifieStatut_"+user['id']+"\" style=\"cursor:auto;\" src=\"./sources/images/super-OFF.png\" title=\"Vous ne pouvez pas modifier votre propre statut\" alt=\"[SU]\" />";
-	}
-	else if(user['statut']=="autoeval")
-		return "<img id=\"boutonModifieStatut_"+user['id']+"\" src=\"./sources/images/student_autoeval.png\" title=\"Utilisateur en autoévaluation\" alt=\"[V]\" onclick=\"ADMIN_USER_change_statut("+user['id']+",'"+user['statut']+"');\"/>";
-	else if(user['statut']=="evaluateur")
-		return "<img id=\"boutonModifieStatut_"+user['id']+"\" src=\"./sources/images/teaching.png\" title=\"Evaluateur\" alt=\"[V]\" onclick=\"ADMIN_USER_change_statut("+user['id']+",'"+user['statut']+"');\"/>";
-	else
-		return "<img id=\"boutonModifieStatut_"+user['id']+"\" src=\"./sources/images/student.png\" title=\"Utilisateur normal\" alt=\"[o_o]\" onclick=\"ADMIN_USER_change_statut("+user['id']+",'"+user['statut']+"');\"/>";
-	return "";
-}
 
 
 //Renvoie une couleur de l'arc en ciel entre rouge et vert (pour les compétences)

@@ -10,6 +10,10 @@ USERS
 	margin:auto;
 }
 
+
+/*******************
+CHAQUE LIGNE (dans leur ensemble)
+******************/
 /*Utilisateur par defaut (eleve)*/
 .user
 {
@@ -32,6 +36,39 @@ USERS
 	margin-right:0px;
 	box-shadow: 3px 3px 3px #999;
 }
+/*Utilisateur admin -------------*/
+.user.admin
+{
+	background-color:#FFDDDD;
+}
+.user.admin:hover
+{
+	background-color:#FFAAAA;
+}
+/*Utilisateur evaluation ----------*/
+.user.evaluateur
+{
+	background-color:#FFEECC;
+}
+.user.evaluateur:hover
+{
+	background-color:#FFCC99;
+}
+/*Utilisateur autoevaluation ---------------*/
+.user.autoeval
+{
+	background-color:#CCFFCC;
+}
+.user.autoeval:hover
+{
+	background-color:#99FF99;
+}
+
+
+
+/**********************
+ICONE EN DEBUT DE LIGNE
+************************/
 .iconeUser
 {
 	display:inline-block;
@@ -48,47 +85,17 @@ USERS
 	vertical-align:middle;
 	background-image:url('../images/student.png');
 }
-
-/*Utilisateur admin -------------*/
-.user.admin
-{
-	background-color:#FFDDDD;
-}
-.user.admin:hover
-{
-	background-color:#FFAAAA;
-}
 .user.admin .iconeUser
 {
 	border:solid #FFAAAA;
 	background-color:#FFDDDD;
 	background-image:url('../images/super.png');
 }
-
-/*Utilisateur evaluation ----------*/
-.user.evaluateur
-{
-	background-color:#FFEECC;
-}
-.user.evaluateur:hover
-{
-	background-color:#FFCC99;
-}
 .user.evaluateur .iconeUser
 {
 	border:solid #FFCC99;
 	background-color:#FFEECC;
 	background-image:url('../images/teaching.png');
-}
-
-/*Utilisateur autoevaluation ---------------*/
-.user.autoeval
-{
-	background-color:#CCFFCC;
-}
-.user.autoeval:hover
-{
-	background-color:#99FF99;
 }
 .user.autoeval .iconeUser
 {
@@ -99,6 +106,9 @@ USERS
 
 
 
+/******************************
+INTERIEUR DES USERS
+**********************************/
 .user .nom-user,.user .prenom-user,.user .classe-user,.user .bouton-user, .user .login-user
 {
 	display:inline-block;
@@ -126,4 +136,53 @@ USERS
 	cursor:pointer;
 	vertical-align:middle;
 }
+
+.user .bouton_user
+{
+	display:inline-block;
+	margin:0px;
+	padding:0px;
+	width:32px;
+	height:32px;
+	vertical-align:middle;
+	cursor:pointer;
+}
+
+.user .bouton_user.ADMIN_USER_bouton_Modif
+{
+	background-image:url('../images/icone-modif.png');
+}
+
+.user .bouton_user.ADMIN_USER_bouton_Supprime
+{
+	background-image:url('../images/icone-supprime_utilisateur.png');
+}
+.user.connecte .bouton_user.ADMIN_USER_bouton_Supprime
+{
+	background-image:url('../images/icone-supprime_utilisateur-OFF.png');
+	cursor:not-allowed;
+}
+
+.user .bouton_user.ADMIN_USER_bouton_Change_Statut
+{
+	background-image:url('../images/student.png');
+}
+.user.admin .bouton_user.ADMIN_USER_bouton_Change_Statut
+{
+	background-image:url('../images/super.png');
+}
+.user.autoeval .bouton_user.ADMIN_USER_bouton_Change_Statut
+{
+	background-image:url('../images/student_autoeval.png');
+}
+.user.evaluateur .bouton_user.ADMIN_USER_bouton_Change_Statut
+{
+	background-image:url('../images/teaching.png');
+}
+.user.connecte .bouton_user.ADMIN_USER_bouton_Change_Statut
+{
+	background-image:url('../images/super-OFF.png');
+	cursor:not-allowed;
+}
+
 
