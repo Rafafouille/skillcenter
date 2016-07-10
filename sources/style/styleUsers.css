@@ -1,0 +1,129 @@
+ 
+/*******************
+USERS
+******************/
+
+
+#tableau_utilisateurs
+{
+	width:600px;
+	margin:auto;
+}
+
+/*Utilisateur par defaut (eleve)*/
+.user
+{
+	background-color:#DDDDFF;
+	border-radius:5px;
+	vertical-align:middle;
+	padding:5px;
+	margin:2px;
+	box-shadow: 6px 6px 8px #ccc;
+	cursor:pointer;
+	height:32px;
+}
+
+.user:hover
+{
+	background-color:#AAAAFF;
+	margin-top:4px;
+	margin-bottom:-2px;
+	margin-left:4px;
+	margin-right:0px;
+	box-shadow: 3px 3px 3px #999;
+}
+.iconeUser
+{
+	display:inline-block;
+	width:32px;
+	height:32px;
+	padding:0px;
+	margin-top:-16px;
+	margin-bottom:-16px;
+	margin-left:-32px;
+	margin-right:0px;
+	background-color:#DDDDFF;
+	border-radius:16px;
+	border:solid #AAAAFF;
+	vertical-align:middle;
+	background-image:url('../images/student.png');
+}
+
+/*Utilisateur admin -------------*/
+.user.admin
+{
+	background-color:#FFDDDD;
+}
+.user.admin:hover
+{
+	background-color:#FFAAAA;
+}
+.user.admin .iconeUser
+{
+	border:solid #FFAAAA;
+	background-color:#FFDDDD;
+	background-image:url('../images/super.png');
+}
+
+/*Utilisateur evaluation ----------*/
+.user.evaluateur
+{
+	background-color:#FFEECC;
+}
+.user.evaluateur:hover
+{
+	background-color:#FFCC99;
+}
+.user.evaluateur .iconeUser
+{
+	border:solid #FFCC99;
+	background-color:#FFEECC;
+	background-image:url('../images/teaching.png');
+}
+
+/*Utilisateur autoevaluation ---------------*/
+.user.autoeval
+{
+	background-color:#CCFFCC;
+}
+.user.autoeval:hover
+{
+	background-color:#99FF99;
+}
+.user.autoeval .iconeUser
+{
+	border:solid #99FF99;
+	background-color:#CCFFCC;
+	background-image:url('../images/student_autoeval.png');
+}
+
+
+
+.user .nom-user,.user .prenom-user,.user .classe-user,.user .bouton-user, .user .login-user
+{
+	display:inline-block;
+	width:100px;
+	margin:0px;
+	vertical-align:middle;
+}
+
+.nom-user,.prenom-user
+{
+	font-weight:bold;
+}
+
+.user .nom-user
+{
+	width:150px;
+}
+.user .boutons_user
+{
+	visibility:hidden;
+}
+.user .boutons_user img
+{
+	display:inline-block;
+	cursor:pointer;
+	vertical-align:middle;
+}
+
