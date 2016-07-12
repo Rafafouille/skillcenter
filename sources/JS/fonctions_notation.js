@@ -87,7 +87,7 @@ function NOTATION_ajouteIndicateur(indicateur,conteneur)
 "										<img src=\"./sources/images/icone-info.png\" alt=\"[i]\"  style=\"cursor:help;\" title=\""+indicateur.details+"\"/>"+
 "									</td>"+
 "									<td class=\"niveauxIndicateur\">"+
-"									"+NOTATION_getNiveauxIndicateur(indicateur.niveauEleveMax,indicateur.niveauMax,indicateur.id,STATUT=="admin" || STATUT=="evaluateur",false)
+"									"+NOTATION_getNiveauxIndicateur(indicateur.niveauEleveMax,indicateur.niveauMax,indicateur.id,STATUT=="admin" || STATUT=="evaluateur" || STATUT=="autoeval",false)
 "									</td>"+
 "								</tr>";
 
@@ -118,8 +118,15 @@ function NOTATION_getNiveauxIndicateur(val,maxi,indicateur, clickable,degrade)
 		//Ajout du javascript (onClick)
 		var actionOnClick="";
 		if(clickable)
-			actionOnClick="donneNote("+i+",$('#notationListeEleves').val(),"+indicateur+")";
-
+		{
+			//Choix de l'action a faire au moment du click (et choix de l'élève à noter)
+			var idEleveStr="0";
+			if(STATUT=="admin" || STATUT=="evaluateur")//Si on est admin/evaluateur...
+				idEleveStr="$('#notationListeEleves').val()";//...le num de l'élève a noter sera cel
+			if(STATUT=="autoeval")//Si c'est un auto-évaluateur
+				idEleveStr=ID_COURANT;	//Par defaut on note celui qui
+			actionOnClick="donneNote("+i+","+idEleveStr+","+indicateur+")";
+		}
 		
 		if(i<=val)
 		{

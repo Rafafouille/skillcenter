@@ -390,11 +390,12 @@ if($action=="getNotationEleves")
 // Action qui ajoute une nouvelle note **************************************
 if($action=="newNote")
 {
-	if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur")
+	$eleve=0;
+		if(isset($_POST['eleve'])) $eleve=intval($_POST['eleve']);
+
+	if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur" || $_SESSION['statut']=="autoeval" && $_SESSION['id']==$eleve)
 	{
 		connectToBDD();
-		$eleve=0;
-			if(isset($_POST['eleve'])) $eleve=intval($_POST['eleve']);
 		$indicateur=0;
 			if(isset($_POST['indicateur'])) $indicateur=intval($_POST['indicateur']);
 		$note=0;
