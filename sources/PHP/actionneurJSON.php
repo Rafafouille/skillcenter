@@ -79,11 +79,17 @@ if($action=="logout")
 //Renvoie la liste des classes*************************
 if($action=="getListeClasses")
 {
-	connectToBDD();
-	$reponseJSON['listeClasses']=array();
-	$reponse = $bdd->query('SELECT DISTINCT(classe) FROM '.$BDD_PREFIXE.'utilisateurs WHERE classe<>""');
-	while ($donnees = $reponse->fetch())
-		array_push($reponseJSON["listeClasses"],$donnees["classe"]);
+	if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur")
+	{
+		connectToBDD();
+		$reponseJSON['listeClasses']=array();
+		$reponse = $bdd->query('SELECT DISTINCT(classe) FROM '.$BDD_PREFIXE.'utilisateurs WHERE classe<>""');
+		while ($donnees = $reponse->fetch())
+			array_push($reponseJSON["listeClasses"],$donnees["classe"]);
+	}
+	else
+		$reponseJSON["messageRetour"]=":)Vous n'avez pas le droit de récupérer la liste des classes.";
+	
 }
 
 // =====================================================
@@ -247,7 +253,7 @@ if($action=="changeStatutUser")
 // =====================================================
 if($action=="getListeEleves")
 {
-	if($_SESSION['statut']=="admin")
+	if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur")
 	{
 		connectToBDD();
 		$classe="";
@@ -288,10 +294,9 @@ if($action=="getNotationEleves")
 	$eleve=0;
 	if(isset($_POST['eleve'])) $eleve=intval($_POST['eleve']);
 
-	if($_SESSION['statut']=="admin" || $eleve==$_SESSION['id'] && $eleve>0)	//Si admin, ou utilisateur connecté qui demande sa propre notation
+	if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur" || $eleve==$_SESSION['id'] && $eleve>0)	//Si admin, ou utilisateur connecté qui demande sa propre notation
 	{
 		connectToBDD();
-
 
 		//Recupere la classe de l'élève
 		//$reqClasse = $bdd->query('SELECT classe FROM '.$BDD_PREFIXE.'utilisateurs WHERE id='.$eleve);
@@ -300,7 +305,6 @@ if($action=="getNotationEleves")
 		
 		if($donneesClasse=$reqClasse->fetch())//Si pas d'eleve selectionné
 		{		
-
 			$classe=$donneesClasse['classe'];
 			
 			$req_ind="(SELECT * FROM ".$BDD_PREFIXE."indicateurs AS i JOIN ".$BDD_PREFIXE."liensClassesIndicateurs AS l ON i.id=l.indicateur WHERE classe='".$classe."')";
@@ -386,7 +390,7 @@ if($action=="getNotationEleves")
 // Action qui ajoute une nouvelle note **************************************
 if($action=="newNote")
 {
-	if($_SESSION['statut']=="admin")
+	if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur")
 	{
 		connectToBDD();
 		$eleve=0;

@@ -20,10 +20,10 @@ $(function()//Fonction lancée au chargement de la page
 
 	//Initialisation des pages
 	if(STATUT=="admin")
-	{
 		getListeUsersAdmin("[ALL]");
+	
+	if(STATUT=="admin" || STATUT=="evaluateur")
 		updateListesClasses();// Met a jour les listes des classes
-	}
 
 	//Mise en page des menus déroulants
 	 $("#userAdminSelectClasse").selectBoxIt();

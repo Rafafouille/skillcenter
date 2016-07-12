@@ -4,49 +4,6 @@
 
 
 
-// LISTES CLASSE ET ELEVES
-// ****************************************************
-
-// Fonction qui met à jour les listes de classe
-// (sur plusieurs pages)
-updateListesClasses=function()
-{
-	$.post(
-			'./sources/PHP/actionneurJSON.php',//Requete appelée
-			{	//Les données à passer par POST
-				action:"getListeClasses"
-			},
-			updateListesClasses_CallBack,	//Fonction callback
-			"json"	//Type de réponse
-	);
-}
-
-//Callback de la fonction
-updateListesClasses_CallBack=function(reponse)
-{
-	//Liste dans la page "Competences"
-	$("#selectClasseCompetences").empty();
-	//$("#selectClasseCompetences").append("<option value=\"[ALL]\">Toutes les classes</option>");
-	//Liste dans la page "Notation"
-	$("#notationListeClasses").empty();
-
-	for(var i=0;i<reponse.listeClasses.length;i++)
-	{
-		var classe=reponse.listeClasses[i];
-		//Ajout dans la page "Competences"
-		$("#selectClasseCompetences").append("<option value=\""+classe+"\">"+classe+"</option>");
-		//Ajout dans la page "Notation"
-		$("#notationListeClasses").append("<option value=\""+classe+"\">"+classe+"</option>");
-	}
-	
-	$("#notationFormulaireListesClasseEtEleves #notationListeClasses").data("selectBox-selectBoxIt").refresh();//Mise a jour SelectBoxIT
-	$("#userAdminSelectClasse").data("selectBox-selectBoxIt").refresh();//Mise a jour SelectBoxIT
-	
-}
-
-
-
-
 
 
 // AFFICHAGE GROUPE / COMPETENCES / INDICATEURS

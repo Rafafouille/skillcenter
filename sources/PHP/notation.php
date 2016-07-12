@@ -16,7 +16,7 @@
 					
 					<?php
 					//Affichage du menu de sélection des classes et des élèves
-					if($_SESSION['statut']=="admin")
+					if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur")
 					{?>
 					<form id="notationFormulaireListesClasseEtEleves" style="float:right;">
 						<select name="notationListeClasses" id="notationListeClasses" onchange="NotationGetListeEleves($(this).val());">

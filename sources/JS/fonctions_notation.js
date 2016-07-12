@@ -87,7 +87,7 @@ function NOTATION_ajouteIndicateur(indicateur,conteneur)
 "										<img src=\"./sources/images/icone-info.png\" alt=\"[i]\"  style=\"cursor:help;\" title=\""+indicateur.details+"\"/>"+
 "									</td>"+
 "									<td class=\"niveauxIndicateur\">"+
-"									"+NOTATION_getNiveauxIndicateur(indicateur.niveauEleveMax,indicateur.niveauMax,indicateur.id,STATUT=="admin",false)
+"									"+NOTATION_getNiveauxIndicateur(indicateur.niveauEleveMax,indicateur.niveauMax,indicateur.id,STATUT=="admin" || STATUT=="evaluateur",false)
 "									</td>"+
 "								</tr>";
 
