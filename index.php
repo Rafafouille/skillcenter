@@ -45,8 +45,13 @@ include("./sources/PHP/actions.php");
 		<script type="text/javascript" src="./sources/JS/libraries/jquery-ui/jquery-ui.min.js"></script>
 		
 		<!-- Menus déroulants -->
+		<!--
 		<link type="text/css" rel="stylesheet" href="http://gregfranko.com/jquery.selectBoxIt.js/css/jquery.selectBoxIt.css" />
 		<script src="http://gregfranko.com/jquery.selectBoxIt.js/js/jquery.selectBoxIt.min.js"></script>
+		-->
+		<link type="text/css" rel="stylesheet" href="./sources/JS/libraries/selectBoxIt/jquery.selectBoxIt.css" />
+		<script src="./sources/JS/libraries/selectBoxIt/jquery.selectBoxIt.min.js"></script>
+
 
 		<script type="text/javascript" src="./sources/JS/fonctions.js"></script>
 		<script type="text/javascript" src="./sources/JS/actionsEvenements.js"></script>
