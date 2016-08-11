@@ -105,6 +105,8 @@ include("./sources/PHP/actions.php");
 					
 					<?php if($_SESSION['id']) echo '<li><a href="#tab-notation"><img src="./sources/images/icone-checklist.png"/><br/>Évaluation</a></li>';?>
 					
+					<?php if($_SESSION['statut']=="admin") echo '<li><a href="#tab-historique"><img src="./sources/images/icone-historique.png"/><br/>Historique</a></li>';?>
+					
 					<?php if($_SESSION['statut']=="admin") echo '<li><a href="#tab-competences"><img src="./sources/images/icone-checklist-edit.png"/><br/>Compétences</a></li>';?>
 				</ul>
 				<div id="tab-home">
@@ -116,11 +118,12 @@ include("./sources/PHP/actions.php");
 				
 					if($_SESSION['id'])	//Si connecté
 					include("./sources/PHP/notation.php"); //Notation
+
+					if($_SESSION['statut']=="admin")	//Si admin...
+					include("./sources/PHP/historique.php");//Historique de notation
 				
 					if($_SESSION['statut']=="admin")	//Si admin
 					include("./sources/PHP/competences.php");//Administration Compétences
-
-
 
 				?>
 	

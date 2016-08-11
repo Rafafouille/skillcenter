@@ -423,6 +423,35 @@ if($action=="newNote")
 
 
 
+// =====================================================
+// HISTORIQUE
+// =====================================================
+
+//Supprime une notation
+if($action=="supprimeNotation")
+{
+	if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur")
+	{
+		$id=-1;
+		if(isset($_POST['idNotation'])) $id=intval($_POST['idNotation']);
+		if($id>0)
+		{
+			connectToBDD();
+
+			$req=$bdd->prepare("DELETE FROM notation WHERE id=:id");
+			$req->execute(array('id'=>$id));
+			$reponseJSON["idNotation"]=$id;
+			$reponseJSON["messageRetour"]=":)L'évaluation a bien été supprimée.";
+		}
+		else
+			$reponseJSON["messageRetour"]=":(L'évaluation à supprimer n'a pas/a mal été transmise.";
+	}
+	else
+		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de supprimer une évaluation.";
+}
+
+
+
 
 // =====================================================
 // ADMINISTRATION COMPETENCES
