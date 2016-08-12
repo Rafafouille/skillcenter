@@ -1,0 +1,3 @@
+- Séparer le fichier "boites.php" en deux ou trois (élève / prof / admin)
+- Faire bilan "radar" élèves
+- Faire badges
