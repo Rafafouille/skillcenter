@@ -1,0 +1,95 @@
+/*****************************
+	HISTORIQUE
+ ***************************/
+
+.element_historique
+{
+	max-width:850px;
+	border-radius:10px;
+	background-color:#FFDDAA;
+	padding:5px;
+	margin:auto;
+	margin-bottom:5px;
+	margin-top:5px;
+}
+
+.element_historique:hover
+{
+	background-color:#DDBB88;
+}
+
+.id_historique
+{
+	display:inline-block;
+	background-color:white;
+	border:2px solid #BB9977;
+	border-radius:20px;
+	width:40px;
+	height:40px;
+	overflow:hidden;
+	vertical-align:middle;
+
+	margin-left:-20px;
+	margin-top:-10px;
+	margin-bottom:-10px;
+	margin-right:5px;
+
+	text-align:center;
+	font-weight:bold;
+	font-size:small;
+}
+
+.id_historique div
+{
+	/*height:100%;*/
+	width:100%;
+	margin:auto;
+	padding:auto;
+	padding-top:11px;
+}
+
+.eleve_historique
+{
+	font-weight:bold;
+	display:inline-block;
+	width:200px;
+	vertical-align:middle;
+}
+
+.prof_date_historique
+{
+	font-size:small;
+	display:inline-block;
+	width:200px;
+	vertical-align:middle;
+}
+
+.note_historique
+{
+	display:inline-block;
+	width:100px;
+	vertical-align:middle;
+}
+
+.intitule_historique
+{
+	display:inline-block;
+	width:230px;
+	font-style:italic;
+	vertical-align:middle;
+	font-size:small;
+}
+
+.menu_historique
+{
+	display:inline-block;
+	width:50px;
+	vertical-align:middle;
+	text-align:right;
+}
+
+.menu_historique img
+{
+	cursor:pointer;
+	height:20px;
+} 

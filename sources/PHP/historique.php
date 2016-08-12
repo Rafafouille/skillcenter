@@ -8,10 +8,11 @@
 						{
 							echo "
 						<div id=\"historique_".$donnees['id']."\" class=\"element_historique\">
-							<div class=\"id_historique\">".$donnees['id']."</div>
+							<div class=\"id_historique\"><div>".$donnees['id']."</div></div>
 							<div class=\"eleve_historique\">".$donnees['prenomEleve']." ".$donnees['nomEleve']."</div>
 							<div class=\"prof_date_historique\">(<img style=\"height:20px; vertical-align:middle;\" src=\"./sources/images/teaching.png\"/>".$donnees['prenomProf']." ".$donnees['nomProf']."<br/>".$donnees['date'].")</div>
 							<div class=\"note_historique\">Note : ".$donnees['note']."/".$donnees['niveaux']."</div>
+							<div class=\"intitule_historique\">\"".$donnees['nomIndicateur']."\"</div>
 							<div class=\"menu_historique\">
 								<img src=\"./sources/images/icone-modif.png\" alt=\"[Modif]\" title=\"Modifier l'évaluation\" onclick=\"\"/>
 								<img src=\"./sources/images/poubelle.png\" alt=\"[Suppr]\" title=\"Supprimer l'évaluation\" onclick=\"$('#supprEvaluNumId').text(".$donnees['id'].");$('#dialog-supprimeNotation').dialog('open');\"/>

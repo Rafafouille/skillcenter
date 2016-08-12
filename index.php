@@ -36,6 +36,7 @@ include("./sources/PHP/actions.php");
 		<link rel="stylesheet" href="./sources/style/style.css" />
 		<?php if($_SESSION["statut"]=="admin") { ?>
 		<link rel="stylesheet" href="./sources/style/styleUsers.css" />
+		<link rel="stylesheet" href="./sources/style/styleHistorique.css" />
 		<?php } ?>
 		<link rel="stylesheet" href="./sources/style/styleCompetences.css" />
 		
