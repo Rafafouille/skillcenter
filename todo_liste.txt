@@ -1,4 +1,3 @@
-- Lors de la mise à jour d'une notation, remettre la ligne en DEBUT de page
 - Séparer le fichier "boites.php" en deux ou trois (élève / prof / admin)
 - Faire bilan "radar" élèves
 - Faire badges
@@ -6,3 +5,4 @@
 - Mettre une page "A propos"
 - La page "evaluation" doit se réactualiser quand on rajoute un intitulé
 - La page "evaluation" doit se réactualiser quand on modifier/supprime un note
+- Crypter les Mdp
