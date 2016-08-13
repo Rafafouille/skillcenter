@@ -63,6 +63,10 @@ include("./sources/PHP/actions.php");
 		<script type="text/javascript" src="./sources/JS/actionsEvenements_notation.js"></script>
 		<?php }
 
+		if($_SESSION["statut"]=="admin" || $_SESSION["statut"]=="examinateur") {//Si admin ou prof ?>
+		<script type="text/javascript" src="./sources/JS/actionsEvenements_historique.js"></script>
+		<?php }
+
 		if($_SESSION["statut"]=="admin") { //Si admin?>
 		<script type="text/javascript" src="./sources/JS/fonctions_competences.js"></script>
 		<script type="text/javascript" src="./sources/JS/actionsEvenements_utilisateurs.js"></script>

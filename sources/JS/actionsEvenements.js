@@ -121,28 +121,3 @@ updateListesClasses_CallBack=function(reponse)
 }
 
 
-
-
-/************************************************
-	HISTORIQUE
-********************************************/
-
-supprimeNotation=function(id)
-{
-	$.post(
-			'./sources/PHP/actionneurJSON.php',//Requete appelée
-			{	//Les données à passer par POST
-				action:"supprimeNotation",
-				idNotation:id
-			},
-			supprimeNotation_CallBack,	//Fonction callback
-			"json"	//Type de réponse
-	);
-}
-
-supprimeNotation_CallBack=function(reponse)
-{
-	afficheMessage(reponse.messageRetour);
-	var id=reponse.idNotation;
-	$("#historique_"+id).remove();
-}

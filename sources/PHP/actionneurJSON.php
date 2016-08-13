@@ -427,6 +427,35 @@ if($action=="newNote")
 // HISTORIQUE
 // =====================================================
 
+//Modifie une notation
+if($action=="modifieNotation")
+{
+	if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur")
+	{
+		$id=-1;
+		if(isset($_POST['idNotation'])) $id=intval($_POST['idNotation']);
+		$note="-1";
+		if(isset($_POST['note'])) $note=intval($_POST['note']);
+		if($id>0)
+		{
+			connectToBDD();
+
+			$req=$bdd->prepare("UPDATE notation SET note=:note, date=NOW(),examinateur=".$_SESSION['id']." WHERE id=:id");
+			$req->execute(array('id'=>$id,'note'=>$note));
+			$reponseJSON["idNotation"]=$id;
+			$reponseJSON["note"]=$note;
+			$reponseJSON["date"]=date("Y-m-d H:i");
+			$reponseJSON["evaluateur"]=$_SESSION['prenom']." ".$_SESSION['nom'];
+			$reponseJSON["messageRetour"]=":)L'évaluation a bien été mise à jour.";
+
+		}
+		else
+			$reponseJSON["messageRetour"]=":(L'évaluation à supprimer n'a pas/a mal été transmise.";
+	}
+	else
+		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de modifier une évaluation.";
+}
+
 //Supprime une notation
 if($action=="supprimeNotation")
 {
