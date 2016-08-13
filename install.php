@@ -113,7 +113,8 @@ if(isset($_POST['NIVEAU_DEFAUT']))	$_SESSION['NIVEAU_DEFAUT']=$_POST['NIVEAU_DEF
 		.boite p
 		{
 			width:80%;
-			padding:20px;
+			margin-left:auto;
+			margin-right:auto;
 		}
 	</style>
 </head>
