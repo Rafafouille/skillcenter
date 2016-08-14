@@ -176,13 +176,13 @@ if($etape=="sauvOptions")
 			<br/><br/>
 			Les données de ce fichier vont être récupérées.
 			<br/><br/>
-			Ce fichier sera écrasé en toute fin d'installation (si jamais vous annulez avant...)
+			Ce fichier sera écrasé seulement après avoir rentré les paramètres (si jamais vous annulez avant...).
 		</p>
 		<table class="boutons"><tr>
 			<td>
 				<form action="" method="POST" style="display:inline;">
 					<input type="hidden" name="etape" value="debut"/>
-					<input type="submit" class="bouton" value="<-- Présent"/>
+					<input type="submit" class="bouton" value="<-- Précédent"/>
 				</form>
 			</td>
 			<td>
@@ -209,6 +209,30 @@ if($etape=="sauvOptions")
 }
 
 
+
+
+
+//etape 3bis : tester la connection SQL ============================
+if($etape=="testBDD")
+{
+	$connexionReussie=false;
+	try
+	{
+		$bdd = new PDO('mysql:host='.$_SESSION['BDD_SERVER'].';dbname='.$_SESSION['BDD_NOM_BDD'].'',$_SESSION['BDD_LOGIN'],$_SESSION['BDD_MOT_DE_PASSE']);
+		
+		$connexionReussie=true;
+	}
+	catch(PDOException $e)
+	{
+		$connexionReussie=false; //Inutile...
+	}
+	if($connexionReussie)
+		$etape="valideBDD";
+	else
+		$etape="rentreBDD";
+}
+
+
 // etape 3 : Rentre BDD ===========================================
 if($etape=="rentreBDD")
 {?>
@@ -217,7 +241,14 @@ if($etape=="rentreBDD")
 		<p>
 			Pour utiliser SkillCenter, vous devez avoir une base de données MySQL.
 			<br/>Merci de rentrer les paramètres de connexion ci-dessous.
+		</p>
 
+			<?php if(isset($connexionReussie))
+						{if(!$connexionReussie)
+								echo "<p style=\"color:red;font-weight:bold;\">Le test de connexion à la base de données a échoué. Les paramètres ne semblent pas être bons...</p>";
+						}
+			?>
+		<p>
 			<form id="rentreBDD" method="POST" action="">
 				<table>
 					<tr>
@@ -241,7 +272,7 @@ if($etape=="rentreBDD")
 						<td><input type="text" id="input_BDD_PREFIXE" name="BDD_PREFIXE" placeholder="Ex : cpt1_    [OPTIONNEL]" value="<?php echo $_SESSION['BDD_PREFIXE'];?>"/></td>
 					</tr>
 				</table>
-				<input type="hidden" name="etape" value="rentreNotation"/>
+				<input type="hidden" name="etape" value="testBDD"/>
 				<input type="submit" class="bouton" value="Suivant -->"/>
 			</form>
 			
@@ -251,7 +282,7 @@ if($etape=="rentreBDD")
 				<td>
 					<form action="" method="POST" style="display:inline;">
 						<input type="hidden" name="etape" value="debut"/>
-						<input type="submit" class="bouton" value="<-- Présent"/>
+						<input type="submit" class="bouton" value="<-- Précédent"/>
 					</form>
 				</td>
 			</tr></table>
@@ -261,8 +292,35 @@ if($etape=="rentreBDD")
 
 
 
+// etape 3ter : Valide BDD ===========================================
+if($etape=="valideBDD")
+{?>
+	<div class="boite">
+		<h2>Paramètres de la BDD validés</h2>
+		<p>
+			La connexion-test à la base de donnée a réussie.
+			Les paramètres fournis sont donc corrects.
+		</p>
+		<div class="boutons">
+			<table><tr>
+				<td>
+					<form action="" method="POST" style="display:inline;">
+						<input type="hidden" name="etape" value="rentreBDD"/>
+						<input type="submit" class="bouton" value="<-- Précédent"/>
+					</form>
+				</td>
+				<td>
+					<form action="" method="POST" style="display:inline;">
+						<input type="hidden" name="etape" value="rentreNotation"/>
+						<input type="submit" class="bouton" value="Suivant -->"/>
+					</form>
+				</td>
+			</tr></table>
+		</div>
+	</div>
+<?php }
 
-
+				
 
 
 // etape 4 : Rentre Notation ===========================================
@@ -293,13 +351,13 @@ if($etape=="rentreNotation")
 				<td>
 					<form action="" method="POST" style="display:inline;">
 						<input type="hidden" name="etape" value="rentreBDD"/>
-						<input type="submit" class="bouton" value="<-- Présent"/>
+						<input type="submit" class="bouton" value="<-- Précédent"/>
 					</form>
 				</td>
 				<td>
 					<form action="" method="POST" style="display:inline;">
 						<input type="hidden" name="etape" value="ecritFichier"/>
-						<input type="submit" class="bouton" value="Suivant -->"/>
+						<input type="submit" class="bouton" value="Créer le fichier 'options.php' -->"/>
 					</form>
 				</td>
 			</tr></table>
@@ -327,7 +385,7 @@ if($etape=="ecritFichier")
 
 //Paramètre des niveaux des critères ********
 \$NB_NIVEAUX_MAX=".$_SESSION['NB_NIVEAUX'].";		//Nombre de niveaux maximums qu'un critère pourra prendre
-\$NIVEAUX_DEFAUT=".$_SESSION['NIVEAU_DEFAUT'].";		//Niveau max initialement proposé lors de la création d'un critère
+\$NIVEAU_DEFAUT=".$_SESSION['NIVEAU_DEFAUT'].";		//Niveau max initialement proposé lors de la création d'un critère
 
 //**************** FIN DU FICHIER ****************
 ?>";
@@ -357,8 +415,14 @@ if($etape=="ecritFichier")
 			<table><tr>
 				<td>
 					<form action="" method="POST" style="display:inline;">
-						<input type="hidden" name="etape" value="ecritFichier"/>
-						<input type="submit" class="bouton" value="Réessayer"/>
+						<input type="hidden" name="etape" value="rentreNotation"/>
+						<input type="submit" class="bouton" value="<-- Précédent"/>
+					</form>
+				</td>
+				<td>
+					<form action="" method="POST" style="display:inline;">
+						<input type="hidden" name="etape" value="creerBDD_Info"/>
+						<input type="submit" class="bouton" value="Suivant -->"/>
 					</form>
 				</td>
 			</tr></table>
@@ -375,7 +439,7 @@ if($etape=="ecritFichier")
 			<strong>Impossible de créer le nouveau fichier "options.php".</strong>
 			<br/>vérifiez que PHP a bien les droits d'écriture dans le dossier "sources/PHP".
 			<br/><br/>Sinon, vous pouvez créez (ou remplacer) le fichier "options.php" à la main (n'oubliez pas le "s" !)
-			dans le dossier "<em>sources/PHP</em>", à l'aide 'un éditeur de texte en copiant le texte suivant :
+			dans le dossier "<em>sources/PHP</em>", à l'aide d'un éditeur de texte en copiant le texte suivant :
 			<form>
 				<textarea rows="15" cols="70"><?php echo $contenu;?></textarea>
 			</form>
@@ -384,8 +448,20 @@ if($etape=="ecritFichier")
 			<table><tr>
 				<td>
 					<form action="" method="POST" style="display:inline;">
+						<input type="hidden" name="etape" value="rentreNotation"/>
+						<input type="submit" class="bouton" value="<-- Précédent"/>
+					</form>
+				</td>
+				<td>
+					<form action="" method="POST" style="display:inline;">
 						<input type="hidden" name="etape" value="ecritFichier"/>
 						<input type="submit" class="bouton" value="Réessayer"/>
+					</form>
+				</td>
+				<td>
+					<form action="" method="POST" style="display:inline;">
+						<input type="hidden" name="etape" value="creerBDD_Info"/>
+						<input type="submit" class="bouton" value="Passer -->"/>
 					</form>
 				</td>
 			</tr></table>
@@ -412,8 +488,20 @@ if($etape=="ecritFichier")
 			<table><tr>
 				<td>
 					<form action="" method="POST" style="display:inline;">
-						<input type="hidden" name="etape" value="ecritFichier"/>
+						<input type="hidden" name="etape" value="rentreNotation"/>
+						<input type="submit" class="bouton" value="<-- Précédent"/>
+					</form>
+				</td>
+				<td>
+					<form action="" method="POST" style="display:inline;">
+						<input type="hidden" name="etape" value="creerBDD_Info"/>
 						<input type="submit" class="bouton" value="Réessayer"/>
+					</form>
+				</td>
+				<td>
+					<form action="" method="POST" style="display:inline;">
+						<input type="hidden" name="etape" value="creerBDD_Info"/>
+						<input type="submit" class="bouton" value="Passer -->"/>
 					</form>
 				</td>
 			</tr></table>
@@ -422,12 +510,355 @@ if($etape=="ecritFichier")
 	<?php
 	}
 }
+
+
+
+
+
+// etape 6 : Creer BDD information ===========================================
+if($etape=="creerBDD_Info")
+{?>
+	<div class="boite">
+		<h2>Créaction / Actualisation des tables de la BDD</h2>
+		<p>
+			Nous allons maintenant installer (ou mettre à jour) les tables de la base de données.
+			Pour ce faire, il faut être sûr que l'utilisateur de la base SQL (que vous avez rentré précédement) 
+			ait les droits d'écriture dans la base de donnée...
+		</p>
+		<div class="boutons">
+			<table><tr>
+				<td>
+					<form action="" method="POST" style="display:inline;">
+						<input type="hidden" name="etape" value="rentreNotation"/>
+						<input type="submit" class="bouton" value="<-- Précédent"/>
+					</form>
+				</td>
+				<td>
+					<form action="" method="POST" style="display:inline;">
+						<input type="hidden" name="etape" value="creerBDD"/>
+						<input type="submit" class="bouton" value="Suivant -->"/>
+					</form>
+				</td>
+			</tr></table>
+		</div>
+	</div>
+<?php }
+
+
+
+
+
+// etape 7 : Creer BDD ===========================================
+if($etape=="creerBDD")
+{
+
+	//Connexion à la BDD
+	$bdd = new PDO('mysql:host='.$_SESSION['BDD_SERVER'].';dbname='.$_SESSION['BDD_NOM_BDD'].'',$_SESSION['BDD_LOGIN'],$_SESSION['BDD_MOT_DE_PASSE']);
+
+
+function creeTable($nom,$attr1)
+{
+		global $bdd;
+
+		//Vérifie si elle existe
+		$rep=$bdd->query("SHOW TABLES FROM ".$_SESSION['BDD_NOM_BDD']." LIKE '".$_SESSION['BDD_PREFIXE'].$nom."'");
+		if($donnees=$rep->fetch())
+			echo "			<li style=\"color:blue;font-style:italic;\">La table '".$_SESSION['BDD_PREFIXE'].$nom."' existe déjà.</li>";
+		else
+		{
+		try
+			{$bdd->query("CREATE TABLE ".$_SESSION['BDD_PREFIXE'].$nom." (".$attr1." INT AUTO_INCREMENT PRIMARY KEY) ");
+				echo "			<li style=\"color:green;\">Table '".$_SESSION['BDD_PREFIXE'].$nom."' créée.</li>";}
+			catch(Execption $e)
+			{echo "			<li style=\"color:red;font-weight:bold;\">Erreur de création de '".$_SESSION['BDD_PREFIXE'].$nom."'.</li>";}
+		}
+}
+
+function creeAttribut($table,$nom,$type)
+{
+		global $bdd;
+		$rep=$bdd->query("SHOW COLUMNS FROM ".$_SESSION['BDD_PREFIXE'].$table." LIKE  '".$nom."'");
+		if($donnees=$rep->fetch())
+			echo "			<li style=\"color:blue;font-style:italic;\">&nbsp;&nbsp;&nbsp;Attribut '".$nom."' (Table '".$_SESSION['BDD_PREFIXE'].$table."') existe déjà.</li>";
+		else
+		{
+			try
+			{$bdd->query("ALTER TABLE ".$_SESSION['BDD_PREFIXE'].$table." ADD ".$nom." ".$type);
+				echo "			<li style=\"color:green;\">&nbsp;&nbsp;&nbsp;Attribut '".$nom."' (Table '".$_SESSION['BDD_PREFIXE'].$table."') créée.</li>";}
+			catch(Execption $e)
+			{echo "			<li style=\"color:red;font-weight:bold;\">&nbsp;&nbsp;&nbsp;Erreur de création de l'attribut '".$nom."' (Table '".$_SESSION['BDD_PREFIXE'].$table."').</li>";}
+		}
+}
+
 ?>
+	<div class="boite">
+		<h2>Créaction / Actualisation des tables de la BDD</h2>
+		<ul>
+<?php
+
+creeTable("competences","id");
+	creeAttribut("competences","id","int AUTO_INCREMENT PRIMARY KEY");
+	creeAttribut("competences","nom","text");
+	creeAttribut("competences","groupe","int");
+	creeAttribut("competences","position","int");
+	
+creeTable("groupes_competences","id");
+	creeAttribut("groupes_competences","id","int AUTO_INCREMENT PRIMARY KEY");
+	creeAttribut("groupes_competences","nom","text");
+	creeAttribut("groupes_competences","position","int");
+
+creeTable("indicateurs","id");
+	creeAttribut("indicateurs","id","int AUTO_INCREMENT PRIMARY KEY");
+	creeAttribut("indicateurs","nom","text");
+	creeAttribut("indicateurs","details","int");
+	creeAttribut("indicateurs","niveaux","int");
+	creeAttribut("indicateurs","position","int");
+	creeAttribut("indicateurs","competence","int");
+
+creeTable("liensClassesIndicateurs","idLien");
+	creeAttribut("liensClassesIndicateurs","idLien","int AUTO_INCREMENT PRIMARY KEY");
+	creeAttribut("liensClassesIndicateurs","indicateur","int");
+	creeAttribut("liensClassesIndicateurs","classe","text");
+
+creeTable("notation","id");
+	creeAttribut("notation","id","int AUTO_INCREMENT PRIMARY KEY");
+	creeAttribut("notation","note","int");
+	creeAttribut("notation","date","timestamp");
+	creeAttribut("notation","eleve","int");
+	creeAttribut("notation","indicateur","int");
+	creeAttribut("notation","examinateur","int");
+	
+creeTable("utilisateurs","id");
+	creeAttribut("utilisateurs","id","int AUTO_INCREMENT PRIMARY KEY");
+	creeAttribut("utilisateurs","nom","text");
+	creeAttribut("utilisateurs","prenom","text");
+	creeAttribut("utilisateurs","login","text");
+	creeAttribut("utilisateurs","mdp","text");
+	creeAttribut("utilisateurs","classe","text");
+	creeAttribut("utilisateurs","statut","text");
+	creeAttribut("utilisateurs","mail","text");
+	creeAttribut("utilisateurs","notifieMail","tinyint");
+
+
+
+?>
+		</ul>
+		<div class="boutons">
+			<table><tr>
+				<td>
+					<form action="" method="POST" style="display:inline;">
+						<input type="hidden" name="etape" value="creerBDD_Info"/>
+						<input type="submit" class="bouton" value="<-- Précédent"/>
+					</form>
+				</td>
+				<td>
+					<form action="" method="POST" style="display:inline;">
+						<input type="hidden" name="etape" value="testAdmin"/>
+						<input type="submit" class="bouton" value="Suivant -->"/>
+					</form>
+				</td>
+			</tr></table>
+		</div>
+	</div>
+<?php
+}
 
 
 
 
 
+
+
+
+
+//ETAPE 8bis : enregistre admin ===========================================
+if($etape=="enregistreAdmin")
+{
+		$bdd = new PDO('mysql:host='.$_SESSION['BDD_SERVER'].';dbname='.$_SESSION['BDD_NOM_BDD'].'',$_SESSION['BDD_LOGIN'],$_SESSION['BDD_MOT_DE_PASSE']);
+
+		$nom="";
+		if(isset($_POST['admin_nom'])) $nom=strtoupper($_POST['admin_nom']);
+		$prenom="";
+		if(isset($_POST['admin_prenom'])) $prenom=ucwords($_POST['admin_prenom']);
+		$login="";
+		if(isset($_POST['admin_login'])) $login=strtolower($_POST['admin_login']);
+		$mdp="";
+		if(isset($_POST['admin_mdp'])) $mdp=$_POST['admin_mdp'];
+		$mail="";
+		if(isset($_POST['admin_mail'])) $mail=strtolower($_POST['admin_mail']);
+
+
+		if($nom!="" && $login!="" && $mdp!="")
+		{
+			$req=$bdd->prepare("INSERT INTO ".$_SESSION['BDD_PREFIXE']."utilisateurs(nom,prenom,login,mdp,classe,statut,mail,notifieMail) VALUES(:nom,:prenom,:login,:mdp,'','admin',:mail,1)");
+			$req->execute(array(	'nom'=>$nom,
+												'prenom'=>$prenom,
+												'login'=>$login,
+												'mdp'=>$mdp,
+												'mail'=>$mail
+					));
+			$etape="confirmeAdmin";
+		}
+		else//Si pas valide
+		{
+			$etape="testAdmin";
+		}
+}
+
+
+
+
+
+
+
+//ETAPE 8 : 1er admin ===========================================
+if($etape=="testAdmin")
+{
+		$bdd = new PDO('mysql:host='.$_SESSION['BDD_SERVER'].';dbname='.$_SESSION['BDD_NOM_BDD'].'',$_SESSION['BDD_LOGIN'],$_SESSION['BDD_MOT_DE_PASSE']);
+		$rep=$bdd->query("SELECT * FROM utilisateurs WHERE statut='admin'");
+
+		if($donnees=$rep->fetch())	//S'il y a un admin
+		{?>
+	<div class="boite">
+		<h2>Administration</h2>
+		<p>
+			La base de donnée semble déjà avoir un admin.
+			Nous n'allons donc pas en créer un supplémentaire.
+		</p>
+		<div class="boutons">
+			<table><tr>
+				<td>
+					<form action="" method="POST" style="display:inline;">
+						<input type="hidden" name="etape" value="creerBDD"/>
+						<input type="submit" class="bouton" value="<-- Précédent"/>
+					</form>
+				</td>
+				<td>
+					<form action="" method="POST" style="display:inline;">
+						<input type="hidden" name="etape" value="supprimeInstall"/>
+						<input type="submit" class="bouton" value="Suivant -->"/>
+					</form>
+				</td>
+			</tr></table>
+		</div>
+	</div>
+		<?php }
+		else	//Si pas d'admin
+		{?>
+	<div class="boite">
+		<h2>Administration</h2>
+		<p>
+			Aucun administrateur n'est visible dans la base de donnée.
+			Nous allons vous créer un profil administrateur.
+		</p>
+		<p>
+			<form method="POST" action="">
+				<table>
+					<tr>
+						<td><label for="admin_nom">Nom :</label></td>
+						<td><input type="text" name="admin_nom" id="admin_nom" placeholder="(Obligatoire)" required/></td>
+					</tr>
+					<tr>
+						<td><label for="admin_prenom">Prénom :</label></td>
+						<td><input type="text" name="admin_prenom" id="admin_prenom" placeholder=""/></td>
+					</tr>
+					<tr>
+						<td><label for="admin_login">Login :</label></td>
+						<td><input type="text" name="admin_login" id="admin_login" placeholder="(Obligatoire)" required/></td>
+					</tr>
+					<tr>
+						<td><label for="admin_mdp">Mot de passe :</label></td>
+						<td><input type="password" name="admin_mdp" id="admin_mdp" placeholder="(Obligatoire)" required/></td>
+					</tr>
+					<tr>
+						<td><label for="admin_mail">Email :</label></td>
+						<td><input type="email" name="admin_mail" id="admin_mail" placeholder=""/></td>
+					</tr>
+				</table>
+
+						<input type="hidden" name="etape" value="enregistreAdmin"/>
+						<input type="submit" class="bouton" value="Suivant -->"/>
+			</form>
+		</p>
+		<div class="boutons">
+			<table><tr>
+				<td>
+					<form action="" method="POST" style="display:inline;">
+						<input type="hidden" name="etape" value="creerBDD"/>
+						<input type="submit" class="bouton" value="<-- Précédent"/>
+					</form>
+				</td>
+			</tr></table>
+		</div>
+	</div>
+		<?php }
+}
+
+
+
+
+
+// etape 9 : Confirme l'admin ===========================================
+if($etape=="confirmeAdmin")
+{?>
+	<div class="boite">
+		<h2>Administration</h2>
+		<p>
+			Le compte administrateur a bien été créé.
+		</p>
+		<div class="boutons">
+			<table><tr>
+				<td>
+					<form action="" method="POST" style="display:inline;">
+						<input type="hidden" name="etape" value="testAdmin"/>
+						<input type="submit" class="bouton" value="<-- Précédent"/>
+					</form>
+				</td>
+				<td>
+					<form action="" method="POST" style="display:inline;">
+						<input type="hidden" name="etape" value="supprimeInstall"/>
+						<input type="submit" class="bouton" value="Suivant -->"/>
+					</form>
+				</td>
+			</tr></table>
+		</div>
+	</div>
+<?php }
+
+
+
+
+
+// etape 10 : Suppression Fichier ===========================================
+if($etape=="supprimeInstall")
+{?>
+	<div class="boite">
+		<h2>Fin de l'installation</h2>
+		<p>
+			L'installation est maintenant terminée.
+			Il reste une étape (qui n'est pas encore automatique...) : <span style="color:red;">Supprimer le fichier "install.php" de votre serveur</span>.
+			Car sinon, des petits malins pourront l'utiliser pour modifier vos données.
+		</p>
+		<div class="boutons">
+			<table><tr>
+				<td>
+					<form action="" method="POST" style="display:inline;">
+						<input type="hidden" name="etape" value="testAdmin"/>
+						<input type="submit" class="bouton" value="<-- Précédent"/>
+					</form>
+				</td>
+				<td>
+					<form action="." method="POST" style="display:inline;">
+						<input type="submit" class="bouton" value="Lancer SkillCenter"/>
+					</form>
+				</td>
+			</tr></table>
+		</div>
+	</div>
+<?php }
+
+
+?>
 
 </body>
 </html>
