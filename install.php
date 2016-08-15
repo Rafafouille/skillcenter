@@ -24,6 +24,7 @@ if(isset($_POST['NIVEAU_DEFAUT']))	$_SESSION['NIVEAU_DEFAUT']=$_POST['NIVEAU_DEF
 <head>
         <meta charset="utf-8" />
         <title>Skillcenter</title>
+	<script type="text/javascript" src="./sources/JS/libraries/jquery-ui/external/jquery/jquery.js"></script>
 	<style>
 		body
 		{
@@ -273,7 +274,6 @@ if($etape=="rentreBDD")
 					</tr>
 				</table>
 				<input type="hidden" name="etape" value="testBDD"/>
-				<input type="submit" class="bouton" value="Suivant -->"/>
 			</form>
 			
 		</p>
@@ -284,6 +284,9 @@ if($etape=="rentreBDD")
 						<input type="hidden" name="etape" value="debut"/>
 						<input type="submit" class="bouton" value="<-- Précédent"/>
 					</form>
+				</td>
+				<td>
+						<div class="bouton" onclick="$('#rentreBDD').submit();"/>Suivant --></div>
 				</td>
 			</tr></table>
 		</div>
@@ -332,17 +335,18 @@ if($etape=="rentreNotation")
 			Les données ci-dessous concernent les options par défaut lorsque vous créerez
 			de nouvelles compétences.
 
-			<form>
+			<form method="POST" action="" id="formRentreNotation">
 				<table>
 					<tr>
 						<td><label for="input_NB_NIVEAUX">Nombre de niveaux maximum <span title="Il s'agit du nombre maximum de niveaux qui seront proposés lors de la création d'un nouveau critère." alt="[i]"/></span> :</label></td>
-						<td><input type="number" min="1" step="3" placeholder="Nombre supérieur à 0" id="input_NB_NIVEAUX" name="BDD_NB_NIVEAUX" value="<?php echo $_SESSION['NB_NIVEAUX'];?>"/></td>
+						<td><input type="number" min="1" step="1" placeholder="Nombre supérieur à 0" id="input_NB_NIVEAUX" name="NB_NIVEAUX" value="<?php echo $_SESSION['NB_NIVEAUX'];?>"/></td>
 					</tr>
 					<tr>
 						<td><label for="input_NIVEAU_DEFAUT">Niveau par défaut <span title="Il s'agit du niveau maximum par défaut proposé lors de la création d''une compétence."><img src="./sources/images/icone-info.png" alt="[i]"/></span> :</label></td>
-						<td><input type="number" min="1" step="3" placeholder="Nombre supérieur à 0" id="input_NIVEAU_DEFAUT" name="NIVEAU_DEFAUT" value="<?php echo $_SESSION['NIVEAU_DEFAUT'];?>"/></td>
+						<td><input type="number" min="1" step="1" placeholder="Nombre supérieur à 0" id="input_NIVEAU_DEFAUT" name="NIVEAU_DEFAUT" value="<?php echo $_SESSION['NIVEAU_DEFAUT'];?>"/></td>
 					</tr>
 				</table>
+				<input type="hidden" name="etape" value="ecritFichier"/>
 			</form>
 			
 		</p>
@@ -355,10 +359,7 @@ if($etape=="rentreNotation")
 					</form>
 				</td>
 				<td>
-					<form action="" method="POST" style="display:inline;">
-						<input type="hidden" name="etape" value="ecritFichier"/>
-						<input type="submit" class="bouton" value="Créer le fichier 'options.php' -->"/>
-					</form>
+						<div class="bouton" onclick="$('#formRentreNotation').submit();"/>Créer le fichier 'options.php' --></div>
 				</td>
 			</tr></table>
 		</div>
