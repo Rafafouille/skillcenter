@@ -45,11 +45,11 @@ include("./sources/PHP/actions.php");
 		<script type="text/javascript" src="./sources/JS/libraries/jquery-ui/external/jquery/jquery.js"></script>
 		<script type="text/javascript" src="./sources/JS/libraries/jquery-ui/jquery-ui.min.js"></script>
 		
+		<!-- CHART.JS (pour les graphiques) + Moment.js ---------->
+		<script type="text/javascript" src="./sources/JS/libraries/chartjs/Chart.min.js"></script>
+		<!--<script type="text/javascript" src="./sources/JS/libraries/momentjs/moment.js"></script>-->
+
 		<!-- Menus déroulants -->
-		<!--
-		<link type="text/css" rel="stylesheet" href="http://gregfranko.com/jquery.selectBoxIt.js/css/jquery.selectBoxIt.css" />
-		<script src="http://gregfranko.com/jquery.selectBoxIt.js/js/jquery.selectBoxIt.min.js"></script>
-		-->
 		<link type="text/css" rel="stylesheet" href="./sources/JS/libraries/selectBoxIt/jquery.selectBoxIt.css" />
 		<script src="./sources/JS/libraries/selectBoxIt/jquery.selectBoxIt.min.js"></script>
 
@@ -114,11 +114,13 @@ include("./sources/PHP/actions.php");
 					
 					<?php if($_SESSION['statut']=="admin") echo '<li><a href="#tab-competences"><img src="./sources/images/icone-checklist-edit.png"/><br/>Compétences</a></li>';?>
 				</ul>
-				<div id="tab-home">
-					Home
-				</div>
 				
-				<?php	if($_SESSION['statut']=="admin")	//Si admin...
+				
+				<?php
+
+					include("./sources/PHP/home.php");
+
+					if($_SESSION['statut']=="admin")	//Si admin...
 					include("./sources/PHP/users.php");	//Administration utilisateur
 				
 					if($_SESSION['id'])	//Si connecté

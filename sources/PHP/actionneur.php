@@ -60,6 +60,7 @@ if($action=="logout")
 	$_SESSION['nom']="";
 	$_SESSION['prenom']="";
 	$_SESSION['statut']="";
+	$_SESSION['id']=0;
 	echo ":)Vous êtes déconnecté. Au revoir !";
 }
 
