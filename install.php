@@ -219,7 +219,7 @@ if($etape=="testBDD")
 	$connexionReussie=false;
 	try
 	{
-		$bdd = new PDO('mysql:host='.$_SESSION['BDD_SERVER'].';dbname='.$_SESSION['BDD_NOM_BDD'].'',$_SESSION['BDD_LOGIN'],$_SESSION['BDD_MOT_DE_PASSE']);
+		$bdd = new PDO('mysql:host='.$_SESSION['BDD_SERVER'].';dbname='.$_SESSION['BDD_NOM_BDD'].';charset=utf8',$_SESSION['BDD_LOGIN'],$_SESSION['BDD_MOT_DE_PASSE']);
 		
 		$connexionReussie=true;
 	}
@@ -554,7 +554,7 @@ if($etape=="creerBDD")
 {
 
 	//Connexion à la BDD
-	$bdd = new PDO('mysql:host='.$_SESSION['BDD_SERVER'].';dbname='.$_SESSION['BDD_NOM_BDD'].'',$_SESSION['BDD_LOGIN'],$_SESSION['BDD_MOT_DE_PASSE']);
+	$bdd = new PDO('mysql:host='.$_SESSION['BDD_SERVER'].';dbname='.$_SESSION['BDD_NOM_BDD'].';charset=utf8',$_SESSION['BDD_LOGIN'],$_SESSION['BDD_MOT_DE_PASSE']);
 
 
 function creeTable($nom,$attr1)
@@ -563,12 +563,12 @@ function creeTable($nom,$attr1)
 
 		//Vérifie si elle existe
 		$rep=$bdd->query("SHOW TABLES FROM ".$_SESSION['BDD_NOM_BDD']." LIKE '".$_SESSION['BDD_PREFIXE'].$nom."'");
-		if($donnees=$rep->fetch())
+		if($donnees=$rep->fetch()) //Si la table existe... on le dit...
 			echo "			<li style=\"color:blue;font-style:italic;\">La table '".$_SESSION['BDD_PREFIXE'].$nom."' existe déjà.</li>";
-		else
+		else	//Sinon, on la crée...
 		{
 		try
-			{$bdd->query("CREATE TABLE ".$_SESSION['BDD_PREFIXE'].$nom." (".$attr1." INT AUTO_INCREMENT PRIMARY KEY) ");
+			{$bdd->query("CREATE TABLE ".$_SESSION['BDD_PREFIXE'].$nom." (".$attr1." MEDIUMINT UNSIGNED AUTO_INCREMENT PRIMARY KEY) CHARACTER SET utf8 COLLATE utf8_bin;");
 				echo "			<li style=\"color:green;\">Table '".$_SESSION['BDD_PREFIXE'].$nom."' créée.</li>";}
 			catch(Execption $e)
 			{echo "			<li style=\"color:red;font-weight:bold;\">Erreur de création de '".$_SESSION['BDD_PREFIXE'].$nom."'.</li>";}
@@ -598,47 +598,47 @@ function creeAttribut($table,$nom,$type)
 <?php
 
 creeTable("competences","id");
-	creeAttribut("competences","id","int AUTO_INCREMENT PRIMARY KEY");
-	creeAttribut("competences","nom","text");
-	creeAttribut("competences","groupe","int");
-	creeAttribut("competences","position","int");
+	creeAttribut("competences","id","MEDIUMINT UNSIGNED AUTO_INCREMENT PRIMARY KEY");
+	creeAttribut("competences","nom","TEXT NOT NULL");
+	creeAttribut("competences","groupe","MEDIUMINT UNSIGNED DEFAULT 0");
+	creeAttribut("competences","position","MEDIUMINT UNSIGNED DEFAULT 0");
 	
 creeTable("groupes_competences","id");
 	creeAttribut("groupes_competences","id","int AUTO_INCREMENT PRIMARY KEY");
-	creeAttribut("groupes_competences","nom","text");
-	creeAttribut("groupes_competences","position","int");
+	creeAttribut("groupes_competences","nom","TEXT NOT NULL");
+	creeAttribut("groupes_competences","position","MEDIUMINT UNSIGNED DEFAULT 0");
 
 creeTable("indicateurs","id");
-	creeAttribut("indicateurs","id","int AUTO_INCREMENT PRIMARY KEY");
-	creeAttribut("indicateurs","nom","text");
-	creeAttribut("indicateurs","details","int");
-	creeAttribut("indicateurs","niveaux","int");
-	creeAttribut("indicateurs","position","int");
-	creeAttribut("indicateurs","competence","int");
+	creeAttribut("indicateurs","id","MEDIUMINT UNSIGNED AUTO_INCREMENT PRIMARY KEY");
+	creeAttribut("indicateurs","nom","TEXT NOT NULL");
+	creeAttribut("indicateurs","details","TEXT NOT NULL");
+	creeAttribut("indicateurs","niveaux","MEDIUMINT UNSIGNED DEFAULT 0");
+	creeAttribut("indicateurs","position","MEDIUMINT DEFAULT 0");
+	creeAttribut("indicateurs","competence","MEDIUMINT UNSIGNED DEFAULT 0");
 
 creeTable("liensClassesIndicateurs","idLien");
-	creeAttribut("liensClassesIndicateurs","idLien","int AUTO_INCREMENT PRIMARY KEY");
-	creeAttribut("liensClassesIndicateurs","indicateur","int");
-	creeAttribut("liensClassesIndicateurs","classe","text");
+	creeAttribut("liensClassesIndicateurs","idLien","MEDIUMINT UNSIGNED AUTO_INCREMENT PRIMARY KEY");
+	creeAttribut("liensClassesIndicateurs","indicateur","MEDIUMINT UNSIGNED DEFAULT 0");
+	creeAttribut("liensClassesIndicateurs","classe","TEXT NOT NULL");
 
 creeTable("notation","id");
-	creeAttribut("notation","id","int AUTO_INCREMENT PRIMARY KEY");
-	creeAttribut("notation","note","int");
-	creeAttribut("notation","date","timestamp");
-	creeAttribut("notation","eleve","int");
-	creeAttribut("notation","indicateur","int");
-	creeAttribut("notation","examinateur","int");
+	creeAttribut("notation","id","MEDIUMINT UNSIGNED AUTO_INCREMENT PRIMARY KEY");
+	creeAttribut("notation","note","MEDIUMINT DEFAULT 0");
+	creeAttribut("notation","date","timestamp DEFAULT NOW()");
+	creeAttribut("notation","eleve","MEDIUMINT UNSIGNED DEFAULT 0");
+	creeAttribut("notation","indicateur","MEDIUMINT UNSIGNED DEFAULT 0");
+	creeAttribut("notation","examinateur","MEDIUMINT UNSIGNED DEFAULT 0");
 	
 creeTable("utilisateurs","id");
-	creeAttribut("utilisateurs","id","int AUTO_INCREMENT PRIMARY KEY");
-	creeAttribut("utilisateurs","nom","text");
-	creeAttribut("utilisateurs","prenom","text");
-	creeAttribut("utilisateurs","login","text");
-	creeAttribut("utilisateurs","mdp","text");
-	creeAttribut("utilisateurs","classe","text");
-	creeAttribut("utilisateurs","statut","text");
-	creeAttribut("utilisateurs","mail","text");
-	creeAttribut("utilisateurs","notifieMail","tinyint");
+	creeAttribut("utilisateurs","id","MEDIUMINT UNSIGNED AUTO_INCREMENT PRIMARY KEY");
+	creeAttribut("utilisateurs","nom","TEXT NOT NULL");
+	creeAttribut("utilisateurs","prenom","TEXT NOT NULL");
+	creeAttribut("utilisateurs","login","TEXT NOT NULL");
+	creeAttribut("utilisateurs","mdp","TEXT NOT NULL");
+	creeAttribut("utilisateurs","classe","TEXT NOT NULL");
+	creeAttribut("utilisateurs","statut","TEXT NOT NULL");
+	creeAttribut("utilisateurs","mail","TEXT DEFAULT ''");
+	creeAttribut("utilisateurs","notifieMail","TINYINT DEFAULT 0");
 
 
 
@@ -675,7 +675,7 @@ creeTable("utilisateurs","id");
 //ETAPE 8bis : enregistre admin ===========================================
 if($etape=="enregistreAdmin")
 {
-		$bdd = new PDO('mysql:host='.$_SESSION['BDD_SERVER'].';dbname='.$_SESSION['BDD_NOM_BDD'].'',$_SESSION['BDD_LOGIN'],$_SESSION['BDD_MOT_DE_PASSE']);
+		$bdd = new PDO('mysql:host='.$_SESSION['BDD_SERVER'].';dbname='.$_SESSION['BDD_NOM_BDD'].';charset=utf8',$_SESSION['BDD_LOGIN'],$_SESSION['BDD_MOT_DE_PASSE']);
 
 		$nom="";
 		if(isset($_POST['admin_nom'])) $nom=strtoupper($_POST['admin_nom']);
@@ -715,8 +715,8 @@ if($etape=="enregistreAdmin")
 //ETAPE 8 : 1er admin ===========================================
 if($etape=="testAdmin")
 {
-		$bdd = new PDO('mysql:host='.$_SESSION['BDD_SERVER'].';dbname='.$_SESSION['BDD_NOM_BDD'].'',$_SESSION['BDD_LOGIN'],$_SESSION['BDD_MOT_DE_PASSE']);
-		$rep=$bdd->query("SELECT * FROM utilisateurs WHERE statut='admin'");
+		$bdd = new PDO('mysql:host='.$_SESSION['BDD_SERVER'].';dbname='.$_SESSION['BDD_NOM_BDD'].';charset=utf8',$_SESSION['BDD_LOGIN'],$_SESSION['BDD_MOT_DE_PASSE']);
+		$rep=$bdd->query("SELECT * FROM ".$_SESSION['BDD_PREFIXE']."utilisateurs WHERE statut='admin'");
 
 		if($donnees=$rep->fetch())	//S'il y a un admin
 		{?>
