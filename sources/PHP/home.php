@@ -12,7 +12,7 @@ if(!$_SESSION['id']) //Si pas connecté
 	<strong>Connectez-vous !</strong></p>
 	<?php
 }
-else //Si connecté 
+elseif(0) //Si connecté 
 {
 ?>
 

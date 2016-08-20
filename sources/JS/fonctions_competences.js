@@ -76,7 +76,7 @@ function ADMIN_COMPETENCES_rendu_HTML_competence(nom,id,numeroCompetence,styleCl
 "					<div class=\""+styleClass+"\" id=\"ADMIN_COMPETENCES_competence_"+id+"\">"+
 "						<div class=\"boutonAjouterIndicateur\" onclick=\"ouvreBoiteAddIndicateur('"+nom+"',"+id+");$(this).parent().find('.listeIndicateurs').slideDown('easings');\">"+
 "							<img src=\"./sources/images/icone-plus.png\" alt=\"[+]\"/>"+
-"							Ajouter un critère"+
+"							Ajouter un indicateur"+
 "						</div>"+
 "						<h3 onclick=\"$(this).parent().find('.listeIndicateurs').slideToggle('easings');\">"+
 "							"+numeroCompetence+" - "+nom+

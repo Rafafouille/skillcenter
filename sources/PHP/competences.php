@@ -1,6 +1,5 @@
 
 				<div id="tab-competences">
-					
 
 					<div class="bouton_ajoute" onclick="$('#dialog-addGroupeCompetences').dialog('open');">
 						<img src="./sources/images/icone-plus.png" alt="[+]"/>
