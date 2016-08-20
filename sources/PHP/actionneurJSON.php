@@ -141,11 +141,11 @@ if($action=="addUser")
 	{
 		connectToBDD();
 		$tableau=array(
-				'nom' => $_POST["newUser_nom"],
-				'prenom' => $_POST['newUser_prenom'],
+				'nom' => strtoupper($_POST["newUser_nom"]),
+				'prenom' => ucwords($_POST['newUser_prenom']),
 				'login' => $_POST['newUser_login'],
 				'mdp' => $_POST['newUser_psw'],
-				'classe' => $_POST['newUser_classe']
+				'classe' => strtoupper($_POST['newUser_classe'])
 			);
 		$req = $bdd->prepare('SELECT id FROM '.$BDD_PREFIXE.'utilisateurs WHERE login=:login');
 		$req->execute(array('login'=>$_POST['newUser_login']));
