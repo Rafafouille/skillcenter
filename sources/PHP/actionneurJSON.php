@@ -395,24 +395,30 @@ if($action=="newNote")
 
 	if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur" || $_SESSION['statut']=="autoeval" && $_SESSION['id']==$eleve)
 	{
-		connectToBDD();
+		//RECUPERE LES DONNEES ------------
 		$indicateur=0;
 			if(isset($_POST['indicateur'])) $indicateur=intval($_POST['indicateur']);
 		$note=0;
 			if(isset($_POST['note'])) $note=intval($_POST['note']);
 		
-		//Ajoute de la note
+		//ECRITURE DE LA NOTE ------------
+		connectToBDD();
 		$req = $bdd->prepare('INSERT INTO '.$BDD_PREFIXE.'notation (note,date,eleve,indicateur,examinateur) VALUES(:note,NOW(),:eleve,:indicateur,'.$_SESSION['id'].')');
 		$req->execute(array(
 						'note' => $note,
 						'eleve' => $eleve,
 						'indicateur' => $indicateur
 					));
-					
-		//On récupère la note pour MAJ coté client
+			
+		//BADGES ---------------------------
+		updateBadges($eleve);
+		
+		//RETOUR ------------
 		$reponseJSON["note"]=getNotationPourJSON($eleve,$indicateur);
 				
 		$reponseJSON["messageRetour"]=":)La note a été ajoutée.";
+
+
 	}
 	else
 	{

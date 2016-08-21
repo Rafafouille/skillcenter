@@ -388,6 +388,9 @@ if($etape=="ecritFichier")
 \$NB_NIVEAUX_MAX=".$_SESSION['NB_NIVEAUX'].";		//Nombre de niveaux maximums qu'un critère pourra prendre
 \$NIVEAU_DEFAUT=".$_SESSION['NIVEAU_DEFAUT'].";		//Niveau max initialement proposé lors de la création d'un critère
 
+//Autres ************************************
+\$AUTORISE_BADGES=true;		//Autorise (ou non) les étudiants à recevoir des badges de validation
+
 //**************** FIN DU FICHIER ****************
 ?>";
 
@@ -639,6 +642,8 @@ creeTable("utilisateurs","id");
 	creeAttribut("utilisateurs","statut","TEXT NOT NULL");
 	creeAttribut("utilisateurs","mail","TEXT DEFAULT ''");
 	creeAttribut("utilisateurs","notifieMail","TINYINT DEFAULT 0");
+	creeAttribut("utilisateurs","badges","TEXT DEFAULT ''");
+	creeAttribut("utilisateurs","nouveaux_badges","TEXT DEFAULT ''");
 
 
 

@@ -98,6 +98,70 @@ function getNotationPourJSON($eleve,$indicateur)
 	return $note;
 }
 
+
+
+//Fonction qui met à jour les badges pour un utilisateur
+function updateBadges($idEleve)
+{
+	global $bdd,$reponseJSON;
+
+	//Récupère les badges déjà données
+	$req = $bdd->prepare('SELECT badges,nouveaux_badges FROM utilisateurs WHERE id=:id');
+	$req->execute(array('id'=>$idEleve));
+	$donnees=$req->fetch();
+	$BDDbadges=$donnees['badges'];
+	$BDDnouveaux_badges=$donnees['nouveaux_badges'];
+	$badges_txt=$BDDbadges.",".$BDDnouveaux_badges;
+	$badges=explode(",",$badges_txt);
+
+	//1ere brique
+	if(eligibleBadge_1ere_brique($idEleve,$badges))
+		$BDDnouveaux_badges.="badge1ereBrique,";
+
+	//1ere brique
+	if(eligibleBadge_choses_serieuses_commencent($idEleve,$badges))
+		$BDDnouveaux_badges.="badgeChosesSerieusesCommencent,";
+
+	//Update BDD
+	$req = $bdd->prepare('UPDATE utilisateurs SET nouveaux_badges=:nouveaux_badges WHERE id=:id');
+	$req->execute(array('nouveaux_badges'=>$BDDnouveaux_badges,'id'=>$idEleve));
+}
+
+
+//VERIFIVATION BADGE : 1ere Brique (1er critere noté)
+function eligibleBadge_1ere_brique($idEleve,$badges)
+{
+	if(!in_array("badge1ereBrique",$badges))
+	{
+		global $bdd;
+		$req = $bdd->prepare('SELECT COUNT(DISTINCT indicateur) as c FROM notation WHERE eleve=:id');
+		$req->execute(array('id'=>$idEleve));
+		$donnees=$req->fetch();
+		if($donnees['c']>=0)
+			return true;
+	}
+	return false;
+}
+
+
+
+
+//VERIFIVATION BADGE : 1ere Brique (5 criteres notés)
+function eligibleBadge_choses_serieuses_commencent($idEleve,$badges)
+{
+	if(!in_array("badgeChosesSerieusesCommencent",$badges))
+	{
+		global $bdd;
+		$req = $bdd->prepare('SELECT COUNT(DISTINCT indicateur) as c FROM notation WHERE eleve=:id');
+		$req->execute(array('id'=>$idEleve));
+		$donnees=$req->fetch();
+		if($donnees['c']>=5)
+			return true;
+	}
+	return false;
+}
+
+
 // =================================
 // A SUPPRIMER ?????
 //Renvoie une couleur de l'arc en ciel entre rouge et vert (pour les compétences)
