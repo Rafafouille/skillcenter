@@ -172,30 +172,39 @@ if($action=="updateUser")
 	if($_SESSION['statut']=="admin")
 	{
 		connectToBDD();
-		//Tableau de valeurs
-		$tableau=array(
-				'nom' => $_POST["newUser_nom"],
-				'prenom' => $_POST['newUser_prenom'],
-				'login' => $_POST['newUser_login'],
-				'mdp' => $_POST['newUser_psw'],
-				'classe' => $_POST['newUser_classe'],
-				'id'	=>	$_POST['id']
-			);
 		
 		//Vérification que le login n'existe pas déja en cas de changement
 		$reponseJSON["debug"]=$_POST['newUser_login'];
 		$req = $bdd->prepare('SELECT * FROM '.$BDD_PREFIXE.'utilisateurs WHERE login=":login"');// AND id<>:id');
-		$req->execute($tableau);
+		$req->execute(array('login' => $_POST['newUser_login']));
 		if($donnees=$req->fetch())
 			$reponseJSON["messageRetour"]=":(Le nom d'utilisateur existe déjà";
 		else
 		{
 			//Modifications
 			if($_POST['newUser_psw']!="")//Si un nouveau mot de passe est proposé
+			{
 				$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'utilisateurs SET nom=:nom, prenom=:prenom, mdp=:mdp login=:login, classe=:classe WHERE id=:id');
+				$req->execute(array(
+						'nom' => $_POST["newUser_nom"],
+						'prenom' => $_POST['newUser_prenom'],
+						'login' => $_POST['newUser_login'],
+						'mdp' => $_POST['newUser_psw'],
+						'classe' => $_POST['newUser_classe'],
+						'id'	=>	$_POST['id']
+					));
+			}
 			else
+			{
 				$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'utilisateurs SET nom=:nom, prenom=:prenom, login=:login, classe=:classe WHERE id=:id');
-			$req->execute($tableau);
+				$req->execute(array(
+						'nom' => $_POST["newUser_nom"],
+						'prenom' => $_POST['newUser_prenom'],
+						'login' => $_POST['newUser_login'],
+						'classe' => $_POST['newUser_classe'],
+						'id'	=>	$_POST['id']
+					));
+			}
 			$reponseJSON["messageRetour"]=":)L'utilisateur << ".$_POST["newUser_prenom"]." ".$_POST['newUser_nom']." >> a bien été mis à jour !";
 		}
 	}
