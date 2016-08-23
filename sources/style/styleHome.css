@@ -1,0 +1,43 @@
+/* **************************
+
+ STYLE POUR LA PAGE PRINCIPALE
+
+*************************** */
+
+
+#liste_badges
+{
+	text-align:center;
+	max-width:700px;
+	margin-right:auto;
+	margin-left:auto;
+}
+
+.badge_valide, .badge_non-valide
+{
+	display:inline-block;
+	text-align:center;
+	width:150px;
+	font-weight:bold;
+	vertical-align:top;
+	cursor:help;
+}
+
+
+.badge_valide
+{
+	color:black;
+}
+
+.badge_non-valide
+{
+	color:#CCCCCC;
+}
+
+
+
+.badge_non-valide img
+{
+	opacity: 0.1;
+	filter:alpha(opacity=10) /* Pour IE8 */
+}

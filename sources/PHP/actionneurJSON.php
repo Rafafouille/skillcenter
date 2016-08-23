@@ -420,7 +420,8 @@ if($action=="newNote")
 					));
 			
 		//BADGES ---------------------------
-		updateBadges($eleve);
+		if($AUTORISE_BADGES)
+			updateBadges($eleve);
 		
 		//RETOUR ------------
 		$reponseJSON["note"]=getNotationPourJSON($eleve,$indicateur);

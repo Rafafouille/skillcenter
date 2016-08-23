@@ -162,6 +162,25 @@ function eligibleBadge_choses_serieuses_commencent($idEleve,$badges)
 }
 
 
+//Fonction qui fait passer un badge obtenu, mais pas encore annoncé, vers la liste des badges obtenus ET annoncés
+function valideBadges($idEleve)
+{
+	global $bdd,$AUTORISE_BADGES;
+	if($AUTORISE_BADGES)
+	{
+		$req = $bdd->prepare('SELECT badges as b,	nouveaux_badges as nb FROM utilisateurs WHERE id=:id');
+		$req->execute(array('id'=>$idEleve));
+		$donnees=$req->fetch();
+		$total=$donnees["b"].$donnees['nb'];
+
+		$req=$bdd->prepare('UPDATE utilisateurs SET badges="'.$total.'", nouveaux_badges="" WHERE id=:id');
+		$req->execute(array('id'=>$idEleve));
+	}
+}
+
+
+
+
 // =================================
 // A SUPPRIMER ?????
 //Renvoie une couleur de l'arc en ciel entre rouge et vert (pour les compétences)
