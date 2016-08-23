@@ -70,7 +70,7 @@ if($action=="logout")
 =======================================================*/
 
 //AJOUT D'UN UTILISATEUR=================
-if($action=="addUser")
+/*if($action=="addUser")
 {
 	if($_SESSION['statut']=="admin")
 	{
@@ -97,10 +97,10 @@ if($action=="addUser")
 	{
 		echo ":(Vous n'avez pas le droit d'ajouter un utilisateur !";
 	}
-}
+}*/
 
 //SUPPRESSION D'UN UTILISATEUR=================
-if($action=="delUser")
+/*if($action=="delUser")
 {
 	if($_SESSION['statut']=="admin")
 	{
@@ -125,11 +125,11 @@ if($action=="delUser")
 	}
 	else
 		echo ":(Vous n'avez pas le droit de supprimer un utilisateur.";
-}
+}*/
 
 
 //UPGRADE UN UTILISATEUR=================
-if($action=="upgradeUser")
+/*if($action=="upgradeUser")
 {
 	if($_SESSION['statut']=="admin")
 	{
@@ -154,10 +154,10 @@ if($action=="upgradeUser")
 	}
 	else
 		echo ":(Vous n'avez pas le droit de modifier le statut d'un utilisateur.";
-}
+}*/
 
 //DOWNGRADE UN UTILISATEUR=================
-if($action=="downgradeUser")
+/*if($action=="downgradeUser")
 {
 	if($_SESSION['statut']=="admin")
 	{
@@ -182,7 +182,7 @@ if($action=="downgradeUser")
 	}
 	else
 		echo ":(Vous n'avez pas le droit de modifier le statut d'un utilisateur.";
-}
+}*/
 
 
 

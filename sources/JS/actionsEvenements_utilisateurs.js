@@ -1,7 +1,8 @@
 // ****************************************************
 // ÉVÉNEMENT - ADMINISTRATION UTILISATEURS
 // ****************************************************
-//GET LIST USERS
+
+//Recupere la liste des utilisateurs pour une classe donnée (arg facultatif) ----
 getListeUsersAdmin=function(classe)
 {
 	if(typeof classe == 'undefined') classe="";
@@ -16,6 +17,7 @@ getListeUsersAdmin=function(classe)
 	);
 }
 
+//Callback de getListeUsersAdmin pour mettre à jour l'affichage
 updateListeUsersAdmin=function(reponse)
 {
 	afficheMessage(reponse.messageRetour);
@@ -26,6 +28,8 @@ updateListeUsersAdmin=function(reponse)
 		$("#tableau_utilisateurs").append(getUserHTMLfromJSON(user));
 	}
 }
+
+
 //Transforme les donées users de JSON en code HTML
 getUserHTMLfromJSON=function(user)
 {
@@ -88,7 +92,7 @@ ajouteUpdateUser=function()
 	);
 }
 
-//Fonction qui met à jour la liste des utilisateur
+//Fonction (Callback de ajouteUpdateUser) qui met à jour la liste des utilisateur
 valideNewUpdateUser=function(reponse)
 {
 	afficheMessage(reponse.messageRetour);
@@ -108,7 +112,7 @@ ouvreBoiteModifieUser=function(i)
 }
 
 
-// SUPPRIMER USER
+// SUPPRIMER USER --------
 ouvreBoiteSupprimeUser=function(i,nom)
 {
 	$( "#dialog-deleteUser-id").text(i);
@@ -116,17 +120,25 @@ ouvreBoiteSupprimeUser=function(i,nom)
 	$( "#dialog-deleteUser").dialog( "open" );
 }
 
+//Supprime l'utilisateur 'i'
 supprimeUser=function(i)
 {
 	$.post(
-			'./sources/PHP/actionneur.php',//Requete appelée
+			'./sources/PHP/actionneurJSON.php',//Requete appelée
 			{	//Les données à passer par POST
 				action:"delUser",
 				id:i
 			},
-			recoitValideRecharge,	//Fonction callback
-			"text"	//Type de réponse
+			callBack_supprimeUser,	//Fonction callback
+			"json"	//Type de réponse
 	);
+}
+
+//Callback de supprimeUser ----------
+callBack_supprimeUser=function(reponse)
+{
+	afficheMessage(reponse.messageRetour);
+	$("#user_"+reponse.idSupprime).remove();
 }
 
 

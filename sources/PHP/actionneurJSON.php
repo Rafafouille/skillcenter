@@ -257,6 +257,46 @@ if($action=="changeStatutUser")
 		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de modifier le statut d'un utilisateur !";
 }
 
+
+
+//SUPPRIME UN UTILISATEUR*************************
+if($action=="delUser")
+{
+	if($_SESSION['statut']=="admin")
+	{
+		connectToBDD();
+		$id=0;
+		if(isset($_POST['id'])) $id=$_POST['id'];
+		if($id)
+		{
+			if($id!=$_SESSION['id'])
+			{
+				$req = $bdd->prepare('DELETE FROM '.$BDD_PREFIXE.'utilisateurs WHERE id = :id');
+				$req->execute(array(
+							'id' => $id
+						));
+				$reponseJSON["idSupprime"]=$id;
+				$reponseJSON["messageRetour"]=":)L'utilisateur n°".$id." a bien été supprimé.";
+			}
+			else
+				$reponseJSON["messageRetour"]=":(Vous ne pouvez pas vous supprimer vous même.";
+		}
+		else
+			$reponseJSON["messageRetour"]=":(Aucune utilisateur à supprimer.";
+	}
+	else
+		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de supprimer un utilisateur.";
+}
+
+
+
+
+
+
+
+
+
+
 // =====================================================
 // NOTATION
 // =====================================================
