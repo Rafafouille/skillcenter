@@ -20,7 +20,7 @@ NotationGetListeEleves=function(classe)
 	);
 }
 
-
+//Callback
 updateListeEleves=function(reponse)
 {
 
@@ -104,6 +104,21 @@ valideNouvelleNote=function(reponse)
 	//MAJ de l'arc en ciel
 	var html_barre_arc_en_ciel=NOTATION_getNiveauxIndicateur(reponse.note.max,reponse.note.niveauMax,reponse.note.idIndicateur,true);
 	$("#NOTATION_indicateur_"+reponse.note.idIndicateur+" .niveauxIndicateur").html(html_barre_arc_en_ciel);
+
+	//Ajout dans l'historique
+	var contenu="\n"+
+"						<div id=\"historique_"+reponse.notation.id+"\" class=\"element_historique\">"+
+"							<div class=\"id_historique\"><div>"+reponse.notation.id+"</div></div>"+
+"							<div class=\"eleve_historique\">"+reponse.notation.prenomEleve+" "+reponse.notation.nomEleve+"</div>"+
+"							<div class=\"prof_date_historique\">(<img style=\"height:20px; vertical-align:middle;\" src=\"./sources/images/teaching.png\"/><span class=\"prof_historique\">"+reponse.notation.prenomProf+" "+reponse.notation.nomProf+"</span><br/><span class=\"date_historique\">"+reponse.notation.date+"</span>)</div>"+
+"							<div class=\"note_historique\">Éval.: <strong><span>"+reponse.notation.note+"</span>/"+reponse.notation.niveaux+"</strong></div>"+
+"							<div class=\"intitule_historique\">\""+reponse.notation.nomIndicateur+"\"</div>"+
+"							<div class=\"menu_historique\">"+
+"								<img src=\"./sources/images/icone-modif.png\" alt=\"[Modif]\" title=\"Modifier l'évaluation\" onclick=\"ouvreBoite_modifNotation("+reponse.notation.id+",$('#historique_"+reponse.notation.id+" .note_historique strong span').text(),"+reponse.notation.niveaux+");\"/>"+
+"								<img src=\"./sources/images/poubelle.png\" alt=\"[Suppr]\" title=\"Supprimer l'évaluation\" onclick=\"ouvreBoite_supprimeNotation("+reponse.notation.id+")\"/>"+
+"							</div>"+
+"						</div>";
+	$("#liste_historique").prepend(contenu);
 }
 
 

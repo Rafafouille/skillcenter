@@ -436,6 +436,8 @@ if($action=="getNotationEleves")
 
 
 
+
+
 // Action qui ajoute une nouvelle note **************************************
 if($action=="newNote")
 {
@@ -459,16 +461,40 @@ if($action=="newNote")
 						'indicateur' => $indicateur
 					));
 			
-		//BADGES ---------------------------
-		if($AUTORISE_BADGES)
-			updateBadges($eleve);
+
 		
 		//RETOUR ------------
 		$reponseJSON["note"]=getNotationPourJSON($eleve,$indicateur);
+
+		$repNote=$bdd->query("SELECT * FROM notation WHERE id=".$bdd->lastInsertId());
+		$dataNote=$repNote->fetch();
+
+		$repEleve=$bdd->query("SELECT nom,prenom FROM utilisateurs WHERE id=".$dataNote["eleve"]);
+		$dataEleve=$repEleve->fetch();
+
+		$repProf=$bdd->query("SELECT nom,prenom FROM utilisateurs WHERE id=".$dataNote["examinateur"]);
+		$dataProf=$repProf->fetch();
+
+		$repInd=$bdd->query("SELECT nom,niveaux FROM indicateurs WHERE id=".$dataNote["indicateur"]);
+		$dataInd=$repInd->fetch();
+
+
+		$reponseJSON["notation"]["id"]=$dataNote["id"];
+		$reponseJSON["notation"]["prenomEleve"]=$dataEleve["prenom"];
+		$reponseJSON["notation"]["nomEleve"]=$dataEleve["nom"];
+		$reponseJSON["notation"]["prenomProf"]=$dataProf["prenom"];
+		$reponseJSON["notation"]["nomProf"]=$dataProf["nom"];
+		$reponseJSON["notation"]["date"]=$dataNote['date'];
+		$reponseJSON["notation"]["note"]=$dataNote['note'];
+		$reponseJSON["notation"]["niveaux"]=$dataInd['niveaux'];
+		$reponseJSON["notation"]["nomIndicateur"]=$dataInd['nom'];
 				
 		$reponseJSON["messageRetour"]=":)La note a été ajoutée.";
 
 
+		//BADGES ---------------------------
+		if($AUTORISE_BADGES)
+			updateBadges($eleve);
 	}
 	else
 	{
