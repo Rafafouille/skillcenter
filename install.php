@@ -644,6 +644,7 @@ creeTable("utilisateurs","id");
 	creeAttribut("utilisateurs","notifieMail","TINYINT DEFAULT 0");
 	creeAttribut("utilisateurs","badges","TEXT DEFAULT ''");
 	creeAttribut("utilisateurs","nouveaux_badges","TEXT DEFAULT ''");
+	creeAttribut("utilisateurs","derniere_connexion","TIMESTAMP NOT NULL DEFAULT 0");
 
 
 

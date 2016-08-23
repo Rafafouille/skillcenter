@@ -100,6 +100,14 @@ function getNotationPourJSON($eleve,$indicateur)
 
 
 
+
+// ==============================================
+// BADGES
+// ================================================
+
+
+
+
 //Fonction qui met à jour les badges pour un utilisateur
 function updateBadges($idEleve)
 {
@@ -114,6 +122,11 @@ function updateBadges($idEleve)
 	$badges_txt=$BDDbadges.",".$BDDnouveaux_badges;
 	$badges=explode(",",$badges_txt);
 
+
+	//1ere connexion
+	if(eligibleBadge_1ere_connexion($idEleve,$badges))
+		$BDDnouveaux_badges.="badge1ereConnexion,";
+
 	//1ere brique
 	if(eligibleBadge_1ere_brique($idEleve,$badges))
 		$BDDnouveaux_badges.="badge1ereBrique,";
@@ -126,6 +139,24 @@ function updateBadges($idEleve)
 	$req = $bdd->prepare('UPDATE utilisateurs SET nouveaux_badges=:nouveaux_badges WHERE id=:id');
 	$req->execute(array('nouveaux_badges'=>$BDDnouveaux_badges,'id'=>$idEleve));
 }
+
+
+
+//VERIFIVATION BADGE : 1ere Connexion
+function eligibleBadge_1ere_connexion($idEleve,$badges)
+{
+	if(!in_array("badge1ereConnexion",$badges))
+	{
+		global $bdd;
+		$req = $bdd->prepare('SELECT derniere_connexion as dc FROM utilisateurs WHERE id=:id');
+		$req->execute(array('id'=>$idEleve));
+		$donnees=$req->fetch();
+		if($donnees['dc']!=0)
+			return true;
+	}
+	return false;
+}
+
 
 
 //VERIFIVATION BADGE : 1ere Brique (1er critere noté)

@@ -49,6 +49,13 @@ if($action=="login")
 			$_SESSION['statut']=$donnees['statut'];
 			$_SESSION['id']=$donnees['id'];
 			$reponseJSON["messageRetour"]=":)Vous êtes connecté. Bonjour ".$_SESSION['prenom']." ".$_SESSION['nom']." !";
+
+			//MAJ date de connexion
+			$req2=$bdd->prepare("UPDATE utilisateurs SET derniere_connexion=NOW() WHERE id=:id");
+			$req2->execute(array('id'=>$_SESSION['id']));
+
+			//Badges
+			updateBadges($_SESSION['id']);
 		}
 		else	//Si le couple (utilisateur<->mot de passe) n'est pas trouvé...
 			$reponseJSON["messageRetour"]=":(L'identifiant ou le mot de passe est incorrect.";
