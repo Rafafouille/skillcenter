@@ -107,37 +107,50 @@ function getNotationPourJSON($eleve,$indicateur)
 
 
 
+//Fonction qui recupere la liste des badges (affichés ou pas encore...)
+function getBadges($idEleve)
+{
+	global $bdd;
+
+	//Récupère les badges déjà données
+	$req = $bdd->prepare('SELECT badges,nouveaux_badges FROM utilisateurs WHERE id=:id');
+	$req->execute(array('id'=>$idEleve));
+	$donnees=$req->fetch();
+
+	$BDDbadgesTXT=$donnees['badges'];//Badges deja donnes
+	$BDDnouveaux_badgesTXT=$donnees['nouveaux_badges'];//Nouveau badges acquis
+
+	$badgesTXT=$BDDbadgesTXT.",".$BDDnouveaux_badgesTXT;
+	$badges=explode(",",$badgesTXT);
+	return array($badges,$BDDnouveaux_badgesTXT);
+}
+
+
 
 //Fonction qui met à jour les badges pour un utilisateur
 function updateBadges($idEleve)
 {
 	global $bdd,$reponseJSON;
 
-	//Récupère les badges déjà données
-	$req = $bdd->prepare('SELECT badges,nouveaux_badges FROM utilisateurs WHERE id=:id');
-	$req->execute(array('id'=>$idEleve));
-	$donnees=$req->fetch();
-	$BDDbadges=$donnees['badges'];
-	$BDDnouveaux_badges=$donnees['nouveaux_badges'];
-	$badges_txt=$BDDbadges.",".$BDDnouveaux_badges;
-	$badges=explode(",",$badges_txt);
+	list ($badges,$BDDnouveaux_badgesTXT)=getBadges($idEleve);//On récupere tous les badges (et les nouveaux)
 
 
 	//1ere connexion
 	if(eligibleBadge_1ere_connexion($idEleve,$badges))
-		$BDDnouveaux_badges.="badge1ereConnexion,";
+		$BDDnouveaux_badgesTXT.=",badge1ereConnexion,";
 
 	//1ere brique
 	if(eligibleBadge_1ere_brique($idEleve,$badges))
-		$BDDnouveaux_badges.="badge1ereBrique,";
+		$BDDnouveaux_badgesTXT.=",badge1ereBrique,";
 
 	//1ere brique
 	if(eligibleBadge_choses_serieuses_commencent($idEleve,$badges))
-		$BDDnouveaux_badges.="badgeChosesSerieusesCommencent,";
+		$BDDnouveaux_badgesTXT.=",badgeChosesSerieusesCommencent,";
 
 	//Update BDD
+	str_replace(",,",",",$BDDnouveaux_badgesTXT);
 	$req = $bdd->prepare('UPDATE utilisateurs SET nouveaux_badges=:nouveaux_badges WHERE id=:id');
-	$req->execute(array('nouveaux_badges'=>$BDDnouveaux_badges,'id'=>$idEleve));
+	$req->execute(array('nouveaux_badges'=>$BDDnouveaux_badgesTXT,'id'=>$idEleve));
 }
 
 
@@ -168,7 +181,7 @@ function eligibleBadge_1ere_brique($idEleve,$badges)
 		$req = $bdd->prepare('SELECT COUNT(DISTINCT indicateur) as c FROM notation WHERE eleve=:id');
 		$req->execute(array('id'=>$idEleve));
 		$donnees=$req->fetch();
-		if($donnees['c']>=0)
+		if($donnees['c']>0)
 			return true;
 	}
 	return false;
@@ -177,7 +190,7 @@ function eligibleBadge_1ere_brique($idEleve,$badges)
 
 
 
-//VERIFIVATION BADGE : 1ere Brique (5 criteres notés)
+//VERIFIVATION BADGE : choses_serieuses (5 criteres notés)
 function eligibleBadge_choses_serieuses_commencent($idEleve,$badges)
 {
 	if(!in_array("badgeChosesSerieusesCommencent",$badges))
