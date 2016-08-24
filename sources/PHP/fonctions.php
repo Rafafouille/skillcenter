@@ -127,23 +127,49 @@ function getBadges($idEleve)
 
 
 
-//Fonction qui met à jour les badges pour un utilisateur
+//Fonction qui met à jour TOUS les badges pour un utilisateur
 function updateBadges($idEleve)
+{
+	updateBadges_aLaNotation($idEleve);
+}
+
+
+//Fonction qui met à jour les badges AU MOMENT DE LA CONNEXION DE L'ELEVE
+function updateBadges_aLaConnexion($idEleve)
 {
 	global $bdd,$reponseJSON;
 
 	list ($badges,$BDDnouveaux_badgesTXT)=getBadges($idEleve);//On récupere tous les badges (et les nouveaux)
 
-
 	//1ere connexion
 	if(eligibleBadge_1ere_connexion($idEleve,$badges))
 		$BDDnouveaux_badgesTXT.=",badge1ereConnexion,";
+
+	//Update BDD
+	str_replace(",,",",",$BDDnouveaux_badgesTXT);
+	$req = $bdd->prepare('UPDATE utilisateurs SET nouveaux_badges=:nouveaux_badges WHERE id=:id');
+	$req->execute(array('nouveaux_badges'=>$BDDnouveaux_badgesTXT,'id'=>$idEleve));
+}
+
+
+
+//Fonction qui met à jour les badges AU MOMENT DE LA NOTATION
+function updateBadges_aLaNotation($idEleve)
+{
+	global $bdd,$reponseJSON;
+
+	list ($badges,$BDDnouveaux_badgesTXT)=getBadges($idEleve);//On récupere tous les badges (et les nouveaux)
 
 	//1ere brique
 	if(eligibleBadge_1ere_brique($idEleve,$badges))
 		$BDDnouveaux_badgesTXT.=",badge1ereBrique,";
 
-	//1ere brique
+	//Décollage
+	if(eligibleBadge_decollage($idEleve,$badges))
+		$BDDnouveaux_badgesTXT.=",badgeDecollage,";
+
+
+	//Choses serieuses
 	if(eligibleBadge_choses_serieuses_commencent($idEleve,$badges))
 		$BDDnouveaux_badgesTXT.=",badgeChosesSerieusesCommencent,";
 
@@ -187,7 +213,20 @@ function eligibleBadge_1ere_brique($idEleve,$badges)
 	return false;
 }
 
-
+//VERIFIVATION BADGE : Decollage (1er critere validé)
+function eligibleBadge_decollage($idEleve,$badges)
+{
+	if(!in_array("badgeDecollage",$badges))
+	{
+		global $bdd;
+		$req = $bdd->prepare("SELECT count(*) AS c FROM (SELECT note,indicateur FROM notation WHERE eleve=:id) as n JOIN indicateurs as i on n.indicateur=i.id WHERE n.note=i.niveaux");
+		$req->execute(array('id'=>$idEleve));
+		$donnees=$req->fetch();
+		if($donnees['c']>0)
+			return true;
+	}
+	return false;
+}
 
 
 //VERIFIVATION BADGE : choses_serieuses (5 criteres notés)
@@ -215,7 +254,8 @@ function valideBadges($idEleve)
 		$req = $bdd->prepare('SELECT badges as b,	nouveaux_badges as nb FROM utilisateurs WHERE id=:id');
 		$req->execute(array('id'=>$idEleve));
 		$donnees=$req->fetch();
-		$total=$donnees["b"].$donnees['nb'];
+		$total=
+	str_replace(",,",",",$donnees["b"].",".$donnees['nb']);
 
 		$req=$bdd->prepare('UPDATE utilisateurs SET badges="'.$total.'", nouveaux_badges="" WHERE id=:id');
 		$req->execute(array('id'=>$idEleve));

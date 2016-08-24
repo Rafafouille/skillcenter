@@ -55,7 +55,8 @@ if($action=="login")
 			$req2->execute(array('id'=>$_SESSION['id']));
 
 			//Badges
-			updateBadges($_SESSION['id']);
+			if($AUTORISE_BADGES)
+				updateBadges_aLaConnexion($_SESSION['id']);
 		}
 		else	//Si le couple (utilisateur<->mot de passe) n'est pas trouvé...
 			$reponseJSON["messageRetour"]=":(L'identifiant ou le mot de passe est incorrect.";
@@ -501,7 +502,7 @@ if($action=="newNote")
 
 		//BADGES ---------------------------
 		if($AUTORISE_BADGES)
-			updateBadges($eleve);
+			updateBadges_aLaNotation($eleve);
 	}
 	else
 	{

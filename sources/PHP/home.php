@@ -108,18 +108,19 @@ else
 
 		$listeBadges=array(
 										"badge1ereConnexion"=>array("1<sup>ère</sup> Connexion","badge_1ere_connexion.png","Au moins 1 connexion au site"),
-										"badge1ereBrique"=>array("1<sup>ère</sup> Brique !","badge_1ere_brique.png","Au moins 1 compétence a été évaluée"),
-										"badge1Decollage"=>array("Décollage","badge_decollage.png","Au moins 1 compétence a été validée"),
-										"badgeChosesSerieusesCommencent"=>array("Les choses sérieuses commencent","badge_debutant.png","Au moins 5 compétence ont été évaluées"),
+										"badge1ereBrique"=>array("1<sup>ère</sup> Brique !","badge_1ere_brique.png","Au moins 1 critère a été évaluée"),
+										"badgeDecollage"=>array("Décollage","badge_decollage.png","Au moins 1 critère a été validée"),
+										"badgeChosesSerieusesCommencent"=>array("Les choses sérieuses commencent","badge_debutant.png","Au moins 5 critère ont été évaluées"),
 										"badgeFormule1"=>array("Formule 1","badge_formule1.png","Au moins 5 compétences validées en moins d'un mois"),
 										"badgeSeigneur"=>array("Seigneur","badge_seigneur.png","Au moins 1 domaine entièrement validé"),
-										"badgeTacheDHuile"=>array("Tache d'Huile","badge_tache_d_huile.png","Au moins un critère évalué et non-acquis")
+										"badgeTacheDHuile"=>array("Tache d'Huile","badge_tache_d_huile.png","Au moins un critère évalué et non-acquis"),
 									);
 
-		$req=$bdd->query("SELECT badges as b,nouveaux_badges as nb FROM utilisateurs WHERE id=".$_SESSION['id']);
-		$donnees=$req->fetch();
-		$badgesTXT=$donnees['b'].",".$donnees['nb'];
-		$listeBadgesObtenus=explode(",",$badgesTXT);
+		//Recupere les badges
+		list ($listeBadgesObtenus,$BDDnouveaux_badgesTXT)=getBadges($_SESSION['id']);//On récupere tous les badges (et les nouveaux)
+		$listeNouveauxBadges=explode(",",$BDDnouveaux_badgesTXT);
+
+
 
 		?>
 	<div id="liste_badges">
@@ -128,7 +129,7 @@ else
 		foreach($listeBadges as $key=>$value)
 		{
 			?>
-			<div class="<?php echo in_array($key,$listeBadgesObtenus) ? "badge_valide":"badge_non-valide"; ?>" title="<?php echo $value[2];?>">
+			<div class="<?php echo in_array($key,$listeBadgesObtenus) ? "badge_valide":"badge_non-valide"; echo in_array($key,$listeNouveauxBadges) ? "_nouveau":"";?>" title="<?php echo $value[2];?>">
 				<img src="./sources/images/<?php echo $value[1];?>" alt="<?php echo $value[0];?>"/>
 				<br/>
 				<?php echo $value[0];?>
