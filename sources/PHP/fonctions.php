@@ -173,6 +173,10 @@ function updateBadges_aLaNotation($idEleve)
 	if(eligibleBadge_choses_serieuses_commencent($idEleve,$badges))
 		$BDDnouveaux_badgesTXT.=",badgeChosesSerieusesCommencent,";
 
+	//Tache d'huile
+	if(eligibleBadge_tache_dhuile($idEleve,$badges))
+		$BDDnouveaux_badgesTXT.=",badgeTacheDHuile,";
+
 	//Update BDD
 	str_replace(",,",",",$BDDnouveaux_badgesTXT);
 	$req = $bdd->prepare('UPDATE utilisateurs SET nouveaux_badges=:nouveaux_badges WHERE id=:id');
@@ -244,6 +248,22 @@ function eligibleBadge_choses_serieuses_commencent($idEleve,$badges)
 	return false;
 }
 
+
+
+//VERIFIVATION BADGE : Tache d'huile (1 critère noté à "0")
+function eligibleBadge_tache_dhuile($idEleve,$badges)
+{
+	if(!in_array("badgeTacheDHuile",$badges))
+	{
+		global $bdd;
+		$req = $bdd->prepare("SELECT count(*) as c FROM notation WHERE eleve=:id AND note=0");
+		$req->execute(array('id'=>$idEleve));
+		$donnees=$req->fetch();
+		if($donnees['c']>0)
+			return true;
+	}
+	return false;
+}
 
 //Fonction qui fait passer un badge obtenu, mais pas encore annoncé, vers la liste des badges obtenus ET annoncés
 function valideBadges($idEleve)
