@@ -640,10 +640,10 @@ creeTable("utilisateurs","id");
 	creeAttribut("utilisateurs","mdp","TEXT NOT NULL");
 	creeAttribut("utilisateurs","classe","TEXT NOT NULL");
 	creeAttribut("utilisateurs","statut","TEXT NOT NULL");
-	creeAttribut("utilisateurs","mail","TEXT DEFAULT ''");
+	creeAttribut("utilisateurs","mail","TEXT NOT NULL");
 	creeAttribut("utilisateurs","notifieMail","TINYINT DEFAULT 0");
-	creeAttribut("utilisateurs","badges","TEXT DEFAULT ''");
-	creeAttribut("utilisateurs","nouveaux_badges","TEXT DEFAULT ''");
+	creeAttribut("utilisateurs","badges","TEXT NOT NULL");
+	creeAttribut("utilisateurs","nouveaux_badges","TEXT NOT NULL");
 	creeAttribut("utilisateurs","derniere_connexion","TIMESTAMP NOT NULL DEFAULT 0");
 
 
