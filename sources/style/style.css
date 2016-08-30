@@ -20,7 +20,7 @@ Entete
 
 header,#entete
 {
-	background-color:black;
+	/*background-color:black; passé directement dans le code*/
 	width:100%;
 	color:white;
 	margin:0px;

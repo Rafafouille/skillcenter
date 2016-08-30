@@ -7,15 +7,19 @@ $etape="debut";
 if(isset($_POST['etape']))	$etape=$_POST['etape'];
 //$etape=$_SESSION['etape'];
 
+if(isset($_POST['TITRE_PAGE']))				$_SESSION['TITRE_PAGE']=$_POST['TITRE_PAGE'];
+if(isset($_POST['COULEUR_BANDEAU']))	$_SESSION['COULEUR_BANDEAU']=$_POST['COULEUR_BANDEAU'];
 
 if(isset($_POST['BDD_SERVER']))		$_SESSION['BDD_SERVER']=$_POST['BDD_SERVER'];
 if(isset($_POST['BDD_NOM_BDD']))	$_SESSION['BDD_NOM_BDD']=$_POST['BDD_NOM_BDD'];
 if(isset($_POST['BDD_LOGIN']))		$_SESSION['BDD_LOGIN']=$_POST['BDD_LOGIN'];
 if(isset($_POST['BDD_MOT_DE_PASSE']))	$_SESSION['BDD_MOT_DE_PASSE']=$_POST['BDD_MOT_DE_PASSE'];
 if(isset($_POST['BDD_PREFIXE']))	$_SESSION['BDD_PREFIXE']=$_POST['BDD_PREFIXE'];
+
 if(isset($_POST['NB_NIVEAUX']))		$_SESSION['NB_NIVEAUX']=$_POST['NB_NIVEAUX'];
 if(isset($_POST['NIVEAU_DEFAUT']))	$_SESSION['NIVEAU_DEFAUT']=$_POST['NIVEAU_DEFAUT'];
 
+if(isset($_POST['AUTORISE_BADGES']))	$_SESSION['AUTORISE_BADGES']=$_POST['AUTORISE_BADGES']=="oui";
 
 
 ?>
@@ -150,19 +154,23 @@ if($etape=="debut")
 
 
 
-
-
 // etape 2 : Sauvegarde ===========================================
 if($etape=="sauvOptions")
 {
 	//Chargement des options par défaut
+	$TITRE_PAGE="Skillcenter";	//Titre de la page
+	$COULEUR_BANDEAU="#000000";	//Couleur du bandeau
+
 	$BDD_SERVER="";	//Adresse BDD
 	$BDD_NOM_BDD="";	//Nom de la BDD
 	$BDD_LOGIN="";			//Login du compte de BDD
 	$BDD_MOT_DE_PASSE="";		//Mot de passed u compte de BDD
 	$BDD_PREFIXE="";		//Préfixe de toute les tables de la BDD
-	$NB_NIVEAUX_MAX=5;		//Nombre de niveau max possible à donner aux élèvess
+
+	$NB_NIVEAUX_MAX=5;		//Nombre de niveau max possible à donner aux élèves
 	$NIVEAU_DEFAUT=4;		//Niveau par défaut quand on crée un critères
+
+	$AUTORISE_BADGES=true;	//Utilise les badges ou non
 
 	//Récupération des valeurs existantes
 	$_SESSION['optionsExiste']=file_exists($dOptions."options.php");
@@ -188,7 +196,7 @@ if($etape=="sauvOptions")
 			</td>
 			<td>
 				<form action="" method="POST" style="display:inline;">
-					<input type="hidden" name="etape" value="rentreBDD"/>
+					<input type="hidden" name="etape" value="rentreConfigGenerale"/>
 					<input type="submit" class="bouton" value="Suivant -->"/>
 				</form>
 			</td>
@@ -198,16 +206,65 @@ if($etape=="sauvOptions")
 		include_once($dOptions."options.php");
 	}
 	else//Si pas de fichier option.php --> on passe à la suite
-		$etape="rentreBDD";
+		$etape="rentreConfigGenerale";
+
+	$_SESSION['TITRE_PAGE']=$TITRE_PAGE;	//Titre de la page
+	$_SESSION['COULEUR_BANDEAU']=$COULEUR_BANDEAU;	//Couleur d'arrière plan du bandeau
 
 	$_SESSION['BDD_SERVER']=$BDD_SERVER;	//Adresse BDD
 	$_SESSION['BDD_NOM_BDD']=$BDD_NOM_BDD;	//Nom de la BDD
 	$_SESSION['BDD_LOGIN']=$BDD_LOGIN;	//Login du compte de BDD
 	$_SESSION['BDD_MOT_DE_PASSE']=$BDD_MOT_DE_PASSE;		//Mot de passed u compte de BDD
 	$_SESSION['BDD_PREFIXE']=$BDD_PREFIXE;		//Préfixe de toute les tables de la BDD
+
 	$_SESSION['NB_NIVEAUX']=$NB_NIVEAUX_MAX;		//Nombre de niveau max possible à donner aux élèvess
 	$_SESSION['NIVEAU_DEFAUT']=$NIVEAU_DEFAUT;
+
+	$_SESSION['AUTORISE_BADGES']=$AUTORISE_BADGES;
 }
+
+
+
+
+// etape 2 BIS : Config générales ===========================================
+if($etape=="rentreConfigGenerale")
+{?>
+	<div class="boite">
+		<h2>Configuration générale</h2>
+		<p>
+			<form method="POST" action="" id="formRentreConfigGenerale">
+				<table>
+					<tr>
+						<td><label for="input_TITRE_PAGE">Titre de la page <span title="Ce titre sera affiché sur le bandeau d'entête de la page, et de la fenêtre du navigateur." alt="[i]"/></span> :</label></td>
+						<td><input type="text" placeholder="Écrire un titre" id="input_TITRE_PAGE" name="TITRE_PAGE" value="<?php echo $_SESSION['TITRE_PAGE'];?>"/></td>
+					</tr>
+					<tr>
+						<td><label for="input_COULEUR_BANDEAU">Couleur du bandeau :</label></td>
+						<td><input type="color" placeholder="Ex : #FF0000" id="input_COULEUR_BANDEAU" name="COULEUR_BANDEAU" value="<?php echo $_SESSION['COULEUR_BANDEAU'];?>"/></td>
+					</tr>
+				</table>
+				<input type="hidden" name="etape" value="rentreBDD"/>
+			</form>
+			
+		</p>
+		<div class="boutons">
+			<table><tr>
+				<td>
+					<form action="" method="POST" style="display:inline;">
+						<input type="hidden" name="etape" value="debut"/>
+						<input type="submit" class="bouton" value="<-- Précédent"/>
+					</form>
+				</td>
+				<td>
+						<div class="bouton" onclick="$('#formRentreConfigGenerale').submit();"/>Suivant --></div>
+				</td>
+			</tr></table>
+		</div>
+	</div>
+<?php }
+
+
+
 
 
 
@@ -241,7 +298,7 @@ if($etape=="rentreBDD")
 		<h2>Paramètres de la base de données (BDD)</h2>
 		<p>
 			Pour utiliser SkillCenter, vous devez avoir une base de données MySQL.
-			<br/>Merci de rentrer les paramètres de connexion ci-dessous.
+			<br/>Merci de rentrer les paramètres de connexion ci-dessous.<?php echo $_SESSION['COULEUR_BANDEAU'];?>
 		</p>
 
 			<?php if(isset($connexionReussie))
@@ -345,6 +402,14 @@ if($etape=="rentreNotation")
 						<td><label for="input_NIVEAU_DEFAUT">Niveau par défaut <span title="Il s'agit du niveau maximum par défaut proposé lors de la création d''une compétence."><img src="./sources/images/icone-info.png" alt="[i]"/></span> :</label></td>
 						<td><input type="number" min="1" step="1" placeholder="Nombre supérieur à 0" id="input_NIVEAU_DEFAUT" name="NIVEAU_DEFAUT" value="<?php echo $_SESSION['NIVEAU_DEFAUT'];?>"/></td>
 					</tr>
+					<tr>
+						<td><label for="input_AUTORISE_BADGES">Autorise l'acquisition des badges <span title="Les 'badges' sont des récompenses acquises par l'élève lorsque certaines actions sont réalisée (comme 'atteindre un certain nombre de compétences...')"><img src="./sources/images/icone-info.png" alt="[i]"/></span> :</label></td>
+						<td><select id="input_AUTORISE_BADGES" name="AUTORISE_BADGES">
+									<option value="oui" <?php if($_SESSION['AUTORISE_BADGES']) echo "selected";?>>Oui</options>
+									<option value="non" <?php if(!$_SESSION['AUTORISE_BADGES']) echo "selected";?>>Non</options>
+								</select>
+						</td>
+					</tr>
 				</table>
 				<input type="hidden" name="etape" value="ecritFichier"/>
 			</form>
@@ -377,6 +442,10 @@ if($etape=="ecritFichier")
 		PARAMETRES DE L'APPLICATION
 ***************************************************** */
 
+//Paramètres généraux ************************
+\$TITRE_PAGE=\"".$_SESSION['TITRE_PAGE']."\";	//Titre de la page (du navigateur + du bandeau)
+\$COULEUR_BANDEAU=\"".$_SESSION['COULEUR_BANDEAU']."\";	//Couleur d'arriere plan du bandeau
+
 //Paramètres pour la base de données SQL ***********
 \$BDD_SERVER=\"".$_SESSION['BDD_SERVER']."\";	//Adresse de la base de données
 \$BDD_NOM_BDD=\"".$_SESSION['BDD_NOM_BDD']."\";	//Nom de la base de données
@@ -389,7 +458,7 @@ if($etape=="ecritFichier")
 \$NIVEAU_DEFAUT=".$_SESSION['NIVEAU_DEFAUT'].";		//Niveau max initialement proposé lors de la création d'un critère
 
 //Autres ************************************
-\$AUTORISE_BADGES=true;		//Autorise (ou non) les étudiants à recevoir des badges de validation
+\$AUTORISE_BADGES=".($_SESSION['AUTORISE_BADGES']?"true":"false").";		//Autorise (ou non) les étudiants à recevoir des badges de validation
 
 //**************** FIN DU FICHIER ****************
 ?>";
@@ -406,7 +475,8 @@ if($etape=="ecritFichier")
 		{
 			fputs($options_php,$contenu);
 			fclose($options_php);
-			unlink($dOptions."options_old.php");
+			if(file_exists($dOptions."options_old.php"))
+				unlink($dOptions."options_old.php");
 
 		?>	
 	<div class="boite">
@@ -528,6 +598,8 @@ if($etape=="creerBDD_Info")
 			Nous allons maintenant installer (ou mettre à jour) les tables de la base de données.
 			Pour ce faire, il faut être sûr que l'utilisateur de la base SQL (que vous avez rentré précédement) 
 			ait les droits d'écriture dans la base de donnée...
+			<br/>
+			Note : cela peut prendre quelques secondes, soyez patient...
 		</p>
 		<div class="boutons">
 			<table><tr>

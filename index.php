@@ -32,7 +32,7 @@ include("./sources/PHP/actions.php");
     <head>
         <!-- En-tête de la page -->
         <meta charset="utf-8" />
-        <title>Skillcenter</title>
+        <title><?php echo $TITRE_PAGE;?></title>
 		<link rel="stylesheet" href="./sources/style/style.css" />
 		<?php if($_SESSION["statut"]=="admin") { ?>
 		<link rel="stylesheet" href="./sources/style/styleUsers.css" />
