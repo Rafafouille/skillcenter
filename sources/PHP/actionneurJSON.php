@@ -51,7 +51,7 @@ if($action=="login")
 			$reponseJSON["messageRetour"]=":)Vous êtes connecté. Bonjour ".$_SESSION['prenom']." ".$_SESSION['nom']." !";
 
 			//MAJ date de connexion
-			$req2=$bdd->prepare("UPDATE utilisateurs SET derniere_connexion=NOW() WHERE id=:id");
+			$req2=$bdd->prepare("UPDATE ".$BDD_PREFIXE."utilisateurs SET derniere_connexion=NOW() WHERE id=:id");
 			$req2->execute(array('id'=>$_SESSION['id']));
 
 			//Badges
@@ -192,7 +192,7 @@ if($action=="updateUser")
 			//Modifications
 			if($_POST['newUser_psw']!="")//Si un nouveau mot de passe est proposé
 			{
-				$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'utilisateurs SET nom=:nom, prenom=:prenom, mdp=:mdp login=:login, classe=:classe WHERE id=:id');
+				$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'utilisateurs SET nom=:nom, prenom=:prenom, mdp=:mdp, login=:login, classe=:classe WHERE id=:id');
 				$req->execute(array(
 						'nom' => $_POST["newUser_nom"],
 						'prenom' => $_POST['newUser_prenom'],
@@ -477,13 +477,13 @@ if($action=="newNote")
 		$repNote=$bdd->query("SELECT * FROM notation WHERE id=".$bdd->lastInsertId());
 		$dataNote=$repNote->fetch();
 
-		$repEleve=$bdd->query("SELECT nom,prenom FROM utilisateurs WHERE id=".$dataNote["eleve"]);
+		$repEleve=$bdd->query("SELECT nom,prenom FROM ".$BDD_PREFIXE."utilisateurs WHERE id=".$dataNote["eleve"]);
 		$dataEleve=$repEleve->fetch();
 
-		$repProf=$bdd->query("SELECT nom,prenom FROM utilisateurs WHERE id=".$dataNote["examinateur"]);
+		$repProf=$bdd->query("SELECT nom,prenom FROM ".$BDD_PREFIXE."utilisateurs WHERE id=".$dataNote["examinateur"]);
 		$dataProf=$repProf->fetch();
 
-		$repInd=$bdd->query("SELECT nom,niveaux FROM indicateurs WHERE id=".$dataNote["indicateur"]);
+		$repInd=$bdd->query("SELECT nom,niveaux FROM ".$BDD_PREFIXE."indicateurs WHERE id=".$dataNote["indicateur"]);
 		$dataInd=$repInd->fetch();
 
 
@@ -530,7 +530,7 @@ if($action=="modifieNotation")
 		{
 			connectToBDD();
 
-			$req=$bdd->prepare("UPDATE notation SET note=:note, date=NOW(),examinateur=".$_SESSION['id']." WHERE id=:id");
+			$req=$bdd->prepare("UPDATE ".$BDD_PREFIXE."notation SET note=:note, date=NOW(),examinateur=".$_SESSION['id']." WHERE id=:id");
 			$req->execute(array('id'=>$id,'note'=>$note));
 			$reponseJSON["idNotation"]=$id;
 			$reponseJSON["note"]=$note;

@@ -110,10 +110,10 @@ function getNotationPourJSON($eleve,$indicateur)
 //Fonction qui recupere la liste des badges (affichés ou pas encore...)
 function getBadges($idEleve)
 {
-	global $bdd;
+	global $bdd,$BDD_PREFIXE;
 
 	//Récupère les badges déjà données
-	$req = $bdd->prepare('SELECT badges,nouveaux_badges FROM utilisateurs WHERE id=:id');
+	$req = $bdd->prepare('SELECT badges,nouveaux_badges FROM '.$BDD_PREFIXE.'utilisateurs WHERE id=:id');
 	$req->execute(array('id'=>$idEleve));
 	$donnees=$req->fetch();
 
@@ -137,7 +137,7 @@ function updateBadges($idEleve)
 //Fonction qui met à jour les badges AU MOMENT DE LA CONNEXION DE L'ELEVE
 function updateBadges_aLaConnexion($idEleve)
 {
-	global $bdd,$reponseJSON;
+	global $bdd,$reponseJSON,$BDD_PREFIXE;
 
 	list ($badges,$BDDnouveaux_badgesTXT)=getBadges($idEleve);//On récupere tous les badges (et les nouveaux)
 
@@ -147,7 +147,7 @@ function updateBadges_aLaConnexion($idEleve)
 
 	//Update BDD
 	str_replace(",,",",",$BDDnouveaux_badgesTXT);
-	$req = $bdd->prepare('UPDATE utilisateurs SET nouveaux_badges=:nouveaux_badges WHERE id=:id');
+	$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'utilisateurs SET nouveaux_badges=:nouveaux_badges WHERE id=:id');
 	$req->execute(array('nouveaux_badges'=>$BDDnouveaux_badgesTXT,'id'=>$idEleve));
 }
 
@@ -156,7 +156,7 @@ function updateBadges_aLaConnexion($idEleve)
 //Fonction qui met à jour les badges AU MOMENT DE LA NOTATION
 function updateBadges_aLaNotation($idEleve)
 {
-	global $bdd,$reponseJSON;
+	global $bdd,$reponseJSON,$BDD_PREFIXE;
 
 	list ($badges,$BDDnouveaux_badgesTXT)=getBadges($idEleve);//On récupere tous les badges (et les nouveaux)
 
@@ -179,7 +179,7 @@ function updateBadges_aLaNotation($idEleve)
 
 	//Update BDD
 	str_replace(",,",",",$BDDnouveaux_badgesTXT);
-	$req = $bdd->prepare('UPDATE utilisateurs SET nouveaux_badges=:nouveaux_badges WHERE id=:id');
+	$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'utilisateurs SET nouveaux_badges=:nouveaux_badges WHERE id=:id');
 	$req->execute(array('nouveaux_badges'=>$BDDnouveaux_badgesTXT,'id'=>$idEleve));
 }
 
@@ -190,8 +190,8 @@ function eligibleBadge_1ere_connexion($idEleve,$badges)
 {
 	if(!in_array("badge1ereConnexion",$badges))
 	{
-		global $bdd;
-		$req = $bdd->prepare('SELECT derniere_connexion as dc FROM utilisateurs WHERE id=:id');
+		global $bdd,$BDD_PREFIXE;
+		$req = $bdd->prepare('SELECT derniere_connexion as dc FROM '.$BDD_PREFIXE.'utilisateurs WHERE id=:id');
 		$req->execute(array('id'=>$idEleve));
 		$donnees=$req->fetch();
 		if($donnees['dc']!=0)
@@ -207,8 +207,8 @@ function eligibleBadge_1ere_brique($idEleve,$badges)
 {
 	if(!in_array("badge1ereBrique",$badges))
 	{
-		global $bdd;
-		$req = $bdd->prepare('SELECT COUNT(DISTINCT indicateur) as c FROM notation WHERE eleve=:id');
+		global $bdd,$BDD_PREFIXE;
+		$req = $bdd->prepare('SELECT COUNT(DISTINCT indicateur) as c FROM '.$BDD_PREFIXE.'notation WHERE eleve=:id');
 		$req->execute(array('id'=>$idEleve));
 		$donnees=$req->fetch();
 		if($donnees['c']>0)
@@ -222,8 +222,8 @@ function eligibleBadge_decollage($idEleve,$badges)
 {
 	if(!in_array("badgeDecollage",$badges))
 	{
-		global $bdd;
-		$req = $bdd->prepare("SELECT count(*) AS c FROM (SELECT note,indicateur FROM notation WHERE eleve=:id) as n JOIN indicateurs as i on n.indicateur=i.id WHERE n.note=i.niveaux");
+		global $bdd,$BDD_PREFIXE;
+		$req = $bdd->prepare("SELECT count(*) AS c FROM (SELECT note,indicateur FROM ".$BDD_PREFIXE."notation WHERE eleve=:id) as n JOIN ".$BDD_PREFIXE."indicateurs as i on n.indicateur=i.id WHERE n.note=i.niveaux");
 		$req->execute(array('id'=>$idEleve));
 		$donnees=$req->fetch();
 		if($donnees['c']>0)
@@ -238,8 +238,8 @@ function eligibleBadge_choses_serieuses_commencent($idEleve,$badges)
 {
 	if(!in_array("badgeChosesSerieusesCommencent",$badges))
 	{
-		global $bdd;
-		$req = $bdd->prepare('SELECT COUNT(DISTINCT indicateur) as c FROM notation WHERE eleve=:id');
+		global $bdd,$BDD_PREFIXE;
+		$req = $bdd->prepare('SELECT COUNT(DISTINCT indicateur) as c FROM '.$BDD_PREFIXE.'notation WHERE eleve=:id');
 		$req->execute(array('id'=>$idEleve));
 		$donnees=$req->fetch();
 		if($donnees['c']>=5)
@@ -255,8 +255,8 @@ function eligibleBadge_tache_dhuile($idEleve,$badges)
 {
 	if(!in_array("badgeTacheDHuile",$badges))
 	{
-		global $bdd;
-		$req = $bdd->prepare("SELECT count(*) as c FROM notation WHERE eleve=:id AND note=0");
+		global $bdd,$BDD_PREFIXE;
+		$req = $bdd->prepare("SELECT count(*) as c FROM ".$BDD_PREFIXE."notation WHERE eleve=:id AND note=0");
 		$req->execute(array('id'=>$idEleve));
 		$donnees=$req->fetch();
 		if($donnees['c']>0)
@@ -268,16 +268,16 @@ function eligibleBadge_tache_dhuile($idEleve,$badges)
 //Fonction qui fait passer un badge obtenu, mais pas encore annoncé, vers la liste des badges obtenus ET annoncés
 function valideBadges($idEleve)
 {
-	global $bdd,$AUTORISE_BADGES;
+	global $bdd,$AUTORISE_BADGES,$BDD_PREFIXE;
 	if($AUTORISE_BADGES)
 	{
-		$req = $bdd->prepare('SELECT badges as b,	nouveaux_badges as nb FROM utilisateurs WHERE id=:id');
+		$req = $bdd->prepare('SELECT badges as b,	nouveaux_badges as nb FROM '.$BDD_PREFIXE.'utilisateurs WHERE id=:id');
 		$req->execute(array('id'=>$idEleve));
 		$donnees=$req->fetch();
 		$total=
 	str_replace(",,",",",$donnees["b"].",".$donnees['nb']);
 
-		$req=$bdd->prepare('UPDATE utilisateurs SET badges="'.$total.'", nouveaux_badges="" WHERE id=:id');
+		$req=$bdd->prepare('UPDATE '.$BDD_PREFIXE.'utilisateurs SET badges="'.$total.'", nouveaux_badges="" WHERE id=:id');
 		$req->execute(array('id'=>$idEleve));
 	}
 }
