@@ -386,6 +386,44 @@ if($etape=="valideBDD")
 // etape 4 : Rentre Notation ===========================================
 if($etape=="rentreNotation")
 {?>
+	<script>
+		//Script pour changer les nom des niveaux...
+		updateNomsNiveaux=function()
+		{
+			return;
+			
+			$(".inputNomsNiveaux").parent().parent().remove();
+			
+			var nbMax=parseInt($("#input_NB_NIVEAUX").val());
+			
+			//Tableau des noms dejà existants
+			tabNoms=Array(<?php
+			if(isset($_SESSION['NOMS_NIVEAU']))
+			{
+				for($i=0;$i<sizeof($_SESSION['NOMS_NIVEAU']);$i++)
+				{
+					echo "\"".$_SESSION['NOMS_NIVEAU'][$i]."\"";
+					if($i<sizeof($_SESSION['NOMS_NIVEAU'])-1)
+						echo ",";
+				}
+			}
+			?>);
+			
+			
+			for(var i=0;i<=nbMax;i++)
+			{
+				var nomNiveau=i;
+				
+				var texte=""+
+"					<tr>"+
+"						<td style=\"text-align:right;\"><label for=\"input_NOM_NIVEAUX_"+i+"\">Niveau "+i+" :</label></td>"+
+"						<td><input type=\"text\" size=\"2\" maxlength=\"2\" name=\"input_NOM_NIVEAUX_"+i+"\" id=\"input_NOM_NIVEAUX_"+i+"\" class=\"inputNomsNiveaux\" value=\""+nomNiveau+"\"></td>"
+"					</tr>";
+				$("#input_NIVEAU_DEFAUT").parent().parent().before(texte);
+			}
+		}
+	</script>
+
 	<div class="boite">
 		<h2>Options des compétences</h2>
 		<p>
@@ -396,7 +434,7 @@ if($etape=="rentreNotation")
 				<table>
 					<tr>
 						<td><label for="input_NB_NIVEAUX">Nombre de niveaux maximum <span title="Il s'agit du nombre maximum de niveaux qui seront proposés lors de la création d'un nouveau critère." alt="[i]"/></span> :</label></td>
-						<td><input type="number" min="1" step="1" placeholder="Nombre supérieur à 0" id="input_NB_NIVEAUX" name="NB_NIVEAUX" value="<?php echo $_SESSION['NB_NIVEAUX'];?>"/></td>
+						<td><input type="number" min="1" step="1" placeholder="Nombre supérieur à 0" id="input_NB_NIVEAUX" name="NB_NIVEAUX" value="<?php echo $_SESSION['NB_NIVEAUX'];?>" onchange="updateNomsNiveaux();"/></td>
 					</tr>
 					<tr>
 						<td><label for="input_NIVEAU_DEFAUT">Niveau par défaut <span title="Il s'agit du niveau maximum par défaut proposé lors de la création d''une compétence."><img src="./sources/images/icone-info.png" alt="[i]"/></span> :</label></td>
