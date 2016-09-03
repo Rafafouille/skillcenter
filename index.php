@@ -109,11 +109,11 @@ include("./sources/PHP/actions.php");
 					<li><a href="#tab-home"><img src="./sources/images/home.png" alt="[Home]"/><br/>Home</a></li>
 					<?php if($_SESSION['statut']=="admin") echo '<li><a href="#tab-users"><img src="./sources/images/icone-user.png"/><br/>Utilisateurs</a></li>';?>
 					
-					<?php if($_SESSION['id']) echo '<li><a href="#tab-notation"><img src="./sources/images/icone-checklist.png"/><br/>Évaluation</a></li>';?>
+					<?php if($_SESSION['id']) echo '<li><a href="#tab-notation"><img src="./sources/images/icone-checklist.png"/><br/>Bilan</a></li>';?>
 					
 					<?php if($_SESSION['statut']=="admin") echo '<li><a href="#tab-historique"><img src="./sources/images/icone-historique.png"/><br/>Historique</a></li>';?>
 					
-					<?php if($_SESSION['statut']=="admin") echo '<li><a href="#tab-competences"><img src="./sources/images/icone-checklist-edit.png"/><br/>Compétences</a></li>';?>
+					<?php if($_SESSION['statut']=="admin") echo '<li><a href="#tab-competences"><img src="./sources/images/icone-checklist-edit.png"/><br/>Paramétrage</a></li>';?>
 				</ul>
 				
 				

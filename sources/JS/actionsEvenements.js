@@ -14,7 +14,7 @@ onChangeTab=function(event,ui)
 	var iOnglet=$('#tab-onglets').tabs('option', 'active');
 
 	//1er affichage de l'onglet "Notation"
-	if(listeOnglets[iOnglet]=="Évaluation" && !NOTATION_LOADED)//Si la page "notation" n'a jamais été chargée
+	if(listeOnglets[iOnglet]=="Bilan" && !NOTATION_LOADED)//Si la page "notation" n'a jamais été chargée
 	{
 		NOTATION_LOADED=true;
 		if(STATUT=="admin" || STATUT=="evaluateur")	//Si c'est un prof qui est connecté
@@ -27,7 +27,7 @@ onChangeTab=function(event,ui)
 			getNotationEleve(ID_COURANT);
 		}
 	}
-	if(listeOnglets[iOnglet]=="Compétences" && !ADMIN_COMPETENCES_LOADED)//Si la page 3 n'a jamais été chargée
+	if(listeOnglets[iOnglet]=="Paramétrage" && !ADMIN_COMPETENCES_LOADED)//Si la page 3 n'a jamais été chargée
 	{
 		ADMIN_COMPETENCES_LOADED=true;
 		var classe=$("#selectClasseCompetences").val();
