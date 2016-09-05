@@ -849,11 +849,13 @@ if($action=="supprimeCompetence")
 		
 		$idCompetence=0;
 		if(isset($_POST['idCompetence'])) $idCompetence=intval($_POST['idCompetence']);
+		$supprimeIndicateur=true;
+		if(isset($_POST['supprimeIndicateur'])) $supprimeIndicateur=intval($_POST['supprimeIndicateur']);
 
 		
 		if($idCompetence!=0)
 		{
-			supprimeCompetence($idCompetence);
+			supprimeCompetence($idCompetence,$supprimeIndicateur);
 			$reponseJSON["messageRetour"]=":)La compétence a bien été supprimée.";
 			$reponseJSON["competence"]["id"]=$idCompetence;
 		}

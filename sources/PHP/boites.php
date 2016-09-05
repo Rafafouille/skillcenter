@@ -155,6 +155,30 @@
 						}
 			});
 		</script>
+
+		<!-- BOITE POUR SUPPRIMER UNE COMPETENCE------------------- -->
+		<div id="dialog-supprimeCompetence" title="Supprimer une compétence">
+			<p>Êtes-vous sur de vouloir supprimer la compétence : "<span class="dialog-supprimeCompetence_nomCompetence"></span>"</p>
+			<form>
+				<input type="hidden" name="dialog-supprimeCompetence-idCompetence" id="dialog-supprimeCompetence-idCompetence"/>
+				<select name="dialog-supprimeCompetence-supprimerIndicateur" id="dialog-supprimeCompetence-supprimerIndicateur">
+					<option value="Oui">Oui</option>
+					<option value="Non">Non</option>
+				</select>
+			</form>
+		</div>
+		<script>
+			$( "#dialog-supprimeCompetence").dialog({
+				autoOpen: false,
+				modal: true,
+				buttons: {
+							"Supprimer": function() {$("#dialog-supprimeCompetence").dialog( "close" );supprimeCompetence(parseInt($("#dialog-supprimeCompetence-idCompetence").val()),$("#dialog-supprimeCompetence-supprimerIndicateur").val()=="Oui");},
+							"Annuler": function() {$("#dialog-supprimeCompetence").dialog( "close" );}
+						}
+			});
+		</script>
+
+
 		
 		<!-- BOITE POUR AJOUTER UN INDICATEUR------------------- -->
 		<div id="dialog-addIndicateur" title="Ajouter un Indicateur">
@@ -215,24 +239,7 @@
 		</script>
 		
 		
-		<!-- BOITE POUR SUPPRIMER UNE COMPETENCE------------------- -->
-		<div id="dialog-supprimeCompetence" title="Supprimer une compétence">
-			<p>Êtes-vous sur de vouloir supprimer la compétence : "<span class="dialog-supprimeCompetence_nomCompetence"></span>")</p>
-			<form>
-				<input type="hidden" name="dialog-supprimeCompetence-idCompetence" id="dialog-supprimeCompetence-idCompetence"/>
-				<input type="hidden" name="dialog-supprimeCompetence-supprimerIndicateur" id="dialog-supprimeCompetence-supprimerIndicateur" value="Oui"/>
-			</form>
-		</div>
-		<script>
-			$( "#dialog-supprimeCompetence").dialog({
-				autoOpen: false,
-				modal: true,
-				buttons: {
-							"Supprimer": function() {$("#dialog-supprimeCompetence").dialog( "close" );supprimeCompetence(parseInt($("#dialog-supprimeCompetence-idCompetence").val()),$("#dialog-supprimeCompetence-supprimerIndicateur").val()=="Oui");},
-							"Annuler": function() {$("#dialog-supprimeCompetence").dialog( "close" );}
-						}
-			});
-		</script>
+
 		
 		
 		<!-- BOITE POUR MODIFIER UNE NOTATION------------------- -->

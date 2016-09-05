@@ -102,6 +102,42 @@ addCompetence_callback=function(reponse)
 
 
 
+//SUPPRIMER UNE COMPETENCE  -------------------
+ouvreBoiteSupprimeCompetence=function(nomCompetence,i)
+{
+	$( "#dialog-supprimeCompetence .dialog-supprimeCompetence_nomCompetence").text(nomCompetence);
+	$( "#dialog-supprimeCompetence-idCompetence").val(i);
+	$( "#dialog-supprimeCompetence").dialog("open");
+}
+
+
+supprimeCompetence=function(idCompetence,supprimeIndicateurInternes)
+{
+	$.post(
+			'./sources/PHP/actionneurJSON.php',//Requete appelée
+			{	//Les données à passer par POST
+				action:"supprimeCompetence",
+				idCompetence:idCompetence,
+				supprimeIndicateur:supprimeIndicateurInternes
+			},
+			supprimeCompetence_callback,	//Fonction callback
+			"json"	//Type de réponse
+	);
+}
+//Callback qui supprime l'indicateur dans la page -----
+supprimeCompetence_callback=function(reponse)
+{
+	afficheMessage(reponse.messageRetour);
+	var id=reponse.competence.id;
+	
+	$("#ADMIN_COMPETENCES_competence_"+id).remove();
+	NOTATION_LOADED=false;//Impose de recharger la notation en cas de suppression d'indicateur
+}
+
+
+
+
+
 
 //AJOUTE UN INDICATEUR - BOITE -------------------
 ouvreBoiteAddIndicateur=function(competence,i)
@@ -173,41 +209,6 @@ supprimeIndicateur_callback=function(reponse)
 }
 
 
-//SUPPRIMER UNE COMPETENCE  -------------------
-ouvreBoiteSupprimeCompetence=function(nomCompetence,i)
-{
-	$( "#dialog-supprimeCompetence .dialog-supprimeCompetence_nomCompetence").text(nomCompetence);
-	$( "#dialog-supprimeCompetence-idCompetence").val(i);
-	$( "#dialog-supprimeCompetence").dialog("open");
-}
-
-
-supprimeCompetence=function(idCompetence,supprimeIndicateurInternes)
-{
-	if(supprimeIndicateurInternes)
-		alert("Indic Supprimés");
-	else
-		alert("Indic non supprimé");
-	$.post(
-			'./sources/PHP/actionneurJSON.php',//Requete appelée
-			{	//Les données à passer par POST
-				action:"supprimeCompetence",
-				idCompetence:idIndicateur,
-				supprimeIndicateur:supprimeIndicateurInternes
-			},
-			supprimeCompetence_callback,	//Fonction callback
-			"json"	//Type de réponse
-	);
-}
-//Callback qui supprime l'indicateur dans la page -----
-supprimeCompetence_callback=function(reponse)
-{
-	afficheMessage(reponse.messageRetour);
-	var id=reponse.competence.id;
-	
-	$("#ADMIN_COMPETENCES_competence_"+id).remove();
-	NOTATION_LOADED=false;//Impose de recharger la notation en cas de suppression d'indicateur
-}
 
 
 

@@ -166,9 +166,23 @@ COMPETENCES
 	float:right;
 	vertical-align:middle;
 	cursor:pointer;
+	margin-top:3px;
+	margin-left:0px;
+	margin-bottom:-3px;
+	margin-right:0px;
+ -webkit-filter: drop-shadow(4px 4px 5px #777799);
+  filter: drop-shadow(4px 4px 5px #777799);
 }
 
-
+.boutonSupprimerCompetence:hover
+{
+	margin-top:6px;
+	margin-left:3px;
+	margin-bottom:-6px;
+	margin-right:-3px;
+ -webkit-filter: drop-shadow(2px 2px 3px #555577);
+  filter: drop-shadow(2px 2px 3px #555577);
+}
 /* ************************************
 INDICATEURS
 ************************************* */
