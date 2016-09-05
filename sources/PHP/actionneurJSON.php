@@ -474,7 +474,7 @@ if($action=="newNote")
 		//RETOUR ------------
 		$reponseJSON["note"]=getNotationPourJSON($eleve,$indicateur);
 
-		$repNote=$bdd->query("SELECT * FROM notation WHERE id=".$bdd->lastInsertId());
+		$repNote=$bdd->query("SELECT * FROM ".$BDD_PREFIXE."notation WHERE id=".$bdd->lastInsertId());
 		$dataNote=$repNote->fetch();
 
 		$repEleve=$bdd->query("SELECT nom,prenom FROM ".$BDD_PREFIXE."utilisateurs WHERE id=".$dataNote["eleve"]);
@@ -557,7 +557,7 @@ if($action=="supprimeNotation")
 		{
 			connectToBDD();
 
-			$req=$bdd->prepare("DELETE FROM notation WHERE id=:id");
+			$req=$bdd->prepare("DELETE FROM ".$BDD_PREFIXE."notation WHERE id=:id");
 			$req->execute(array('id'=>$id));
 			$reponseJSON["idNotation"]=$id;
 			$reponseJSON["messageRetour"]=":)L'évaluation a bien été supprimée.";
