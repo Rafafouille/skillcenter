@@ -828,8 +828,7 @@ if($action=="supprimeIndicateur")
 		
 		if($idIndicateur!=0)
 		{
-			$req = $bdd->prepare('DELETE FROM '.$BDD_PREFIXE.'indicateurs WHERE id=:idIndicateur');
-			$req->execute(array('idIndicateur' => $idIndicateur));
+			supprimeIndicateur($idIndicateur);
 			$reponseJSON["messageRetour"]=":)L'indicateur a bien été supprimé.";
 			$reponseJSON["indicateur"]["id"]=$idIndicateur;
 		}
@@ -841,7 +840,29 @@ if($action=="supprimeIndicateur")
 }
 	
 	
+//SUPPRESSION D'UNE COMPETENCE =================
+if($action=="supprimeCompetence")
+{
+	if($_SESSION['statut']=="admin")
+	{
+		connectToBDD();
+		
+		$idCompetence=0;
+		if(isset($_POST['idCompetence'])) $idCompetence=intval($_POST['idCompetence']);
 
+		
+		if($idCompetence!=0)
+		{
+			supprimeCompetence($idCompetence);
+			$reponseJSON["messageRetour"]=":)La compétence a bien été supprimée.";
+			$reponseJSON["competence"]["id"]=$idCompetence;
+		}
+		else
+			$reponseJSON["messageRetour"]=":(Aucune compétence à supprimer n'a été transmise.";
+	}
+	else
+		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de supprimer une compétence.";
+}
 
 
 

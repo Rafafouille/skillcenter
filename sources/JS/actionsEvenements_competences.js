@@ -135,6 +135,7 @@ addIndicateur_callback=function(reponse)
 	var rendu=ADMIN_COMPETENCES_rendu_HTML_indicateur(indicateur,0,0,"indicateur");
 	$("#ADMIN_COMPETENCES_competence_"+indicateur.competence+" .listeIndicateurs .indicateurs").append(rendu);
 	
+	NOTATION_LOADED=false;//Impose de recharger la notation en cas de nouvelle indicateur
 }
 
 
@@ -142,8 +143,6 @@ addIndicateur_callback=function(reponse)
  //SUPPRIME UN INDICATEUR - BOITE-------------------------------------------
 ouvreBoiteSupprimeIndicateur=function(nomIndicateur,i)
 {
-	iii=i;
-	nnn=nomIndicateur;
 	$( "#dialog-supprimeIndicateur .dialog-supprimeIndicateur_nomIndicateur").text(nomIndicateur);
 	$( "#dialog-supprimeIndicateur-idIndicateur").val(i);
 	$( "#dialog-supprimeIndicateur").dialog("open");
@@ -169,11 +168,46 @@ supprimeIndicateur_callback=function(reponse)
 	var id=reponse.indicateur.id;
 	
 	$("#ADMIN_COMPETENCES_indicateur_"+id).remove();
+	NOTATION_LOADED=false;//Impose de recharger la notation en cas de suppression d'indicateur
 	
 }
 
 
+//SUPPRIMER UNE COMPETENCE  -------------------
+ouvreBoiteSupprimeCompetence=function(nomCompetence,i)
+{
+	$( "#dialog-supprimeCompetence .dialog-supprimeCompetence_nomCompetence").text(nomCompetence);
+	$( "#dialog-supprimeCompetence-idCompetence").val(i);
+	$( "#dialog-supprimeCompetence").dialog("open");
+}
 
+
+supprimeCompetence=function(idCompetence,supprimeIndicateurInternes)
+{
+	if(supprimeIndicateurInternes)
+		alert("Indic Supprimés");
+	else
+		alert("Indic non supprimé");
+	$.post(
+			'./sources/PHP/actionneurJSON.php',//Requete appelée
+			{	//Les données à passer par POST
+				action:"supprimeCompetence",
+				idCompetence:idIndicateur,
+				supprimeIndicateur:supprimeIndicateurInternes
+			},
+			supprimeCompetence_callback,	//Fonction callback
+			"json"	//Type de réponse
+	);
+}
+//Callback qui supprime l'indicateur dans la page -----
+supprimeCompetence_callback=function(reponse)
+{
+	afficheMessage(reponse.messageRetour);
+	var id=reponse.competence.id;
+	
+	$("#ADMIN_COMPETENCES_competence_"+id).remove();
+	NOTATION_LOADED=false;//Impose de recharger la notation en cas de suppression d'indicateur
+}
 
 
 

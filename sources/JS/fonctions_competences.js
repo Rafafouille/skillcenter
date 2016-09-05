@@ -74,6 +74,7 @@ function ADMIN_COMPETENCES_rendu_HTML_competence(nom,id,numeroCompetence,styleCl
 {
 	return ""+
 "					<div class=\""+styleClass+"\" id=\"ADMIN_COMPETENCES_competence_"+id+"\">"+
+"						<img class=\"boutonSupprimerCompetence\" src=\"./sources/images/poubelle.png\" alt=\"[X]\" onclick=\"alert('toto');ouvreBoiteSupprimeCompetence(\""+nom+"\","+id+")\"/>"+
 "						<div class=\"boutonAjouterIndicateur\" onclick=\"ouvreBoiteAddIndicateur('"+nom+"',"+id+");$(this).parent().find('.listeIndicateurs').slideDown('easings');\">"+
 "							<img src=\"./sources/images/icone-plus.png\" alt=\"[+]\"/>"+
 "							Ajouter un indicateur"+

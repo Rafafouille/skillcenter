@@ -40,6 +40,8 @@ modifieNotation_CallBack=function(reponse)
 	$("#historique_"+id+" .date_historique").text(reponse.date);//MAJ prof
 	//$("#historique_"+id).insertBefore($("#liste_historique").children()[0]);
 	$("#historique_"+id).slideUp(function(){$(this).insertBefore($("#liste_historique").children()[0]).slideDown();});
+	
+	NOTATION_LOADED=false;//Impose de recharger la notation en cas de modif
 }
 
 supprimeNotation=function(id)
@@ -60,6 +62,8 @@ supprimeNotation_CallBack=function(reponse)
 	afficheMessage(reponse.messageRetour);
 	var id=reponse.idNotation;
 	$("#historique_"+id).remove();
+	
+	NOTATION_LOADED=false;//Impose de recharger la notation en cas de suppression
 }
 
  

@@ -161,7 +161,12 @@ COMPETENCES
 	cursor:pointer;
 }
 
-
+.boutonSupprimerCompetence
+{
+	float:right;
+	vertical-align:middle;
+	cursor:pointer;
+}
 
 
 /* ************************************

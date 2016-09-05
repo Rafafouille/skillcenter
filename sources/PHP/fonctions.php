@@ -284,6 +284,32 @@ function valideBadges($idEleve)
 
 
 
+// ======================================
+// COMPETENCES
+// ====================================
+
+//Fonction qui supprime un indicateur
+function supprimeIndicateur($idIndicateur)
+{
+	global $bdd,$BDD_PREFIXE;
+	$req = $bdd->prepare('DELETE FROM '.$BDD_PREFIXE.'indicateurs WHERE id=:idIndicateur');
+	$req->execute(array('idIndicateur' => $idIndicateur));
+}
+
+//Fonction qui supprime une compétence
+function supprimeCompetence($idCompetence,$supprInd=true)
+{
+	global $bdd,$BDD_PREFIXE;
+	if($supprInd)
+	{
+		$req = $bdd->prepare('DELETE FROM '.$BDD_PREFIXE.'indicateurs WHERE competence=:idComp');
+		$req->execute(array('idComp' => $idCompetence));
+	}
+	$req = $bdd->prepare('DELETE FROM '.$BDD_PREFIXE.'competences WHERE id=:idCompetence');
+	$req->execute(array('idCompetence' => $idCompetence));
+}
+
+
 
 // =================================
 // A SUPPRIMER ?????
