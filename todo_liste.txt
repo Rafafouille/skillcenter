@@ -1,9 +1,9 @@
 - Séparer le fichier "boites.php" en deux ou trois (élève / prof / admin)
-- Faire bilan "radar" élèves
-- Faire badges
+- Faire bilan "radar" élèves pour chaque domaine
+- Faire d'autres badges
 - Supprimer actionneur XML
 - Mettre une page "A propos"
-- La page "evaluation" doit se réactualiser quand on rajoute un intitulé
-- La page "evaluation" doit se réactualiser quand on modifier/supprime un note
 - Crypter les Mdp
-- Mettre les status par défaut à "" lors de la créaction des tables SQL
+- Rajouter bouton "supprimer domaine"
+- Rajouter un domaine "fantôme" pour les indicateurs et les compétences, dont le parent a été supprimé
+- Virer les boites d'information

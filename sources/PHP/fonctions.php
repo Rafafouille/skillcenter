@@ -11,6 +11,7 @@ function initSession()
 		$_SESSION['nom']="";
 		$_SESSION['prenom']="";
 		$_SESSION['id']=0;	//ATTENTION : 0 = pas connecté.
+		$_SESSION['classe']="";
 	}
 }
 
@@ -97,6 +98,48 @@ function getNotationPourJSON($eleve,$indicateur)
 
 	return $note;
 }
+
+
+
+
+function getBilanDomaines()
+{
+	$bilan=array();
+	global $bdd,$BDD_PREFIXE;
+
+	//Mise en place du tableau (sans les notes)
+	$requeteIndicateurClasse="SELECT niveaux, competence FROM ".$BDD_PREFIXE."indicateurs as ind JOIN ".$BDD_PREFIXE."liensClassesIndicateurs as lie ON ind.id=lie.indicateur WHERE classe='".$_SESSION['classe']."'";
+	$requeteIndicateurClasseCompetences="SELECT i.niveaux AS niveaux, c.groupe AS idDomaine
+		FROM (".$requeteIndicateurClasse.") AS i JOIN ".$BDD_PREFIXE."competences AS c ON i.competence=c.id";
+	$requeteSommeIndicateurClasseCompetencesDomaine="SELECT g.nom AS nom, SUM(ic.niveaux) AS sommeNiveaux
+		FROM (".$requeteIndicateurClasseCompetences.") AS ic JOIN ".$BDD_PREFIXE."groupes_competences AS g ON ic.idDomaine=g.id GROUP BY g.id";
+	$req = $bdd->query($requeteSommeIndicateurClasseCompetencesDomaine);
+
+	while($donnees=$req->fetch())
+	{
+		$domaine=array("nom"=>$donnees["nom"],
+									"sommeNiveaux"=>intval($donnees["sommeNiveaux"]),
+									"sommeEleve"=>intval(rand(0,intval($donnees["sommeNiveaux"])))
+				);
+		$bilan[$donnees["nom"]]=$domaine;
+	}
+
+
+	//Bilan des notes (à rajouter dans le tableau vierge)
+	$requeteNotes ="SELECT MAX(note) as note, indicateur AS idInd FROM ".$BDD_PREFIXE."notation WHERE eleve=".$_SESSION['id']." GROUP BY indicateur";
+	$requeteNotesInd="SELECT n.note AS note,i.competence AS idComp FROM (".$requeteNotes.") AS n JOIN ".$BDD_PREFIXE."indicateurs AS i ON n.idInd=i.id";
+	$requeteNotesIndCom="SELECT ni.note AS note,c.groupe as idDomaine FROM (".$requeteNotesInd.") AS ni JOIN ".$BDD_PREFIXE."competences AS c ON ni.idComp=c.id";
+	$requeteNotesIndComDom="SELECT sum(note) as sommeNote, g.nom AS nom FROM (".$requeteNotesIndCom.") AS nic JOIN ".$BDD_PREFIXE."groupes_competences as g ON nic.idDomaine=g.id GROUP BY g.id";
+	$req = $bdd->query($requeteNotesIndComDom);
+
+	while($donnees=$req->fetch())
+	{
+		$bilan[$donnees["nom"]]['sommeEleve']=intval($donnees["sommeNote"]);
+	}
+	return $bilan;
+}
+
+
 
 
 

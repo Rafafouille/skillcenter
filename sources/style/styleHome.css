@@ -5,6 +5,18 @@
 *************************** */
 
 
+
+
+#graphiquesHome
+{
+	text-align:center;
+}
+
+#graphiquesHome canvas
+{
+	margin:auto;
+}
+
 #liste_badges
 {
 	text-align:center;

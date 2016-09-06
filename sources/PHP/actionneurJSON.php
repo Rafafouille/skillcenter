@@ -48,6 +48,7 @@ if($action=="login")
 			$_SESSION['prenom']=$donnees['prenom'];
 			$_SESSION['statut']=$donnees['statut'];
 			$_SESSION['id']=$donnees['id'];
+			$_SESSION['classe']=$donnees['classe'];
 			$reponseJSON["messageRetour"]=":)Vous êtes connecté. Bonjour ".$_SESSION['prenom']." ".$_SESSION['nom']." !";
 
 			//MAJ date de connexion
@@ -76,6 +77,7 @@ if($action=="logout")
 	$_SESSION['prenom']="";
 	$_SESSION['statut']="";
 	$_SESSION['id']=0;
+	$_SESSION['classe']="";
 	$reponseJSON["messageRetour"]=":)Vous êtes déconnecté. Au revoir !";
 }
 

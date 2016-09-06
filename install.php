@@ -20,6 +20,7 @@ if(isset($_POST['NB_NIVEAUX']))		$_SESSION['NB_NIVEAUX']=$_POST['NB_NIVEAUX'];
 if(isset($_POST['NIVEAU_DEFAUT']))	$_SESSION['NIVEAU_DEFAUT']=$_POST['NIVEAU_DEFAUT'];
 
 if(isset($_POST['AUTORISE_BADGES']))	$_SESSION['AUTORISE_BADGES']=$_POST['AUTORISE_BADGES']=="oui";
+if(isset($_POST['AUTORISE_GRAPHIQUES']))	$_SESSION['AUTORISE_GRAPHIQUES']=$_POST['AUTORISE_GRAPHIQUES']=="oui";
 
 
 ?>
@@ -171,6 +172,7 @@ if($etape=="sauvOptions")
 	$NIVEAU_DEFAUT=4;		//Niveau par défaut quand on crée un critères
 
 	$AUTORISE_BADGES=true;	//Utilise les badges ou non
+	$AUTORISE_GRAPHIQUES=true;	//Utilise les graphiques dans home ou non
 
 	//Récupération des valeurs existantes
 	$_SESSION['optionsExiste']=file_exists($dOptions."options.php");
@@ -221,6 +223,7 @@ if($etape=="sauvOptions")
 	$_SESSION['NIVEAU_DEFAUT']=$NIVEAU_DEFAUT;
 
 	$_SESSION['AUTORISE_BADGES']=$AUTORISE_BADGES;
+	$_SESSION['AUTORISE_GRAPHIQUES']=$AUTORISE_GRAPHIQUES;
 }
 
 
@@ -448,6 +451,14 @@ if($etape=="rentreNotation")
 								</select>
 						</td>
 					</tr>
+					<tr>
+						<td><label for="input_AUTORISE_GRAPHIQUES">Autorise l'affichage des graphiques <span title="Les graphiques sont un bilan visuel affiché sur la page d'accueil de l'élève "><img src="./sources/images/icone-info.png" alt="[i]"/></span> :</label></td>
+						<td><select id="input_AUTORISE_GRAPHIQUES" name="AUTORISE_GRAPHIQUES">
+									<option value="oui" <?php if($_SESSION['AUTORISE_GRAPHIQUES']) echo "selected";?>>Oui</options>
+									<option value="non" <?php if(!$_SESSION['AUTORISE_GRAPHIQUES']) echo "selected";?>>Non</options>
+								</select>
+						</td>
+					</tr>
 				</table>
 				<input type="hidden" name="etape" value="ecritFichier"/>
 			</form>
@@ -497,6 +508,7 @@ if($etape=="ecritFichier")
 
 //Autres ************************************
 \$AUTORISE_BADGES=".($_SESSION['AUTORISE_BADGES']?"true":"false").";		//Autorise (ou non) les étudiants à recevoir des badges de validation
+\$AUTORISE_GRAPHIQUES=".($_SESSION['AUTORISE_GRAPHIQUES']?"true":"false").";		//Autorise (ou non) à afficher les graphiques sur la page d'accueil
 
 //**************** FIN DU FICHIER ****************
 ?>";
