@@ -27,7 +27,7 @@ function ADMIN_COMPETENCES_rendu_HTML_groupe(nom,id,styleClass)
 	return ""+
 "			<div class=\""+styleClass+"\" id=\"ADMIN_COMPETENCES_groupe_"+id+"\">"+
 "				<div class=\"entete_groupe_competences\">"+
-"					<div class=\"boutonAjouteCompetence\" onclick=\"ouvreBoiteAddCompetence('"+nom+"',"+id+");$(this).parent().parent().find('.groupe_contenu').slideDown('easings');\">"+
+"					<div class=\"boutonAjouteCompetence\" onclick=\"ouvreBoiteAddCompetence('"+addslashes(nom)+"',"+id+");$(this).parent().parent().find('.groupe_contenu').slideDown('easings');\">"+
 "						<img src=\"./sources/images/icone-plus.png\" alt=\"[+]\"/>"+
 "						Ajouter une compétence"+
 "					</div>"+
@@ -74,8 +74,8 @@ function ADMIN_COMPETENCES_rendu_HTML_competence(nom,id,numeroCompetence,styleCl
 {
 	return ""+
 "					<div class=\""+styleClass+"\" id=\"ADMIN_COMPETENCES_competence_"+id+"\">"+
-"						<img class=\"boutonSupprimerCompetence\" src=\"./sources/images/poubelle.png\" alt=\"[X]\" onclick=\"ouvreBoiteSupprimeCompetence('"+nom+"',"+id+")\"/>"+
-"						<div class=\"boutonAjouterIndicateur\" onclick=\"ouvreBoiteAddIndicateur('"+nom+"',"+id+");$(this).parent().find('.listeIndicateurs').slideDown('easings');\">"+
+"						<img class=\"boutonSupprimerCompetence\" src=\"./sources/images/poubelle.png\" alt=\"[X]\" onclick=\"ouvreBoiteSupprimeCompetence('"+addslashes(nom)+"',"+id+")\"/>"+
+"						<div class=\"boutonAjouterIndicateur\" onclick=\"ouvreBoiteAddIndicateur('"+addslashes(nom)+"',"+id+");$(this).parent().find('.listeIndicateurs').slideDown('easings');\">"+
 "							<img src=\"./sources/images/icone-plus.png\" alt=\"[+]\"/>"+
 "							Ajouter un indicateur"+
 "						</div>"+

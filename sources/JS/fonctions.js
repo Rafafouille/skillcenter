@@ -92,3 +92,13 @@ function setArcEnCiel(val,maxi)
 }
 
 
+
+
+//Fonction qui permet d'échapper les apostrophes des chaines de caractères, etc.
+function addslashes(ch) {
+ch = ch.replace(/\\/g,"\\\\")
+ch = ch.replace(/\'/g,"\\'")
+ch = ch.replace(/\"/g,"\\\"")
+return ch
+}
+
