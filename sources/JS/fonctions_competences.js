@@ -77,7 +77,7 @@ function ADMIN_COMPETENCES_rendu_HTML_competence(nom,id,numeroCompetence,styleCl
 "						<img class=\"boutonSupprimerCompetence\" src=\"./sources/images/poubelle.png\" alt=\"[X]\" onclick=\"ouvreBoiteSupprimeCompetence('"+addslashes(nom)+"',"+id+")\"/>"+
 "						<div class=\"boutonAjouterIndicateur\" onclick=\"ouvreBoiteAddIndicateur('"+addslashes(nom)+"',"+id+");$(this).parent().find('.listeIndicateurs').slideDown('easings');\">"+
 "							<img src=\"./sources/images/icone-plus.png\" alt=\"[+]\"/>"+
-"							Ajouter un indicateur"+
+"							Ajouter un critère"+
 "						</div>"+
 "						<h3 onclick=\"$(this).parent().find('.listeIndicateurs').slideToggle('easings');\">"+
 "							"+numeroCompetence+" - "+nom+
