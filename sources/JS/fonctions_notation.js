@@ -16,7 +16,7 @@ function NOTATION_ajouteGroupeCompetences(groupe,conteneur,modeNotation,recreeDe
 	{
 		var rendu=""+
 "			<div class=\"groupe_competences\" id=\"NOTATION_groupe_"+groupe.id+"\">"+
-"				<div class=\"entete_groupe_competences\" onclick=\"$(this).parent().find('.groupe_contenu').slideToggle('easings');\">"+
+"				<div class=\"entete_groupe_competences\" onclick=\"$(this).parent().find('.groupe_contenu').slideToggle('easings');$(this).parent().find('.listeIndicateurs').slideToggle('easings');\">"+
 "					<h3>"+
 "						"+groupe.nom+
 "					</h3>"+
