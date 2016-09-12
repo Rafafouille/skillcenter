@@ -3,7 +3,7 @@
 
 					<div id="liste_historique">
 					<?php
-						$req=$bdd->query("SELECT nee.*,i.id AS idIndicateur,i.nom AS nomIndicateur, i.niveaux FROM (SELECT ne.*,uu.nom AS nomProf, uu.prenom AS prenomProf FROM (SELECT n.id, n.note,n.date,n.indicateur AS idIndicateur,n.examinateur AS idExaminateur, u.nom AS nomEleve, u.prenom AS prenomEleve FROM ".$BDD_PREFIXE."notation AS n JOIN ".$BDD_PREFIXE."utilisateurs AS u ON n.eleve=u.id) AS ne JOIN ".$BDD_PREFIXE."utilisateurs AS uu ON ne.idExaminateur=uu.id) AS nee JOIN ".$BDD_PREFIXE."indicateurs as i ON nee.idIndicateur=i.id ORDER BY date DESC LIMIT 0,20");
+						$req=$bdd->query("SELECT nee.*,i.id AS idIndicateur,i.nom AS nomIndicateur, i.niveaux FROM (SELECT ne.*,uu.nom AS nomProf, uu.prenom AS prenomProf FROM (SELECT n.id, n.note,n.date,n.indicateur AS idIndicateur,n.examinateur AS idExaminateur, u.nom AS nomEleve, u.prenom AS prenomEleve FROM ".$BDD_PREFIXE."notation AS n JOIN ".$BDD_PREFIXE."utilisateurs AS u ON n.eleve=u.id) AS ne JOIN ".$BDD_PREFIXE."utilisateurs AS uu ON ne.idExaminateur=uu.id) AS nee JOIN ".$BDD_PREFIXE."indicateurs as i ON nee.idIndicateur=i.id ORDER BY date DESC ");//LIMIT 0,20
 						while($donnees=$req->fetch())
 						{
 							echo "
