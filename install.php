@@ -19,9 +19,25 @@ if(isset($_POST['BDD_PREFIXE']))	$_SESSION['BDD_PREFIXE']=$_POST['BDD_PREFIXE'];
 if(isset($_POST['NB_NIVEAUX']))		$_SESSION['NB_NIVEAUX']=$_POST['NB_NIVEAUX'];
 if(isset($_POST['NIVEAU_DEFAUT']))	$_SESSION['NIVEAU_DEFAUT']=$_POST['NIVEAU_DEFAUT'];
 
+if(isset($_POST['input_NOM_NIVEAU_1-0']))	//Recupere les noms de niveaux
+{
+	unset($_SESSION['NOMS_NIVEAUX']);
+	$_SESSION['NOMS_NIVEAUX']=array();
+	$i=1;
+	while(isset($_POST['input_NOM_NIVEAU_'.$i.'-0']))
+	{
+		$_SESSION['NOMS_NIVEAUX'][$i]=array();
+		for($j=0;$j<=$i;$j++)
+		{
+			if(isset($_POST['input_NOM_NIVEAU_'.$i.'-'.$j]))
+				$_SESSION['NOMS_NIVEAUX'][$i][$j]=$_POST['input_NOM_NIVEAU_'.$i.'-'.$j];
+		}
+		$i+=1;
+	}
+}
+
 if(isset($_POST['AUTORISE_BADGES']))	$_SESSION['AUTORISE_BADGES']=$_POST['AUTORISE_BADGES']=="oui";
 if(isset($_POST['AUTORISE_GRAPHIQUES']))	$_SESSION['AUTORISE_GRAPHIQUES']=$_POST['AUTORISE_GRAPHIQUES']=="oui";
-
 
 ?>
 <!DOCTYPE html>
@@ -170,6 +186,7 @@ if($etape=="sauvOptions")
 
 	$NB_NIVEAUX_MAX=5;		//Nombre de niveau max possible à donner aux élèves
 	$NIVEAU_DEFAUT=4;		//Niveau par défaut quand on crée un critères
+	$NOMS_NIVEAUX=Array();	//Noms des niveaux
 
 	$AUTORISE_BADGES=true;	//Utilise les badges ou non
 	$AUTORISE_GRAPHIQUES=true;	//Utilise les graphiques dans home ou non
@@ -221,6 +238,7 @@ if($etape=="sauvOptions")
 
 	$_SESSION['NB_NIVEAUX']=$NB_NIVEAUX_MAX;		//Nombre de niveau max possible à donner aux élèvess
 	$_SESSION['NIVEAU_DEFAUT']=$NIVEAU_DEFAUT;
+	$_SESSION['NOMS_NIVEAUX']=$NOMS_NIVEAUX;
 
 	$_SESSION['AUTORISE_BADGES']=$AUTORISE_BADGES;
 	$_SESSION['AUTORISE_GRAPHIQUES']=$AUTORISE_GRAPHIQUES;
@@ -301,7 +319,7 @@ if($etape=="rentreBDD")
 		<h2>Paramètres de la base de données (BDD)</h2>
 		<p>
 			Pour utiliser SkillCenter, vous devez avoir une base de données MySQL.
-			<br/>Merci de rentrer les paramètres de connexion ci-dessous.<?php echo $_SESSION['COULEUR_BANDEAU'];?>
+			<br/>Merci de rentrer les paramètres de connexion ci-dessous.
 		</p>
 
 			<?php if(isset($connexionReussie))
@@ -393,34 +411,54 @@ if($etape=="rentreNotation")
 		//Script pour changer les nom des niveaux...
 		updateNomsNiveaux=function()
 		{
-			return;
-			
 			$(".inputNomsNiveaux").parent().parent().remove();
 			
-			var nbMax=parseInt($("#input_NB_NIVEAUX").val());
+			nbMax=parseInt($("#input_NB_NIVEAUX").val());
 			
 			//Tableau des noms dejà existants
 			tabNoms=Array(<?php
-			if(isset($_SESSION['NOMS_NIVEAU']))
+			if(isset($_SESSION['NOMS_NIVEAUX']))
 			{
-				for($i=0;$i<sizeof($_SESSION['NOMS_NIVEAU']);$i++)
+				for($i=1;$i<=sizeof($_SESSION['NOMS_NIVEAUX']);$i++)
 				{
-					echo "\"".$_SESSION['NOMS_NIVEAU'][$i]."\"";
-					if($i<sizeof($_SESSION['NOMS_NIVEAU'])-1)
+					echo "Array(";
+					$ligne=$_SESSION['NOMS_NIVEAUX'][$i];
+					for($j=0;$j<sizeof($ligne);$j++)
+					{
+						$nom=$ligne[$j];
+						echo "\"".$nom."\"";
+						if($j<sizeof($ligne)-1)
+							echo ",";
+					}
+					echo ")";//Fin du sous-tableau
+					if($i<sizeof($_SESSION['NOMS_NIVEAUX']))
 						echo ",";
 				}
 			}
-			?>);
+			?>);	//Fin tableau entier
 			
 			
-			for(var i=0;i<=nbMax;i++)
+			for(var i=1;i<=nbMax;i++)
 			{
-				var nomNiveau=i;
-				
-				var texte=""+
+					var texte=""+
 "					<tr>"+
-"						<td style=\"text-align:right;\"><label for=\"input_NOM_NIVEAUX_"+i+"\">Niveau "+i+" :</label></td>"+
-"						<td><input type=\"text\" size=\"2\" maxlength=\"2\" name=\"input_NOM_NIVEAUX_"+i+"\" id=\"input_NOM_NIVEAUX_"+i+"\" class=\"inputNomsNiveaux\" value=\""+nomNiveau+"\"></td>"
+"						<td style=\"text-align:right;\"><label for=\"input_NOM_NIVEAU_"+i+"-0\">"+i+" niveau(x) :</label></td>"+
+"						<td>";
+				for(var j=0;j<=i;j++)
+				{
+					
+					//Noms par défaut...
+					if(tabNoms[i-1]==undefined)
+							nomNiveau=j;
+					else
+						if(tabNoms[i-1][j]==undefined)
+							nomNiveau=j;
+						else
+							nomNiveau=tabNoms[i-1][j];
+					
+					texte+="<input type=\"text\" size=\"2\" maxlength=\"2\" name=\"input_NOM_NIVEAU_"+i+"-"+j+"\" id=\"input_NOM_NIVEAU_"+i+"-"+j+"\" class=\"inputNomsNiveaux\" value=\""+nomNiveau+"\">";
+				}
+				texte+="</td>"+
 "					</tr>";
 				$("#input_NIVEAU_DEFAUT").parent().parent().before(texte);
 			}
@@ -436,11 +474,15 @@ if($etape=="rentreNotation")
 			<form method="POST" action="" id="formRentreNotation">
 				<table>
 					<tr>
-						<td><label for="input_NB_NIVEAUX">Nombre de niveaux maximum <span title="Il s'agit du nombre maximum de niveaux qui seront proposés lors de la création d'un nouveau critère." alt="[i]"/></span> :</label></td>
+						<td><label for="input_NB_NIVEAUX">Nombre de niveaux maximum pour chaque critère <span title="Il s'agit du nombre maximum de niveaux qui seront proposés lors de la création d'un nouveau critère." alt="[i]"/></span> :</label></td>
 						<td><input type="number" min="1" step="1" placeholder="Nombre supérieur à 0" id="input_NB_NIVEAUX" name="NB_NIVEAUX" value="<?php echo $_SESSION['NB_NIVEAUX'];?>" onchange="updateNomsNiveaux();"/></td>
 					</tr>
 					<tr>
-						<td><label for="input_NIVEAU_DEFAUT">Niveau par défaut <span title="Il s'agit du niveau maximum par défaut proposé lors de la création d''une compétence."><img src="./sources/images/icone-info.png" alt="[i]"/></span> :</label></td>
+						<td>Intitulés des niveaux : </td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><label for="input_NIVEAU_DEFAUT">Niveau par défaut pour un critère <span title="Il s'agit du niveau maximum par défaut proposé lors de la création d''une compétence."><img src="./sources/images/icone-info.png" alt="[i]"/></span> :</label></td>
 						<td><input type="number" min="1" step="1" placeholder="Nombre supérieur à 0" id="input_NIVEAU_DEFAUT" name="NIVEAU_DEFAUT" value="<?php echo $_SESSION['NIVEAU_DEFAUT'];?>"/></td>
 					</tr>
 					<tr>
@@ -478,6 +520,7 @@ if($etape=="rentreNotation")
 			</tr></table>
 		</div>
 	</div>
+	<script>updateNomsNiveaux();</script>
 <?php }
 
 
@@ -505,7 +548,19 @@ if($etape=="ecritFichier")
 //Paramètre des niveaux des critères ********
 \$NB_NIVEAUX_MAX=".$_SESSION['NB_NIVEAUX'].";		//Nombre de niveaux maximums qu'un critère pourra prendre
 \$NIVEAU_DEFAUT=".$_SESSION['NIVEAU_DEFAUT'].";		//Niveau max initialement proposé lors de la création d'un critère
+//Noms des criteres :
+";
 
+for($i=1;$i<=$_SESSION['NB_NIVEAUX'];$i++)
+{
+	$contenu.="//     Critere de niveau max : ".$i."\n";
+	for($j=0;$j<=$i;$j++)
+	{
+		$contenu.="       \$INTITULE_NIVEAU_".$i."_".$j."=\"".$_SESSION['NOMS_NIVEAUX'][$i][$j]."\";\n";
+	}
+}
+
+$contenu.="
 //Autres ************************************
 \$AUTORISE_BADGES=".($_SESSION['AUTORISE_BADGES']?"true":"false").";		//Autorise (ou non) les étudiants à recevoir des badges de validation
 \$AUTORISE_GRAPHIQUES=".($_SESSION['AUTORISE_GRAPHIQUES']?"true":"false").";		//Autorise (ou non) à afficher les graphiques sur la page d'accueil
