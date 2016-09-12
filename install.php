@@ -30,7 +30,7 @@ if(isset($_POST['input_NOM_NIVEAU_1-0']))	//Recupere les noms de niveaux
 		for($j=0;$j<=$i;$j++)
 		{
 			if(isset($_POST['input_NOM_NIVEAU_'.$i.'-'.$j]))
-				$_SESSION['NOMS_NIVEAUX'][$i][$j]=$_POST['input_NOM_NIVEAU_'.$i.'-'.$j];
+				$_SESSION['NOMS_NIVEAUX'][$i-1][$j]=$_POST['input_NOM_NIVEAU_'.$i.'-'.$j];
 		}
 		$i+=1;
 	}
@@ -186,7 +186,7 @@ if($etape=="sauvOptions")
 
 	$NB_NIVEAUX_MAX=5;		//Nombre de niveau max possible à donner aux élèves
 	$NIVEAU_DEFAUT=4;		//Niveau par défaut quand on crée un critères
-	$NOMS_NIVEAUX=Array();	//Noms des niveaux
+	$INTITULES_NIVEAUX_CRITERES=Array();	//Noms des niveaux
 
 	$AUTORISE_BADGES=true;	//Utilise les badges ou non
 	$AUTORISE_GRAPHIQUES=true;	//Utilise les graphiques dans home ou non
@@ -238,7 +238,7 @@ if($etape=="sauvOptions")
 
 	$_SESSION['NB_NIVEAUX']=$NB_NIVEAUX_MAX;		//Nombre de niveau max possible à donner aux élèvess
 	$_SESSION['NIVEAU_DEFAUT']=$NIVEAU_DEFAUT;
-	$_SESSION['NOMS_NIVEAUX']=$NOMS_NIVEAUX;
+	$_SESSION['NOMS_NIVEAUX']=$INTITULES_NIVEAUX_CRITERES;
 
 	$_SESSION['AUTORISE_BADGES']=$AUTORISE_BADGES;
 	$_SESSION['AUTORISE_GRAPHIQUES']=$AUTORISE_GRAPHIQUES;
@@ -422,7 +422,7 @@ if($etape=="rentreNotation")
 				for($i=1;$i<=sizeof($_SESSION['NOMS_NIVEAUX']);$i++)
 				{
 					echo "Array(";
-					$ligne=$_SESSION['NOMS_NIVEAUX'][$i];
+					$ligne=$_SESSION['NOMS_NIVEAUX'][$i-1];
 					for($j=0;$j<sizeof($ligne);$j++)
 					{
 						$nom=$ligne[$j];
@@ -555,7 +555,7 @@ if($etape=="ecritFichier")
 		$contenu.="[";
 		for($j=0;$j<=$i;$j++)
 		{
-			$contenu.="'".$_SESSION['NOMS_NIVEAUX'][$i][$j]."'";
+			$contenu.="'".$_SESSION['NOMS_NIVEAUX'][$i-1][$j]."'";
 			if($j!=$i)
 				$contenu.=",";
 		}

@@ -89,19 +89,20 @@ include("./sources/PHP/actions.php");
 			NOTATION_LOADED=false;	//Variable globale qui dit si la page "cometences (admin)" a deja été au moins une fois chargée
 			NOTATION_REDESSINE_DE_ZERO=true;
 
-			NOMS_NIVEAUX=Array();
-<?php for($i=1;$i<=$NB_NIVEAUX_MAX;$i++)
+			NOMS_NIVEAUX=[<?php for($i=1;$i<=$NB_NIVEAUX_MAX;$i++)
 						{
-								echo "					NOMS_NIVEAUX[".$i."]=[";
+								echo "[";
 								for($j=0;$j<=$i;$j++)
 								{
 										echo "'".$INTITULES_NIVEAUX_CRITERES[$i-1][$j]."'";
 										if($j!=$i)
 											echo ",";
 								}
-								echo "];\n";
+								echo "]";
+								if($i!=$NB_NIVEAUX_MAX)
+									echo ",";
 						}
- ?>
+ ?>]
 		</script>
     </head>
 

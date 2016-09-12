@@ -139,7 +139,7 @@ function NOTATION_getNiveauxIndicateur(val,maxi,indicateur, clickable,degrade)
 				var couleur=setArcEnCiel(val,maxi);
 
 			rendu+=""+
-"										<div class=\""+cl+"\" style=\"background-color:"+couleur+";\" onclick=\""+actionOnClick+"\" >"+NOMS_NIVEAUX[maxi][i]+"</div>";
+"										<div class=\""+cl+"\" style=\"background-color:"+couleur+";\" onclick=\""+actionOnClick+"\" >"+intitule_critere(i,maxi)+"</div>";
 		}
 		else
 		{
@@ -147,7 +147,7 @@ function NOTATION_getNiveauxIndicateur(val,maxi,indicateur, clickable,degrade)
 			if(clickable)
 				cl+="Modifiable";
 			rendu+=""+
-"										<div class=\""+cl+"\" onclick=\""+actionOnClick+"\">"+NOMS_NIVEAUX[maxi][i]+"</div>";
+"										<div class=\""+cl+"\" onclick=\""+actionOnClick+"\">"+intitule_critere(i,maxi)+"</div>";
 		}
 	}
 	return rendu;

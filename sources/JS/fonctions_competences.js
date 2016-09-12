@@ -156,12 +156,12 @@ function ADMIN_COMPETENCES_getNiveauxIndicateur(val,maxi, full)
 		if(i<=val)
 		{
 			rendu+=""+
-"										<div class=\"indicateurAllume\" style=\"background-color:"+setArcEnCiel(i,valeurVerte)+";\">"+NOMS_NIVEAUX[maxi][i]+"</div>";
+"										<div class=\"indicateurAllume\" style=\"background-color:"+setArcEnCiel(i,valeurVerte)+";\">"+intitule_critere(i,val)+"</div>";
 		}
 		else
 		{
 			rendu+=""+
-"										<div class=\"indicateurEteint\">"+NOMS_NIVEAUX[maxi][i]+"</div>";
+"										<div class=\"indicateurEteint\">"+intitule_critere(i,val)+"</div>";
 		}
 	}
 	return rendu;

@@ -93,6 +93,21 @@ function setArcEnCiel(val,maxi)
 
 
 
+//Fonction qui choisit quoi écrire dans les critère
+function intitule_critere(val,maxi)
+{
+		if(maxi<=NOMS_NIVEAUX.length)
+		{
+			if(val<=NOMS_NIVEAUX[maxi-1].length-1)
+				return NOMS_NIVEAUX[maxi-1][val];
+			else
+				return "_";
+		}
+		else
+			return "-";
+}
+
+
 
 //Fonction qui permet d'échapper les apostrophes des chaines de caractères, etc.
 function addslashes(ch) {
@@ -101,4 +116,5 @@ ch = ch.replace(/\'/g,"\\'")
 ch = ch.replace(/\"/g,"\\\"")
 return ch
 }
+
 
