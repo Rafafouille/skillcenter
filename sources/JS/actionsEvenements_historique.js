@@ -11,11 +11,15 @@ ouvreBoite_modifNotation=function(id,val,maxi)
 	$('#dialog-modifNotation').dialog('open');
 }
 
+
+
 ouvreBoite_supprimeNotation=function(id)
 {
 	$('#supprEvaluNumId').text(id);
 	$('#dialog-supprimeNotation').dialog('open');
 }
+
+
 
 modifieNotation=function(id,note)
 {
@@ -31,6 +35,8 @@ modifieNotation=function(id,note)
 	);
 }
 
+
+
 modifieNotation_CallBack=function(reponse)
 {
 	afficheMessage(reponse.messageRetour);
@@ -44,6 +50,8 @@ modifieNotation_CallBack=function(reponse)
 	NOTATION_LOADED=false;//Impose de recharger la notation en cas de modif
 }
 
+
+//Supprime une note
 supprimeNotation=function(id)
 {
 	$.post(
@@ -61,7 +69,8 @@ supprimeNotation_CallBack=function(reponse)
 {
 	afficheMessage(reponse.messageRetour);
 	var id=reponse.idNotation;
-	$("#historique_"+id).remove();
+	$("#historique_"+id).slideUp();
+	setTimeout(function(){$("#historique_"+id).remove();},1000);
 	
 	NOTATION_LOADED=false;//Impose de recharger la notation en cas de suppression
 }
