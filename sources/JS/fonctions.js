@@ -48,8 +48,20 @@ afficheMessage=function(message)
 				break;
 		}
 		$("#dialog-messageRetour").text(message);
+
+		//Ouverture de la boite
+		var focus=$(":focus");//Magouille pour annuler l'autofocus à louverture de la boite
 		$("#dialog-messageRetour").dialog("open");
-		setTimeout(function(){$("#dialog-messageRetour").dialog("close");}, 5000)
+		if(focus!=[])
+			setTimeout(function(){focus.focus();},510);//On remets le focus juste apres l'animation
+
+		//Fermeture au bout de quelques secondes
+		setTimeout(function(){
+																var focus=$(":focus");//Magouille pour supprimer l'autofocus au moment de la fermeture
+																$("#dialog-messageRetour").dialog("close");
+																if(focus!=[])
+																	focus.focus();
+												}, 5000)
 	}
 }
 
