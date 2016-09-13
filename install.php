@@ -549,21 +549,21 @@ if($etape=="ecritFichier")
 \$NB_NIVEAUX_MAX=".$_SESSION['NB_NIVEAUX'].";		//Nombre de niveaux maximums qu'un critère pourra prendre
 \$NIVEAU_DEFAUT=".$_SESSION['NIVEAU_DEFAUT'].";		//Niveau max initialement proposé lors de la création d'un critère
 //Noms des criteres :
-\$INTITULES_NIVEAUX_CRITERES=[";
+\$INTITULES_NIVEAUX_CRITERES=array(";
 	for($i=1;$i<=$_SESSION['NB_NIVEAUX'];$i++)
 	{
-		$contenu.="[";
+		$contenu.="array(";
 		for($j=0;$j<=$i;$j++)
 		{
 			$contenu.="'".$_SESSION['NOMS_NIVEAUX'][$i-1][$j]."'";
 			if($j!=$i)
 				$contenu.=",";
 		}
-		$contenu.="]";
+		$contenu.=")";
 		if($i!=$_SESSION['NB_NIVEAUX'])
 			$contenu.=",";
 	}
-$contenu.="];\n\n";
+$contenu.=");\n";
 
 /*for($i=1;$i<=$_SESSION['NB_NIVEAUX'];$i++)
 {
