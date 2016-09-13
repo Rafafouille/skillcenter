@@ -36,6 +36,8 @@ include("./sources/PHP/actions.php");
 		<link rel="stylesheet" href="./sources/style/style.css" />
 		<?php if($_SESSION["statut"]=="admin") { ?>
 		<link rel="stylesheet" href="./sources/style/styleUsers.css" />
+		<?php }
+		if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur" || $_SESSION['statut']=="autoeval") { ?>
 		<link rel="stylesheet" href="./sources/style/styleHistorique.css" />
 		<?php } ?>
 		<link rel="stylesheet" href="./sources/style/styleCompetences.css" />
@@ -64,7 +66,7 @@ include("./sources/PHP/actions.php");
 		<script type="text/javascript" src="./sources/JS/actionsEvenements_notation.js"></script>
 		<?php }
 
-		if($_SESSION["statut"]=="admin" || $_SESSION["statut"]=="examinateur") {//Si admin ou prof ?>
+		if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur" || $_SESSION['statut']=="autoeval") {//Si admin ou prof ?>
 		<script type="text/javascript" src="./sources/JS/actionsEvenements_historique.js"></script>
 		<?php }
 
@@ -126,7 +128,7 @@ include("./sources/PHP/actions.php");
 					
 					<?php if($_SESSION['id']) echo '<li><a href="#tab-notation"><img src="./sources/images/icone-checklist.png"/><br/>Bilan</a></li>';?>
 					
-					<?php if($_SESSION['statut']=="admin") echo '<li><a href="#tab-historique"><img src="./sources/images/icone-historique.png"/><br/>Historique</a></li>';?>
+					<?php if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur" || $_SESSION['statut']=="autoeval") echo '<li><a href="#tab-historique"><img src="./sources/images/icone-historique.png"/><br/>Historique</a></li>';?>
 					
 					<?php if($_SESSION['statut']=="admin") echo '<li><a href="#tab-competences"><img src="./sources/images/icone-checklist-edit.png"/><br/>Paramétrage</a></li>';?>
 				</ul>
@@ -142,7 +144,7 @@ include("./sources/PHP/actions.php");
 					if($_SESSION['id'])	//Si connecté
 					include("./sources/PHP/notation.php"); //Notation
 
-					if($_SESSION['statut']=="admin")	//Si admin...
+					if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur" || $_SESSION['statut']=="autoeval")
 					include("./sources/PHP/historique.php");//Historique de notation
 				
 					if($_SESSION['statut']=="admin")	//Si admin

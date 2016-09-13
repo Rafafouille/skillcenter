@@ -142,6 +142,26 @@ function getBilanDomaines()
 
 
 
+// ===============================================
+// HISTORIQUE
+// ===========================================
+
+
+function autoriseModifNoteSelonStatut($idNote)
+{
+		global $bdd,$BDD_PREFIXE;
+
+		//Récupère l'id du proprio de la note (si c'est un auto évluateur)
+		$req=$bdd->prepare("SELECT eleve FROM ".$BDD_PREFIXE."notation WHERE id=:id");
+		$req->execute(array('id'=>$idNote));
+		$idEleve=0;
+		if($donnees=$req->fetch());
+			$idEleve=intval($donnees['eleve']);
+
+		return $_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur" || $_SESSION['statut']=="autoeval" && $_SESSION['id']==$idEleve;
+}
+
+
 
 
 // ==============================================

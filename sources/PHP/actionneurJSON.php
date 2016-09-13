@@ -522,15 +522,20 @@ if($action=="newNote")
 //Modifie une notation
 if($action=="modifieNotation")
 {
-	if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur")
-	{
+		connectToBDD();
+
+		//Récupere les données
 		$id=-1;
 		if(isset($_POST['idNotation'])) $id=intval($_POST['idNotation']);
 		$note="-1";
 		if(isset($_POST['note'])) $note=intval($_POST['note']);
+
+
+	if(autoriseModifNoteSelonStatut($id))
+	{
+
 		if($id>0)
 		{
-			connectToBDD();
 
 			$req=$bdd->prepare("UPDATE ".$BDD_PREFIXE."notation SET note=:note, date=NOW(),examinateur=".$_SESSION['id']." WHERE id=:id");
 			$req->execute(array('id'=>$id,'note'=>$note));
@@ -548,16 +553,20 @@ if($action=="modifieNotation")
 		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de modifier une évaluation.";
 }
 
+
+
 //Supprime une notation
 if($action=="supprimeNotation")
 {
-	if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur")
+	connectToBDD();
+	$id=-1;
+	if(isset($_POST['idNotation'])) $id=intval($_POST['idNotation']);
+
+	if(autoriseModifNoteSelonStatut($id))
 	{
-		$id=-1;
-		if(isset($_POST['idNotation'])) $id=intval($_POST['idNotation']);
+
 		if($id>0)
 		{
-			connectToBDD();
 
 			$req=$bdd->prepare("DELETE FROM ".$BDD_PREFIXE."notation WHERE id=:id");
 			$req->execute(array('id'=>$id));
