@@ -373,6 +373,25 @@ function supprimeCompetence($idCompetence,$supprInd=true)
 }
 
 
+//Fonction qui supprime une compétence
+function supprimeDomaine($idDomaine,$supprComp=true,$supprInd=true)
+{
+	global $bdd,$BDD_PREFIXE,$reponseJSON;
+
+	if($supprComp)
+	{
+		$req = $bdd->prepare('SELECT id FROM '.$BDD_PREFIXE.'competences WHERE groupe=:idDomaine');
+		$req->execute(array('idDomaine' => $idDomaine));
+		while($donnees=$req->fetch())
+		{
+			supprimeCompetence($donnees['id'],$supprInd);
+		}
+	}
+	$req = $bdd->prepare('DELETE FROM '.$BDD_PREFIXE.'groupes_competences WHERE id=:idDomaine');
+	$req->execute(array('idDomaine' => $idDomaine));
+}
+
+
 
 // =================================
 // A SUPPRIMER ?????

@@ -135,6 +135,38 @@
 			});
 		</script>
 		
+		<!-- BOITE POUR SUPPRIMER UN DOMAINE ------------------- -->
+		<div id="dialog-supprimeDomaine" title="Supprimer un domaine de compétences">
+			<p>Êtes-vous sur de vouloir supprimer le domaine : "<span class="dialog-supprimeDomaine_nomDomaine"></span>"</p>
+			<form>
+				<input type="hidden" name="dialog-supprimeDomaine-idDomaine" id="dialog-supprimeDomaine-idDomaine"/>
+				<div style="font-size:small;">
+					<label for="dialog-supprimeDomaine-supprimerCompetences">Supprimer compétences incluses ?</label> 
+					<select name="dialog-supprimeDomaine-supprimerCompetences" id="dialog-supprimeDomaine-supprimerCompetences">
+						<option value="Oui">Oui</option>
+						<option value="Non">Non</option>
+					</select>
+					<br/>
+					<label for="dialog-supprimeDomaine-supprimerIndicateurs">Supprimer critères inclus ?</label> 
+					<select name="dialog-supprimeDomaine-supprimerIndicateurs" id="dialog-supprimeDomaine-supprimerIndicateurs">
+						<option value="Oui">Oui</option>
+						<option value="Non">Non</option>
+					</select>
+				</div>
+			</form>
+		</div>
+		<script>
+			$( "#dialog-supprimeDomaine").dialog({
+				autoOpen: false,
+				modal: true,
+				buttons: {
+					"Supprimer": function() {$("#dialog-supprimeDomaine").dialog("close");supprimeDomaine(parseInt($("#dialog-supprimeDomaine-idDomaine").val()),Number($("#dialog-supprimeDomaine-supprimerCompetences").val()=="Oui"),Number($("#dialog-supprimeDomaine-supprimerIndicateurs").val()=="Oui"));},
+							"Annuler": function() {$("#dialog-supprimeDomaine").dialog("close");}
+					}
+			});
+		</script>
+
+
 		
 		<!-- BOITE POUR AJOUTER UNE COMPETENCE ------------------- -->
 		<div id="dialog-addCompetence" title="Ajouter une compétence">
@@ -161,10 +193,13 @@
 			<p>Êtes-vous sur de vouloir supprimer la compétence : "<span class="dialog-supprimeCompetence_nomCompetence"></span>"</p>
 			<form>
 				<input type="hidden" name="dialog-supprimeCompetence-idCompetence" id="dialog-supprimeCompetence-idCompetence"/>
-				<select name="dialog-supprimeCompetence-supprimerIndicateur" id="dialog-supprimeCompetence-supprimerIndicateur">
-					<option value="Oui">Oui</option>
-					<option value="Non">Non</option>
-				</select>
+				<div style="font-size:small;">
+					<label for="dialog-supprimeCompetence-supprimerIndicateur">Supprimer les critères inclus ?</label> 
+					<select name="dialog-supprimeCompetence-supprimerIndicateur" id="dialog-supprimeCompetence-supprimerIndicateur">
+						<option value="Oui">Oui</option>
+						<option value="Non">Non</option>
+					</select>
+				</div>
 			</form>
 		</div>
 		<script>
@@ -172,7 +207,7 @@
 				autoOpen: false,
 				modal: true,
 				buttons: {
-							"Supprimer": function() {$("#dialog-supprimeCompetence").dialog( "close" );supprimeCompetence(parseInt($("#dialog-supprimeCompetence-idCompetence").val()),$("#dialog-supprimeCompetence-supprimerIndicateur").val()=="Oui");},
+							"Supprimer": function() {$("#dialog-supprimeCompetence").dialog( "close" );supprimeCompetence(parseInt($("#dialog-supprimeCompetence-idCompetence").val()),Number($("#dialog-supprimeCompetence-supprimerIndicateur").val()=="Oui"));},
 							"Annuler": function() {$("#dialog-supprimeCompetence").dialog( "close" );}
 						}
 			});

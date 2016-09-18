@@ -68,6 +68,40 @@ addGroupeCompetences_callback=function(reponse)
 }
 
 
+//SUPPRIMER UN DOMAIN DE COMPETENCE  -------------------
+ouvreBoiteSupprimeDomaine=function(nomDomaine,i)
+{
+	$( "#dialog-supprimeDomaine .dialog-supprimeDomaine_nomDomaine").text(nomDomaine);
+	$( "#dialog-supprimeDomaine-idDomaine").val(i);
+	$( "#dialog-supprimeDomaine").dialog("open");
+}
+
+supprimeDomaine=function(idDomaine,supprimeCompetencesInternes,supprimeIndicateursInternes)
+{
+	$.post(
+			'./sources/PHP/actionneurJSON.php',//Requete appelée
+			{	//Les données à passer par POST
+				action:"supprimeDomaine",
+				idDomaine:idDomaine,
+				supprimeCompetences:supprimeCompetencesInternes,
+				supprimeCriteres:supprimeIndicateursInternes
+			},
+			supprimeDomaine_callback,	//Fonction callback
+			"json"	//Type de réponse
+	);
+}
+
+//Callback qui supprime le domaine dans la page -----
+supprimeDomaine_callback=function(reponse)
+{
+	afficheMessage(reponse.messageRetour);
+	var id=reponse.domaine.id;
+	
+	$("#ADMIN_COMPETENCES_groupe_"+id).remove();
+	NOTATION_LOADED=false;//Impose de recharger la notation en cas de suppression d'indicateur
+}
+
+
 //BOITE AJOUTE COMPETENCES -----------------------------
 ouvreBoiteAddCompetence=function(groupe,i)
 {
@@ -111,20 +145,20 @@ ouvreBoiteSupprimeCompetence=function(nomCompetence,i)
 }
 
 
-supprimeCompetence=function(idCompetence,supprimeIndicateurInternes)
+supprimeCompetence=function(idCompetence,supprimeIndicateursInternes)
 {
 	$.post(
 			'./sources/PHP/actionneurJSON.php',//Requete appelée
 			{	//Les données à passer par POST
 				action:"supprimeCompetence",
 				idCompetence:idCompetence,
-				supprimeIndicateur:supprimeIndicateurInternes
+				supprimeIndicateur:supprimeIndicateursInternes
 			},
 			supprimeCompetence_callback,	//Fonction callback
 			"json"	//Type de réponse
 	);
 }
-//Callback qui supprime l'indicateur dans la page -----
+//Callback qui supprime la competence dans la page -----
 supprimeCompetence_callback=function(reponse)
 {
 	afficheMessage(reponse.messageRetour);

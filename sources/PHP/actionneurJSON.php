@@ -717,7 +717,33 @@ if($action=="addGroupeCompetences")
 		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de créer un domaine.";
 }
 
+//SUPPRESSION D'UN DOMAINE =================
+if($action=="supprimeDomaine")
+{
+	if($_SESSION['statut']=="admin")
+	{
 
+		connectToBDD();
+
+		$idDomaine=0;
+		if(isset($_POST['idDomaine'])) $idDomaine=intval($_POST['idDomaine']);
+		$supprimeCompetences=true;
+		if(isset($_POST['supprimeCompetences'])) $supprimeCompetences=intval($_POST['supprimeCompetences']);
+		$supprimeCriteres=true;
+		if(isset($_POST['supprimeCriteres'])) $supprimeCriteres=intval($_POST['supprimeCriteres']);
+
+		if($idDomaine!=0)
+		{
+			supprimeDomaine($idDomaine,$supprimeCompetences,$supprimeCriteres);
+			$reponseJSON["messageRetour"]=":)Le domaine a bien été supprimé.";
+			$reponseJSON["domaine"]["id"]=$idDomaine;
+		}
+		else
+			$reponseJSON["messageRetour"]=":(Aucun domaine à supprimer n'a été transmis.";
+	}
+	else
+		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de supprimer un domaine.";
+}
 
 //AJOUT D'UNE COMPETENCE=================
 if($action=="addCompetence")
@@ -758,7 +784,32 @@ if($action=="addCompetence")
 		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de créer une compétence.";
 }
 
+//SUPPRESSION D'UNE COMPETENCE =================
+if($action=="supprimeCompetence")
+{
+	if($_SESSION['statut']=="admin")
+	{
 
+		connectToBDD();
+		
+		$idCompetence=0;
+		if(isset($_POST['idCompetence'])) $idCompetence=intval($_POST['idCompetence']);
+		$supprimeIndicateur=true;
+		if(isset($_POST['supprimeIndicateur'])) $supprimeIndicateur=intval($_POST['supprimeIndicateur']);
+
+		
+		if($idCompetence!=0)
+		{
+			supprimeCompetence($idCompetence,$supprimeIndicateur);
+			$reponseJSON["messageRetour"]=":)La compétence a bien été supprimée.";
+			$reponseJSON["competence"]["id"]=$idCompetence;
+		}
+		else
+			$reponseJSON["messageRetour"]=":(Aucune compétence à supprimer n'a été transmise.";
+	}
+	else
+		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de supprimer une compétence.";
+}
 
 //AJOUT D'UN INDICATEUR =================
 if($action=="addIndicateur")
@@ -851,31 +902,7 @@ if($action=="supprimeIndicateur")
 }
 	
 	
-//SUPPRESSION D'UNE COMPETENCE =================
-if($action=="supprimeCompetence")
-{
-	if($_SESSION['statut']=="admin")
-	{
-		connectToBDD();
-		
-		$idCompetence=0;
-		if(isset($_POST['idCompetence'])) $idCompetence=intval($_POST['idCompetence']);
-		$supprimeIndicateur=true;
-		if(isset($_POST['supprimeIndicateur'])) $supprimeIndicateur=intval($_POST['supprimeIndicateur']);
 
-		
-		if($idCompetence!=0)
-		{
-			supprimeCompetence($idCompetence,$supprimeIndicateur);
-			$reponseJSON["messageRetour"]=":)La compétence a bien été supprimée.";
-			$reponseJSON["competence"]["id"]=$idCompetence;
-		}
-		else
-			$reponseJSON["messageRetour"]=":(Aucune compétence à supprimer n'a été transmise.";
-	}
-	else
-		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de supprimer une compétence.";
-}
 
 
 
