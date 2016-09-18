@@ -144,12 +144,21 @@ GROUPE COMPETENCES
 	cursor:pointer;
 	margin-top:15px;
 	margin-left:0px;
-	margin-bottom:-3px;
+	margin-bottom:0px;
 	margin-right:20px;
  -webkit-filter: drop-shadow(4px 4px 5px #777799);
   filter: drop-shadow(4px 4px 5px #777799);
 }
 
+.boutonSupprimerDomaine:hover
+{
+	margin-top:17px;
+	margin-left:2px;
+	margin-bottom:-2px;
+	margin-right:18px;
+	-webkit-filter: drop-shadow(2px 2px 3px #555577);
+	filter: drop-shadow(2px 2px 3px #555577);	
+}
 
 /* ************************************
 COMPETENCES
@@ -175,7 +184,7 @@ COMPETENCES
 	cursor:pointer;
 }
 
-.boutonSupprimerCompetence,
+.boutonSupprimerCompetence
 {
 	float:right;
 	vertical-align:middle;
@@ -184,8 +193,8 @@ COMPETENCES
 	margin-left:0px;
 	margin-bottom:-3px;
 	margin-right:0px;
- -webkit-filter: drop-shadow(4px 4px 5px #777799);
-  filter: drop-shadow(4px 4px 5px #777799);
+	-webkit-filter: drop-shadow(4px 4px 5px #777799);
+	filter: drop-shadow(4px 4px 5px #777799);
 }
 
 .boutonSupprimerCompetence:hover
