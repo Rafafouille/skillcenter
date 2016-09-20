@@ -128,6 +128,10 @@ function NOTATION_getNiveauxIndicateur(val,maxi,indicateur, clickable,degrade)
 			actionOnClick="donneNote("+i+","+idEleveStr+","+indicateur+")";
 		}
 		
+		
+		var alpha=0.1+(i==val)*0.9;//Transparence des lettres
+		
+		
 		if(i<=val)
 		{
 			var cl="indicateurAllume";
@@ -137,9 +141,9 @@ function NOTATION_getNiveauxIndicateur(val,maxi,indicateur, clickable,degrade)
 				var couleur=setArcEnCiel(i,maxi);
 			else
 				var couleur=setArcEnCiel(val,maxi);
-
+			
 			rendu+=""+
-"										<div class=\""+cl+"\" style=\"background-color:"+couleur+";\" onclick=\""+actionOnClick+"\" >"+intitule_critere(i,maxi)+"</div>";
+"										<div class=\""+cl+"\" style=\"background-color:"+couleur+";\" onclick=\""+actionOnClick+"\" ><span style=\"color:rgba(0,0,0,"+alpha+");\">"+intitule_critere(i,maxi)+"</span></div>";
 		}
 		else
 		{
@@ -147,7 +151,7 @@ function NOTATION_getNiveauxIndicateur(val,maxi,indicateur, clickable,degrade)
 			if(clickable)
 				cl+="Modifiable";
 			rendu+=""+
-"										<div class=\""+cl+"\" onclick=\""+actionOnClick+"\">"+intitule_critere(i,maxi)+"</div>";
+"										<div class=\""+cl+"\" onclick=\""+actionOnClick+"\"><span style=\"color:rgba(0,0,0,"+alpha+");\">"+intitule_critere(i,maxi)+"</span></div>";
 		}
 	}
 	return rendu;

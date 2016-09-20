@@ -4,12 +4,13 @@
 - Supprimer actionneur XML
 - Mettre une page "A propos"
 - Crypter les Mdp
-- Rajouter bouton "supprimer domaine"
 - Rajouter un domaine "fantôme" pour les indicateurs et les compétences, dont le parent a été supprimé
 - Virer les boites d'information
 - Renommer les variables gourpes/indicateurs, etc.
+- Permettre de modifier les critères (intitulé, etc.)
 - Mettre les bonnes couleurs quand on active un critère pour un classe (dans la page parametrage)
 - Permettre de réordonner les criteres
 - Enlever la validation des formulaires (des boites) avec la touche "entrer"
-- Gérer le fait de supprimer un domaine sans ses competences, mais en supprimant les criteres
+- Mettre dans l'ordre alphabétique les élèves dans l'onglet "utilisateur"
+- Mettre dans l'ordre alphabétique les élèves dans "Bilan"
 

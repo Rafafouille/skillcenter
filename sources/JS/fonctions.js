@@ -108,15 +108,15 @@ function setArcEnCiel(val,maxi)
 //Fonction qui choisit quoi écrire dans les critère
 function intitule_critere(val,maxi)
 {
-		if(maxi<=NOMS_NIVEAUX.length)
-		{
-			if(val<=NOMS_NIVEAUX[maxi-1].length-1)
-				return NOMS_NIVEAUX[maxi-1][val];
-			else
-				return "_";
-		}
+	if(maxi<=NOMS_NIVEAUX.length)
+	{
+		if(val<=NOMS_NIVEAUX[maxi-1].length-1)
+			return NOMS_NIVEAUX[maxi-1][val];
 		else
-			return "-";
+			return "_";
+	}
+	else
+		return "-";
 }
 
 
