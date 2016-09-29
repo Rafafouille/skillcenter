@@ -14,3 +14,7 @@
 - Mettre dans l'ordre alphabétique les élèves dans l'onglet "utilisateur"
 - Mettre dans l'ordre alphabétique les élèves dans "Bilan"
 - Supprimer les points d'exclamation (!) des critères qui n'ont pas de commentaires
+- Mettre un bouton "annuler" dans la boite de dialogue, lorsqu'on met une note.
+- Permettre de choisir entre "derniere note / moyenne / Max"
+- Mettre des infos dans les attributs data-...
+- Faire le ménage dans les notes quand on baisse le nombre de niveau d'un critère

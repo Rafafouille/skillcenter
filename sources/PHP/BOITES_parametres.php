@@ -97,8 +97,8 @@
 
 
 		
-		<!-- BOITE POUR AJOUTER UN INDICATEUR------------------- -->
-		<div id="dialog-addIndicateur" title="Ajouter un Indicateur">
+		<!-- BOITE POUR AJOUTER UN CRITERE ------------------- -->
+		<div id="dialog-addIndicateur" title="Ajouter un critère">
 			<p>(Compétence : "<span class="dialog-addIndicateur_nomCompetence"></span>")</p>
 			<form>
 				<label for="dialog-addIndicateur-nom">Nom :</label>
@@ -121,6 +121,7 @@
 				</select>
 
 				<input type="hidden" name="dialog-addIndicateur-idCompetence" id="dialog-addIndicateur-idCompetence"/>
+				<?php /*<input type="hidden" name="dialog-addIndicateur-idIndicateur" id="dialog-addIndicateur-idIndicateur"/>*/?>
 			</form>
 		</div>
 		<script>
@@ -135,9 +136,52 @@
 		</script>
 		
 		
+
+		<!-- BOITE POUR MODIFIER UN CRITERE ------------------- -->
+		<div id="dialog-modifIndicateur" title="modifier un critère" data-id_critere="0">
+			<form>
+				<label for="dialog-modifIndicateur-competence">Compétence rattachée : </label>
+				<select id="dialog-modifIndicateur-idCompetence" name="dialog-modifIndicateur-idCcompetence">
+				</select>
+			<br/>
+				<label for="dialog-modifIndicateur-nom">Nom :</label>
+				<input type="text" name="dialog-modifIndicateur-nom" id="dialog-modifIndicateur-nom" />
+			<br/>
+				<label for="dialog-modifIndicateur-details">Détails (facultatif) :</label><br/>
+				<textarea name="dialog-modifIndicateur-details" id="dialog-modifIndicateur-details"></textarea>
+			<br/>
+				<label for="dialog-modifIndicateur-niveaux">Nombre de niveaux :</label>
+				<select name="dialog-modifIndicateur-niveaux" id="dialog-modifIndicateur-niveaux">
+					<?php
+						for($i=1;$i<=$NB_NIVEAUX_MAX;$i++)
+							{echo'
+					<option value="'.$i.'"';
+							if($i==$NIVEAU_DEFAUT)
+								echo " selected";
+							echo'>'.$i.'</option>';
+							};
+					?>
+				</select>
+
+				<!--<input type="hidden" name="dialog-modifIndicateur-idCompetenceOLD" id="dialog-modifIndicateur-idCompetenceOLD"/>-->
+				<!--<input type="hidden" name="dialog-modifCritere-idCritere" id="dialog-modifCritere-idCritere"/>-->
+			</form>
+		</div>
+		<script>
+			$( "#dialog-modifIndicateur").dialog({
+				autoOpen: false,
+				modal: true,
+				buttons: {
+							"Modifier": function() {$("#dialog-modifIndicateur").dialog( "close" );modifCritere($("#dialog-modifIndicateur-nom").val(),$('#dialog-modifIndicateur-details').val(),$('#dialog-modifIndicateur-niveaux').val(),parseInt($("#dialog-modifIndicateur-idCompetence").val()),parseInt($("#dialog-modifIndicateur").data("id_critere")));},
+							"Annuler": function() {$("#dialog-modifIndicateur").dialog( "close" );}
+						}
+			});
+		</script>
+
+
 		
 		
-		<!-- BOITE POUR SUPPRIMER UN INDICATEUR------------------- -->
+		<!-- BOITE POUR SUPPRIMER UN CRITERE------------------- -->
 		<div id="dialog-supprimeIndicateur" title="Supprimer un Indicateur">
 			<p>Êtes-vous sur de vouloir supprimer l'indicateur : "<span class="dialog-supprimeIndicateur_nomIndicateur"></span>")</p>
 			<form>

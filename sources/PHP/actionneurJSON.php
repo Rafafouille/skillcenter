@@ -869,13 +869,61 @@ if($action=="addIndicateur")
 					
 		}
 		else
-			$reponseJSON["messageRetour"]=":(Le nom de l'indicateur est vide.";
+			$reponseJSON["messageRetour"]=":(L'intitulé de l'indicateur est vide.";
 	}
 	else
 		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de créer un indicateur.";
 }
 
+//Modifier un indicateur
+if($action=="modifCritere")
+{
+	if($_SESSION['statut']=="admin")
+	{
+		connectToBDD();
+		$nom="";
+		if(isset($_POST['nom'])) $nom=$_POST['nom'];
+		$details="";
+		if(isset($_POST['details'])) $details=$_POST['details'];
+		$niveaux=1;
+		if(isset($_POST['niveaux'])) $niveaux=intval($_POST['niveaux']);
+		$idCompetence=0;
+		if(isset($_POST['idCompetence'])) $idCompetence=intval($_POST['idCompetence']);
+		$idCritere=0;
+		if(isset($_POST['idCritere'])) $idCritere=intval($_POST['idCritere']);
+		
+		if($idCritere!=0)
+		{
+			if($nom!="")
+			{
+				$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'indicateurs SET nom=:nom, details=:details, niveaux=:niveaux, competence=:idCompetence WHERE id=:idCritere');
+				$req->execute(array(
+							'nom' => $nom,
+							'details' => $details,
+							'niveaux' => $niveaux,
+							'idCompetence' => $idCompetence,
+							'idCritere' => $idCritere
+						));
 
+					$reponseJSON["indicateur"]["nom"]=$nom;
+					$reponseJSON["indicateur"]["details"]=$details;
+					$reponseJSON["indicateur"]["niveaux"]=$niveaux;
+					$reponseJSON["indicateur"]["id"]=$idCritere;
+					$reponseJSON["indicateur"]["competence"]=$idCompetence;
+
+					$reponseJSON["messageRetour"]=":)L'indicateur ".$nom." a bien été modifié.";
+					
+						
+			}
+			else
+				$reponseJSON["messageRetour"]=":(L'intitulé de l'indicateur est vide.";
+		}
+		else
+			$reponseJSON["messageRetour"]=":(Aucun critère transmis.";
+	}
+	else
+		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de modifier un indicateur.";
+}
 
 //SUPPRESSION D'UN INDICATEUR =================
 if($action=="supprimeIndicateur")

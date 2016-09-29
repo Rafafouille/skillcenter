@@ -66,12 +66,12 @@ return retour;
 //AJOUTE / UPDATE USER
 ajouteUpdateUser=function()
 {
-	var nom=$( "#newUser_nom").val();
-	var prenom=$( "#newUser_prenom").val();
-	var classe=$( "#newUser_classe").val();
-	var login=$( "#newUser_login").val();
-	var mdp=$( "#newUser_psw").val();
-	var id=$( "#newUser_id").val();
+	var nom=$("#newUser_nom").val();
+	var prenom=$("#newUser_prenom").val();
+	var classe=$("#newUser_classe").val();
+	var login=$("#newUser_login").val();
+	var mdp=$("#newUser_psw").val();
+	var id=$("#newUser_id").val();
 	if(id==-1)
 		var action="addUser";
 	else
@@ -144,7 +144,7 @@ callBack_supprimeUser=function(reponse)
 
 // A SUPPRIMER <<<<<
 //UPGRADE USER
-ouvreBoiteUpgradeUser=function(id,nom)
+/*ouvreBoiteUpgradeUser=function(id,nom)
 {
 	$("#boiteUpgrade-id").text(id);
 	$("#boiteUpgrade-nom").text(nom);
@@ -169,7 +169,7 @@ callBackUpgradeUser=function(reponse)
 	debug(reponse);//Debug la réponse
 	afficheMessage(reponse);
 	$("#boutonModifieStatut_"+$("#boiteUpgrade-id").text()).replaceWith(getBoutonUpAndDowngradeUserFromJSON({id:$("#boiteUpgrade-id").text(),statut:"admin",nom:$("#boiteUpgrade-nom").text(),prenom:$("#boiteUpgrade-prenom").text()}));
-	/*$("#boutonModifieStatut_"+$("#boiteUpgrade-id").text()).attr('src', './sources/images/super.png');*/
+	//$("#boutonModifieStatut_"+$("#boiteUpgrade-id").text()).attr('src', './sources/images/super.png');
 }
 
 
@@ -200,7 +200,7 @@ callBackDowngradeUser=function(reponse)
 	afficheMessage(reponse);
 	$("#boutonModifieStatut_"+$("#boiteDowngrade-id").text()).replaceWith(getBoutonUpAndDowngradeUserFromJSON({id:$("#boiteDowngrade-id").text(),statut:"",nom:$("#boiteDowngrade-nom").text(),prenom:$("#boiteDowngrade-prenom").text()}));
 //	$("#boutonModifieStatut_"+$("#boiteDowngrade-id").text()).attr('src', './sources/images/student.png');
-}
+}*/
 //>>>>>>>>>>>>>>>>>>>>>>>>
 
 

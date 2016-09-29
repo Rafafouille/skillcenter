@@ -68,7 +68,7 @@ addGroupeCompetences_callback=function(reponse)
 }
 
 
-//SUPPRIMER UN DOMAIN DE COMPETENCE  -------------------
+//SUPPRIMER UN DOMAINE DE COMPETENCE  -------------------
 ouvreBoiteSupprimeDomaine=function(nomDomaine,i)
 {
 	$( "#dialog-supprimeDomaine .dialog-supprimeDomaine_nomDomaine").text(nomDomaine);
@@ -173,14 +173,16 @@ supprimeCompetence_callback=function(reponse)
 
 
 
-//AJOUTE UN INDICATEUR - BOITE -------------------
-ouvreBoiteAddIndicateur=function(competence,i)
+//AJOUTE UN CRITERE  -------------------
+ouvreBoiteAddIndicateur=function(competence,idComp)
 {
+	//$("#dialog-addIndicateur").dialog('option', 'title', 'Ajouter un critère');
 	$( "#dialog-addIndicateur .dialog-addIndicateur_nomCompetence").text(competence);
-	$( "#dialog-addIndicateur-idCompetence").val(i);
+	$( "#dialog-addIndicateur-idCompetence").val(idComp);
+	//$( "#dialog-addIndicateur-idIndicateur").val(0);
 	$( "#dialog-addIndicateur").dialog("open");
 }
-//AJOUTE UN INDICATEUR -------------------
+
 addIndicateur=function(nom,details,niveaux,idCompetence,classe)
 {
 	$.post(
@@ -204,6 +206,54 @@ addIndicateur_callback=function(reponse)
 	var indicateur=reponse.indicateur;
 	var rendu=ADMIN_COMPETENCES_rendu_HTML_indicateur(indicateur,0,0,"indicateur");
 	$("#ADMIN_COMPETENCES_competence_"+indicateur.competence+" .listeIndicateurs .indicateurs").append(rendu);
+	
+	NOTATION_LOADED=false;//Impose de recharger la notation en cas de nouvelle indicateur
+}
+
+//MODIFIE UN CRITERE  -------------------
+ouvreBoiteModifCritere=function(idCrit)
+{
+	//Option pour les competences
+	var idCompetenceParent=$("#ADMIN_COMPETENCES_indicateur_"+idCrit).parent().parent().parent().data("id");
+	getCompetencesInFormulaireOption("#dialog-modifIndicateur-idCompetence",idCompetenceParent);
+	//Nom
+	var nom=$("#ADMIN_COMPETENCES_indicateur_"+idCrit).find(".ADMIN_PARAMETRES_titre_critere").text();
+	$("#dialog-modifIndicateur-nom").val(nom);
+	//Details
+	var detail=$("#ADMIN_COMPETENCES_indicateur_"+idCrit).find(".icone-info").attr("title");
+	$("#dialog-modifIndicateur-details").val(detail);
+	//Niveau
+	var niveau=$("#ADMIN_COMPETENCES_indicateur_"+idCrit).find(".niveauxIndicateur").data("niveau");
+	$("#dialog-modifIndicateur-niveaux").val(niveau);
+	//idCritere à modifier
+	$("#dialog-modifIndicateur").data("id_critere",idCrit)
+
+	$("#dialog-modifIndicateur").dialog("open");
+}
+
+modifCritere=function(nom,details,niveaux,idCompetence,idCritere)
+{
+	$.post(
+			'./sources/PHP/actionneurJSON.php',//Requete appelée
+			{	//Les données à passer par POST
+				action:"modifCritere",
+				nom:nom,
+				details:details,
+				niveaux:niveaux,
+				idCompetence:idCompetence,
+				idCritere:idCritere
+			},
+			modifCritere_callback,	//Fonction callback
+			"json"	//Type de réponse
+	);
+}
+//Callback qui ajoute l'indicateur dans la page -----
+modifCritere_callback=function(reponse)
+{
+	afficheMessage(reponse.messageRetour);
+	/*var indicateur=reponse.indicateur;
+	var rendu=ADMIN_COMPETENCES_rendu_HTML_indicateur(indicateur,0,0,"indicateur");
+	$("#ADMIN_COMPETENCES_competence_"+indicateur.competence+" .listeIndicateurs .indicateurs").append(rendu);*/
 	
 	NOTATION_LOADED=false;//Impose de recharger la notation en cas de nouvelle indicateur
 }

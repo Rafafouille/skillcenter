@@ -25,7 +25,7 @@ function ADMIN_COMPETENCES_ajouteGroupe(groupe,conteneur)
 function ADMIN_COMPETENCES_rendu_HTML_groupe(nom,id,styleClass)
 {
 	return ""+
-"			<div class=\""+styleClass+"\" id=\"ADMIN_COMPETENCES_groupe_"+id+"\">"+
+"			<div class=\""+styleClass+"\" id=\"ADMIN_COMPETENCES_groupe_"+id+"\" data-id=\""+id+"\">"+
 "				<div class=\"entete_groupe_competences\">"+
 "						<img class=\"boutonSupprimerDomaine\" src=\"./sources/images/poubelle.png\" alt=\"[X]\" onclick=\"ouvreBoiteSupprimeDomaine('"+addslashes(nom)+"',"+id+")\"/>"+
 "					<div class=\"boutonAjouteCompetence\" onclick=\"ouvreBoiteAddCompetence('"+addslashes(nom)+"',"+id+");$(this).parent().parent().find('.groupe_contenu').slideDown('easings');\">"+
@@ -74,14 +74,14 @@ toto=competence;
 function ADMIN_COMPETENCES_rendu_HTML_competence(nom,id,numeroCompetence,styleClass)
 {
 	return ""+
-"					<div class=\""+styleClass+"\" id=\"ADMIN_COMPETENCES_competence_"+id+"\">"+
+"					<div class=\""+styleClass+"\" id=\"ADMIN_COMPETENCES_competence_"+id+"\" data-id=\""+id+"\">"+
 "						<img class=\"boutonSupprimerCompetence\" src=\"./sources/images/poubelle.png\" alt=\"[X]\" onclick=\"ouvreBoiteSupprimeCompetence('"+addslashes(nom)+"',"+id+")\"/>"+
 "						<div class=\"boutonAjouterIndicateur\" onclick=\"ouvreBoiteAddIndicateur('"+addslashes(nom)+"',"+id+");$(this).parent().find('.listeIndicateurs').slideDown('easings');\">"+
 "							<img src=\"./sources/images/icone-plus.png\" alt=\"[+]\"/>"+
 "							Ajouter un critère"+
 "						</div>"+
 "						<h3 onclick=\"$(this).parent().find('.listeIndicateurs').slideToggle('easings');\">"+
-"							"+numeroCompetence+" - "+nom+
+"							"+numeroCompetence+" - <span class=\"ADMIN_PARAMETRES_titre_competence_dans_h3\">"+nom+"</span>"+
 "						</h3>"+
 "						<div class=\"listeIndicateurs\">"+
 "							<table class=\"indicateurs\">"+
@@ -116,7 +116,7 @@ function ADMIN_COMPETENCES_ajouteIndicateur(indicateur,conteneur)
 function ADMIN_COMPETENCES_rendu_HTML_indicateur(indicateur,numeroCompetence,numeroIndicateur,styleClass)
 {
 	var rendu=""+
-"								<tr id=\"ADMIN_COMPETENCES_indicateur_"+indicateur.id+"\" class=\""+styleClass+"\">"+
+"								<tr id=\"ADMIN_COMPETENCES_indicateur_"+indicateur.id+"\" class=\""+styleClass+"\" data-id=\""+indicateur.id+"\">"+
 "									<td>"+
 "										<form>"+
 "											<input type=\"checkbox\" name=\"selectIndicateur"+indicateur.id+"\" value=\""+indicateur.id+"\"";
@@ -126,14 +126,20 @@ function ADMIN_COMPETENCES_rendu_HTML_indicateur(indicateur,numeroCompetence,num
 "										</form>"+
 "									</td>"+
 "									<td class=\"intituleIndicateur\">"+
-"										"+numeroCompetence+"."+numeroIndicateur+" - "+indicateur.nom+
+"										"+numeroCompetence+"."+numeroIndicateur+" - <span class=\"ADMIN_PARAMETRES_titre_critere\">"+indicateur.nom+"</span>"+
 "									</td>"+
-"									<td class=\"detailIndicateur\">"+
-"										<img src=\"./sources/images/icone-info.png\" alt=\"[i]\"  style=\"cursor:help;\" title=\""+indicateur.details+"\"/>"+
-"										<img src=\"./sources/images/poubelle.png\" alt=\"[X]\" style=\"cursor:pointer;\" title=\"Supprimer le critère\" onclick=\"ouvreBoiteSupprimeIndicateur('"+indicateur.nom+"',"+indicateur.id+")\"/>"+
-""+//"										<img src=\"./sources/images/icone-modif.png\" alt=\"[§]\" style=\"cursor:pointer;height:25px;\" title=\"Modifier le critère\" onclick=\"ouvreBoiteModifCritere("+indicateur.id+")\"/>"+
+"									<td class=\"detailIndicateur\">";
+
+		if(indicateur.details!="")
+		{
+			rendu+=""+
+"										<img class=\"icone-info\" src=\"./sources/images/icone-info.png\" alt=\"[i]\"  style=\"cursor:help;\" title=\""+indicateur.details+"\"/>";
+		}
+		rendu+=""+
+"										<img class=\"icone-poubelle\" src=\"./sources/images/poubelle.png\" alt=\"[X]\" style=\"cursor:pointer;\" title=\"Supprimer le critère\" onclick=\"ouvreBoiteSupprimeIndicateur('"+indicateur.nom+"',"+indicateur.id+")\"/>"+
+"										<img class=\"icone-modif\" src=\"./sources/images/icone-modif.png\" alt=\"[§]\" style=\"cursor:pointer;height:25px;\" title=\"Modifier le critère\" onclick=\"ouvreBoiteModifCritere("+indicateur.id+")\"/>"+
 "									</td>"+
-"									<td class=\"niveauxIndicateur\">"+
+"									<td class=\"niveauxIndicateur\" data-niveau=\""+indicateur.niveaux+"\">"+
 "									"+ADMIN_COMPETENCES_getNiveauxIndicateur(indicateur.niveaux,NB_NIVEAUX_MAX)
 "									</td>"+
 "								</tr>";
@@ -168,3 +174,39 @@ function ADMIN_COMPETENCES_getNiveauxIndicateur(val,maxi, full)
 	}
 	return rendu;
 }
+
+
+//Fonction qui affiche la liste des compétence dans un formulaire "Option"
+function getCompetencesInFormulaireOption(idOption,numIdComp)
+{
+	$(idOption).empty();	//Efface les options précédentes
+
+	var listeDomainesHTML=$("#liste_competences").find(".groupe_competences");//Recupere la liste des div de domaines
+	var domaineSelect="";	//Retour (à insérer dans le <option>)
+
+	for(i=0;i<listeDomainesHTML.length;i++)//Pour chaque domaine...
+	{
+		var nomDomaine=$(listeDomainesHTML[i]).find(".entete_groupe_competences h3").text();//On recupere le nom
+		domaineSelect+=""+
+"		<optgroup label=\""+nomDomaine+"\">";//On ajoute le groupe dans l'option
+		var listeCompetencesHTML=$(listeDomainesHTML[i]).find(".competence")//On recupere la liste des competences
+		for(j=0;j<listeCompetencesHTML.length;j++)//Pour chaque competence...
+		{
+			var nomCompetence=$(listeCompetencesHTML[j]).find("h3 .ADMIN_PARAMETRES_titre_competence_dans_h3").text();//Nom de la competence
+			var id=$(listeCompetencesHTML[j]).data("id");	//n° id de la competence
+			
+			var selected="";
+			if(id==numIdComp)	//Si le numero de la competence est celui auquel il appartien
+				selected=" selected";
+
+			
+			
+			domaineSelect+=""+
+"				<option value=\""+id+"\" "+selected+">"+nomCompetence+"</option>";
+		}
+		domaineSelect+=""+
+"		</optgroup>";
+	}
+	$(idOption).append(domaineSelect);
+}
+
