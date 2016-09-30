@@ -75,6 +75,7 @@ function ADMIN_COMPETENCES_rendu_HTML_competence(nom,id,numeroCompetence,styleCl
 {
 	return ""+
 "					<div class=\""+styleClass+"\" id=\"ADMIN_COMPETENCES_competence_"+id+"\" data-id=\""+id+"\">"+
+"						<img class=\"boutonModifCompetence\" src=\"./sources/images/icone-modif.png\" alt=\"[§]\" style=\"cursor:pointer;height:25px;\" title=\"Modifier la compétence\" onclick=\"ouvreBoiteModifCompetence("+id+")\"/>"+
 "						<img class=\"boutonSupprimerCompetence\" src=\"./sources/images/poubelle.png\" alt=\"[X]\" onclick=\"ouvreBoiteSupprimeCompetence('"+addslashes(nom)+"',"+id+")\"/>"+
 "						<div class=\"boutonAjouterIndicateur\" onclick=\"ouvreBoiteAddIndicateur('"+addslashes(nom)+"',"+id+");$(this).parent().find('.listeIndicateurs').slideDown('easings');\">"+
 "							<img src=\"./sources/images/icone-plus.png\" alt=\"[+]\"/>"+
@@ -176,37 +177,65 @@ function ADMIN_COMPETENCES_getNiveauxIndicateur(val,maxi, full)
 }
 
 
-//Fonction qui affiche la liste des compétence dans un formulaire "Option"
+
+
+
+//Fonction qui affiche la liste des domaines dans un formulaire "Option"
+function getDomainesInFormulaireOption(idOption,numIdDomaine)
+{
+	$(idOption).empty();//Efface les options précédentes
+
+	var listeDomainesHTML=$("#liste_competences").find(".groupe_competences, .groupe_competences_unselected");
+	var domaineSelect="";	//retour à insérer dans le option
+
+	for(i=0;i<listeDomainesHTML.length;i++)
+	{
+		var nomDomaine=$(listeDomainesHTML[i]).find(".entete_groupe_competences h3").text();
+		var id=parseInt($(listeDomainesHTML[i]).data("id"));
+
+		domaineSelect+=""+
+"				<option value=\""+id+"\"";
+
+			if(id==numIdDomaine)
+				domaineSelect+=" selected";
+
+		domaineSelect+=">"+nomDomaine+"</option>";
+	}
+	$(idOption).append(domaineSelect);
+}
+
+
+
+
+//Fonction qui affiche la liste des compétences dans un formulaire "Option"
 function getCompetencesInFormulaireOption(idOption,numIdComp)
 {
 	$(idOption).empty();	//Efface les options précédentes
 
-	var listeDomainesHTML=$("#liste_competences").find(".groupe_competences");//Recupere la liste des div de domaines
-	var domaineSelect="";	//Retour (à insérer dans le <option>)
+	var listeDomainesHTML=$("#liste_competences").find(".groupe_competences, .groupe_competences_unselected");//Recupere la liste des div de domaines
+	var competenceSelect="";	//Retour (à insérer dans le <option>)
 
 	for(i=0;i<listeDomainesHTML.length;i++)//Pour chaque domaine...
 	{
 		var nomDomaine=$(listeDomainesHTML[i]).find(".entete_groupe_competences h3").text();//On recupere le nom
-		domaineSelect+=""+
+		competenceSelect+=""+
 "		<optgroup label=\""+nomDomaine+"\">";//On ajoute le groupe dans l'option
-		var listeCompetencesHTML=$(listeDomainesHTML[i]).find(".competence")//On recupere la liste des competences
+		var listeCompetencesHTML=$(listeDomainesHTML[i]).find(".competence,.competence_unselected")//On recupere la liste des competences
 		for(j=0;j<listeCompetencesHTML.length;j++)//Pour chaque competence...
 		{
 			var nomCompetence=$(listeCompetencesHTML[j]).find("h3 .ADMIN_PARAMETRES_titre_competence_dans_h3").text();//Nom de la competence
 			var id=$(listeCompetencesHTML[j]).data("id");	//n° id de la competence
 			
 			var selected="";
-			if(id==numIdComp)	//Si le numero de la competence est celui auquel il appartien
+			if(id==numIdComp)	//Si le numero de la competence est celui auquel il appartient
 				selected=" selected";
 
-			
-			
-			domaineSelect+=""+
+			competenceSelect+=""+
 "				<option value=\""+id+"\" "+selected+">"+nomCompetence+"</option>";
 		}
-		domaineSelect+=""+
+		competenceSelect+=""+
 "		</optgroup>";
 	}
-	$(idOption).append(domaineSelect);
+	$(idOption).append(competenceSelect);
 }
 

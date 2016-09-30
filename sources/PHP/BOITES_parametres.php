@@ -52,7 +52,7 @@
 		
 		<!-- BOITE POUR AJOUTER UNE COMPETENCE ------------------- -->
 		<div id="dialog-addCompetence" title="Ajouter une compétence">
-			<p>(Groupe : "<span class="dialog-addCompetence_nomGroupe"></span>")</p>
+			<p>(Domaine : "<span class="dialog-addCompetence_nomGroupe"></span>")</p>
 			<form>
 				<label for="dialog-addCompetence-nom">Intitulé de la compétence :</label>
 				<input type="text" name="dialog-addCompetence-nom" id="dialog-addCompetence-nom" />
@@ -70,6 +70,31 @@
 			});
 		</script>
 
+
+		
+		<!-- BOITE POUR MODIFIER UNE COMPETENCE ------------------- -->
+		<div id="dialog-modifCompetence" title="Modifier une compétence" data-idcompetence="0">
+			<form>
+				<label for="dialog-modifCompetence-idDomaine">Domaine : </label>
+				<select id="dialog-modifCompetence-idDomaine" name="dialog-modifCompetence-idDomaine"></select>
+				<br/>
+				<label for="dialog-modifCompetence-nom">Intitulé de la compétence :</label>
+				<input type="text" name="dialog-modifCompetence-nom" id="dialog-modifCompetence-nom" />
+				<!--<input type="hidden" name="dialog-modifCompetence-idDomaine" id="dialog-modifCompetence-idDomaine"/>-->
+			</form>
+		</div>
+		<script>
+			$( "#dialog-modifCompetence").dialog({
+				autoOpen: false,
+				modal: true,
+				buttons: {
+							"Ajouter": function() {$("#dialog-modifCompetence").dialog( "close" );modifCompetence($("#dialog-modifCompetence-nom").val(),parseInt($("#dialog-modifCompetence-idDomaine").val()),parseInt($("#dialog-modifCompetence").attr("data-idcompetence")));},
+							"Annuler": function() {$("#dialog-modifCompetence").dialog( "close" );}
+						}
+			});
+		</script>
+		
+		
 		<!-- BOITE POUR SUPPRIMER UNE COMPETENCE------------------- -->
 		<div id="dialog-supprimeCompetence" title="Supprimer une compétence">
 			<p>Êtes-vous sur de vouloir supprimer la compétence : "<span class="dialog-supprimeCompetence_nomCompetence"></span>"</p>

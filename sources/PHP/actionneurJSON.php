@@ -784,6 +784,42 @@ if($action=="addCompetence")
 		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de créer une compétence.";
 }
 
+
+//MODIFICATION D'UNE COMPETENCE=================
+if($action=="modifCompetence")
+{
+	if($_SESSION['statut']=="admin")
+	{
+		connectToBDD();
+		$nom="";
+		if(isset($_POST['nom'])) $nom=$_POST['nom'];
+		$idDomaine=0;
+		if(isset($_POST['idDomaine'])) $idDomaine=intval($_POST['idDomaine']);
+		$idCompetence=0;
+		if(isset($_POST['idCompetence'])) $idCompetence=intval($_POST['idCompetence']);
+		
+		if($idCompetence!=0)
+		{
+			$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'competences SET nom=:nom, groupe=:idDomaine WHERE id=:idCompetence');
+			$req->execute(array(
+						'nom' => $nom,
+						'idDomaine' => $idDomaine,
+						'idCompetence' => $idCompetence
+					));
+
+			$reponseJSON["messageRetour"]=":)La compétence ".$nom." a bien été modifiée.";
+			$reponseJSON["competence"]["nom"]=$nom;
+			$reponseJSON["competence"]["id"]=$idCompetence;
+			$reponseJSON["competence"]["groupe"]=$idDomaine;
+		}
+		else
+			$reponseJSON["messageRetour"]=":(Aucun n° de compétence envoyé.";
+	}
+	else
+		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de modifier une compétence.";
+}
+
+
 //SUPPRESSION D'UNE COMPETENCE =================
 if($action=="supprimeCompetence")
 {

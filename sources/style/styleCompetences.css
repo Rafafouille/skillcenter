@@ -184,7 +184,7 @@ COMPETENCES
 	cursor:pointer;
 }
 
-.boutonSupprimerCompetence
+.boutonSupprimerCompetence, .boutonModifCompetence
 {
 	float:right;
 	vertical-align:middle;
@@ -197,7 +197,7 @@ COMPETENCES
 	filter: drop-shadow(4px 4px 5px #777799);
 }
 
-.boutonSupprimerCompetence:hover
+.boutonSupprimerCompetence:hover, .boutonModifCompetence:hover
 {
 	margin-top:6px;
 	margin-left:3px;

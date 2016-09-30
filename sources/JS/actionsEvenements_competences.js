@@ -124,7 +124,6 @@ addCompetence=function(nom,idGroupe)
 			"json"	//Type de réponse
 	);
 }
-
 //Callback qui ajoute la compétence dans la page -----
 addCompetence_callback=function(reponse)
 {
@@ -133,6 +132,52 @@ addCompetence_callback=function(reponse)
 	var rendu=ADMIN_COMPETENCES_rendu_HTML_competence(comp.nom,comp.id,0,"competence_unselected");
 	$("#ADMIN_COMPETENCES_groupe_"+comp.groupe+" .groupe_contenu").append(rendu);
 }
+
+
+
+//BOITE MODIF COMPETENCES -----------------------------
+ouvreBoiteModifCompetence=function(idCompetence)
+{
+	//Intitule
+	var intitule=$("#ADMIN_COMPETENCES_competence_"+idCompetence).find(".ADMIN_PARAMETRES_titre_competence_dans_h3").text();
+	$("#dialog-modifCompetence-nom").val(intitule);
+	//idCompetence
+	var idCompetence=$("#ADMIN_COMPETENCES_competence_"+idCompetence).attr("data-id");
+	$("#dialog-modifCompetence").attr("data-idcompetence",idCompetence)
+	//idDomaine
+	var idDomaine=$("#ADMIN_COMPETENCES_competence_"+idCompetence).parent().parent().data("id");
+	getDomainesInFormulaireOption("#dialog-modifCompetence-idDomaine",idDomaine);
+	//$("#dialog-modifCompetence-idDomaine").val(idDomaine);
+
+	$("#dialog-modifCompetence").dialog( "open" );
+}
+
+//MODIF COMPETENCE -----------------------------
+modifCompetence=function(nom,idDomaine,idCompetence)
+{
+	$.post(
+			'./sources/PHP/actionneurJSON.php',//Requete appelée
+			{	//Les données à passer par POST
+				action:"modifCompetence",
+				nom:nom,
+				idDomaine:idDomaine,
+				idCompetence:idCompetence
+			},
+			modifCompetence_callback,	//Fonction callback
+			"json"	//Type de réponse
+	);
+}
+//Callback qui ajoute la compétence dans la page -----
+modifCompetence_callback=function(reponse)
+{
+	var comp=reponse.competence;
+	afficheMessage(reponse.messageRetour);
+	//Recharge la page de parametrage
+	var classe=$("#selectClasseCompetences").val();
+	updateCompetencesSelonClasse(classe);
+	NOTATION_LOADED=false;//Impose de recharger la notation en cas de nouvelle indicateur
+}
+
 
 
 
@@ -250,11 +295,10 @@ modifCritere=function(nom,details,niveaux,idCompetence,idCritere)
 //Callback qui ajoute l'indicateur dans la page -----
 modifCritere_callback=function(reponse)
 {
-	afficheMessage(reponse.messageRetour);
-	/*var indicateur=reponse.indicateur;
-	var rendu=ADMIN_COMPETENCES_rendu_HTML_indicateur(indicateur,0,0,"indicateur");
-	$("#ADMIN_COMPETENCES_competence_"+indicateur.competence+" .listeIndicateurs .indicateurs").append(rendu);*/
-	
+	afficheMessage(reponse.messageRetour);	
+	//Recharge la page de parametrage
+	var classe=$("#selectClasseCompetences").val();
+	updateCompetencesSelonClasse(classe);
 	NOTATION_LOADED=false;//Impose de recharger la notation en cas de nouvelle indicateur
 }
 
