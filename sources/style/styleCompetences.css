@@ -99,6 +99,7 @@ GROUPE COMPETENCES
 	vertical-align:middle;
 	padding:20px;
 	margin:0px;
+	margin-right:20px;
 }
 
 /* CONTENU DU GROUPE */
@@ -137,7 +138,7 @@ GROUPE COMPETENCES
 	margin-top:17px;
 }
 
-.boutonSupprimerDomaine
+.boutonSupprimerDomaine, .boutonModifDomaine
 {
 	float:right;
 	vertical-align:middle;
@@ -145,17 +146,17 @@ GROUPE COMPETENCES
 	margin-top:15px;
 	margin-left:0px;
 	margin-bottom:0px;
-	margin-right:20px;
+	margin-right:5px;
  -webkit-filter: drop-shadow(4px 4px 5px #777799);
   filter: drop-shadow(4px 4px 5px #777799);
 }
 
-.boutonSupprimerDomaine:hover
+.boutonSupprimerDomaine:hover, .boutonModifDomaine:hover
 {
 	margin-top:17px;
 	margin-left:2px;
 	margin-bottom:-2px;
-	margin-right:18px;
+	margin-right:3px;
 	-webkit-filter: drop-shadow(2px 2px 3px #555577);
 	filter: drop-shadow(2px 2px 3px #555577);	
 }

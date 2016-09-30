@@ -16,6 +16,25 @@
 						}
 			});
 		</script>
+
+		<!-- BOITE POUR MODIFIER UN DOMAINE ------------------- -->
+		<div id="dialog-modifDomaine" title="Modifier un domaine" data-iddomaine="0">
+			<form>
+				<label for="dialog-modifDomaine-nom">Intitulé du domaine :</label>
+				<input type="text" name="dialog-modifDomaine-nom" id="dialog-modifDomaine-nom" />
+			</form>
+		</div>
+		<script>
+			$( "#dialog-modifDomaine").dialog({
+				autoOpen: false,
+				modal: true,
+				buttons: {
+							"Modifier": function() {$("#dialog-modifDomaine").dialog( "close" );modifDomaine($("#dialog-modifDomaine-nom").val(),parseInt($("#dialog-modifDomaine").attr("data-iddomaine")));},
+							"Annuler": function() {$("#dialog-modifDomaine").dialog( "close" );}
+						}
+			});
+		</script>
+		
 		
 		<!-- BOITE POUR SUPPRIMER UN DOMAINE ------------------- -->
 		<div id="dialog-supprimeDomaine" title="Supprimer un domaine de compétences">

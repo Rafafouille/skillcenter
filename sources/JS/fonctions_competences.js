@@ -27,13 +27,14 @@ function ADMIN_COMPETENCES_rendu_HTML_groupe(nom,id,styleClass)
 	return ""+
 "			<div class=\""+styleClass+"\" id=\"ADMIN_COMPETENCES_groupe_"+id+"\" data-id=\""+id+"\">"+
 "				<div class=\"entete_groupe_competences\">"+
-"						<img class=\"boutonSupprimerDomaine\" src=\"./sources/images/poubelle.png\" alt=\"[X]\" onclick=\"ouvreBoiteSupprimeDomaine('"+addslashes(nom)+"',"+id+")\"/>"+
+"					<img class=\"boutonModifDomaine\" src=\"./sources/images/icone-modif.png\" alt=\"[§]\" onclick=\"ouvreBoiteModifDomaine("+id+");\"/>"+
+"					<img class=\"boutonSupprimerDomaine\" src=\"./sources/images/poubelle.png\" alt=\"[X]\" onclick=\"ouvreBoiteSupprimeDomaine('"+addslashes(nom)+"',"+id+")\"/>"+
 "					<div class=\"boutonAjouteCompetence\" onclick=\"ouvreBoiteAddCompetence('"+addslashes(nom)+"',"+id+");$(this).parent().parent().find('.groupe_contenu').slideDown('easings');\">"+
 "						<img src=\"./sources/images/icone-plus.png\" alt=\"[+]\"/>"+
 "						Ajouter une compétence"+
 "					</div>"+
 "					<h3 onclick=\"$(this).parent().parent().find('.groupe_contenu').slideToggle('easings');\">"+
-"						"+nom+
+"						<span class=\"ADMIN_PARAMETRES_titre_domaine_dans_h3\">"+nom+"</span>"+
 "					</h3>"+
 "				</div>"+
 "				<div class=\"groupe_contenu\">"+

@@ -67,6 +67,44 @@ addGroupeCompetences_callback=function(reponse)
 	$("#liste_competences").append(rendu);
 }
 
+//BOITE MODIF DOMAINE -----------------------------
+ouvreBoiteModifDomaine=function(idDomaine)
+{
+	//Intitule
+	var intitule=$("#ADMIN_COMPETENCES_groupe_"+idDomaine).find(".ADMIN_PARAMETRES_titre_domaine_dans_h3").text();
+	$("#dialog-modifDomaine-nom").val(intitule);
+	//idDomaine
+	var idDomaine=$("#ADMIN_COMPETENCES_groupe_"+idDomaine).attr("data-id");
+	$("#dialog-modifDomaine").attr("data-iddomaine",idDomaine)
+	
+	$("#dialog-modifDomaine").dialog("open" );
+}
+
+//MODIF DOMAINE --------------------------
+modifDomaine=function(nom,idDomaine)
+{
+	$.post(
+			'./sources/PHP/actionneurJSON.php',//Requete appelée
+			{	//Les données à passer par POST
+				action:"modifDomaine",
+				nom:nom,
+				idDomaine:idDomaine
+			},
+			modifDomaine_callback,	//Fonction callback
+			"json"	//Type de réponse
+	);
+}
+//Callback qui ajoute le groupe dans la page ---------------
+modifDomaine_callback=function(reponse)
+{
+	var domaine=reponse.domaine;
+	afficheMessage(reponse.messageRetour);
+	
+	var classe=$("#selectClasseCompetences").val();
+	updateCompetencesSelonClasse(classe);
+	NOTATION_LOADED=false;//Impose de recharger la notation en cas de nouvelle indicateur
+}
+
 
 //SUPPRIMER UN DOMAINE DE COMPETENCE  -------------------
 ouvreBoiteSupprimeDomaine=function(nomDomaine,i)

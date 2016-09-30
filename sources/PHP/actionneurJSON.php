@@ -717,6 +717,35 @@ if($action=="addGroupeCompetences")
 		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de créer un domaine.";
 }
 
+//MODIF D'UN DOMAINE=================
+if($action=="modifDomaine")
+{
+	if($_SESSION['statut']=="admin")
+	{
+		connectToBDD();
+		$nom="";
+		if(isset($_POST['nom'])) $nom=$_POST['nom'];
+		$idDomaine="";
+		if(isset($_POST['idDomaine'])) $idDomaine=intval($_POST['idDomaine']);
+		if($idDomaine!=0)
+		{
+			//Écriture
+			$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'groupes_competences SET nom=:nom WHERE id=:idDomaine');
+			$req->execute(array('nom' => $nom,
+								"idDomaine"=>$idDomaine));
+
+			
+			$reponseJSON["messageRetour"]=":)Le domaine ".$nom." a bien été créé.";
+			$reponseJSON["domaine"]["nom"]=$nom;
+			$reponseJSON["domaine"]["id"]=$idDomaine;
+		}
+		else
+			$reponseJSON["messageRetour"]=":(Aucun n° de domaine n'a été envoyé.";
+	}
+	else
+		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de modifier un domaine.";
+}
+
 //SUPPRESSION D'UN DOMAINE =================
 if($action=="supprimeDomaine")
 {
