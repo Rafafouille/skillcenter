@@ -2,7 +2,7 @@
 include_once('./sources/PHP/options.php');
 include_once('./sources/PHP/fonctions.php');
 
-
+$VERSION="16.10.2";	//N° de la version
 
 initSession();
 connectToBDD();
@@ -110,12 +110,6 @@ include("./sources/PHP/actions.php");
 
 	<body style="display:none;">
 	
-		<?php
-			if($messageRetour!="" && 0)
-			{
-				echo "<div id=\"messageRetour\">".$messageRetour."</div>";
-			}
-		?>
 	
 		<?php include("./sources/PHP/entete.php");?>
 		
