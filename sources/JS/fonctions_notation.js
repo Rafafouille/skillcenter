@@ -77,6 +77,10 @@ function NOTATION_ajouteIndicateur(indicateur,conteneur)
 {
 	numeroIndicateur++;
 
+	if(indicateur.details=="")
+		var styleInfo="style=\"visibility:hidden;\"";
+	else
+		var styleInfo="";
 
 	var rendu=""+
 "								<tr class=\"indicateur\" id=\"NOTATION_indicateur_"+indicateur.id+"\" >"+
@@ -84,7 +88,7 @@ function NOTATION_ajouteIndicateur(indicateur,conteneur)
 "										"+numeroCompetence+"."+numeroIndicateur+" - "+indicateur.nom+
 "									</td>"+
 "									<td class=\"detailIndicateur\">"+
-"										<img src=\"./sources/images/icone-info.png\" alt=\"[i]\"  style=\"cursor:help;\" title=\""+indicateur.details+"\"/>"+
+"										<img "+styleInfo+" src=\"./sources/images/icone-info.png\" alt=\"[i]\"  style=\"cursor:help;\" title=\""+indicateur.details+"\"/>"+
 "									</td>"+
 "									<td class=\"niveauxIndicateur\">"+
 "									"+NOTATION_getNiveauxIndicateur(indicateur.niveauEleveMax,indicateur.niveauMax,indicateur.id,STATUT=="admin" || STATUT=="evaluateur" || STATUT=="autoeval",false)
