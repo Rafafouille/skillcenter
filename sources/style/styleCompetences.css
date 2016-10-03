@@ -258,7 +258,8 @@ INDICATEURS
 
 .indicateurs
 {
-	width:100%;
+	margin-left:5%;
+	width:95%;
 }
 
 .indicateur_unselected
@@ -307,6 +308,11 @@ INDICATEURS
 	margin-bottom:-5px;
 	margin-right:-5px;
 	box-shadow: 3px 3px 6px #777766;
+}
+
+.ADMIN_PARAMETRAGE_checkbox_indicateur
+{
+	width:20px;
 }
 
 .intituleIndicateur

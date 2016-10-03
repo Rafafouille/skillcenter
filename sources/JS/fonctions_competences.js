@@ -119,7 +119,7 @@ function ADMIN_COMPETENCES_rendu_HTML_indicateur(indicateur,numeroCompetence,num
 {
 	var rendu=""+
 "								<tr id=\"ADMIN_COMPETENCES_indicateur_"+indicateur.id+"\" class=\""+styleClass+"\" data-id=\""+indicateur.id+"\" data-lien=\""+indicateur.lien+"\">"+
-"									<td>"+
+"									<td class=\"ADMIN_PARAMETRAGE_checkbox_indicateur\">"+
 "										<form>"+
 "											<input type=\"checkbox\" name=\"selectIndicateur"+indicateur.id+"\" value=\""+indicateur.id+"\"";
 	if(indicateur.selected)
