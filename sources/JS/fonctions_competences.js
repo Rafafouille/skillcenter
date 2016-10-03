@@ -118,7 +118,7 @@ function ADMIN_COMPETENCES_ajouteIndicateur(indicateur,conteneur)
 function ADMIN_COMPETENCES_rendu_HTML_indicateur(indicateur,numeroCompetence,numeroIndicateur,styleClass)
 {
 	var rendu=""+
-"								<tr id=\"ADMIN_COMPETENCES_indicateur_"+indicateur.id+"\" class=\""+styleClass+"\" data-id=\""+indicateur.id+"\">"+
+"								<tr id=\"ADMIN_COMPETENCES_indicateur_"+indicateur.id+"\" class=\""+styleClass+"\" data-id=\""+indicateur.id+"\" data-lien=\""+indicateur.lien+"\">"+
 "									<td>"+
 "										<form>"+
 "											<input type=\"checkbox\" name=\"selectIndicateur"+indicateur.id+"\" value=\""+indicateur.id+"\"";
@@ -130,13 +130,18 @@ function ADMIN_COMPETENCES_rendu_HTML_indicateur(indicateur,numeroCompetence,num
 "									<td class=\"intituleIndicateur\">"+
 "										"+numeroCompetence+"."+numeroIndicateur+" - <span class=\"ADMIN_PARAMETRES_titre_critere\">"+indicateur.nom+"</span>"+
 "									</td>"+
-"									<td class=\"detailIndicateur\">";
+"									<td class=\"boutonsIndicateur\">";
 
-		if(indicateur.details!="")
-		{
-			rendu+=""+
-"										<img class=\"icone-info\" src=\"./sources/images/icone-info.png\" alt=\"[i]\"  style=\"cursor:help;\" title=\""+indicateur.details+"\"/>";
-		}
+
+	if(indicateur.lien=="")	{rendu+=""+
+"										<img style=\"visibility:hidden\" src=\"./sources/images/icone-internet.png\"/>";}
+		else				{rendu+=""+
+"										<a href=\""+indicateur.lien+"\"><img src=\"./sources/images/icone-internet.png\" alt=\"[i]\"  style=\"cursor:pointer;\" title=\"Lien vers ressources : "+indicateur.lien+"\"/></a>";}
+	if(indicateur.details==""){rendu+=""+
+	"									<img style=\"visibility:hidden;\" src=\"./sources/images/icone-info.png\"/>";}
+		else				{rendu+=""+
+		"								<img src=\"./sources/images/icone-info.png\" alt=\"[i]\"  style=\"cursor:help;\" title=\""+indicateur.details+"\"/>";}
+
 		rendu+=""+
 "										<img class=\"icone-poubelle\" src=\"./sources/images/poubelle.png\" alt=\"[X]\" style=\"cursor:pointer;\" title=\"Supprimer le critère\" onclick=\"ouvreBoiteSupprimeIndicateur('"+indicateur.nom+"',"+indicateur.id+")\"/>"+
 "										<img class=\"icone-modif\" src=\"./sources/images/icone-modif.png\" alt=\"[§]\" style=\"cursor:pointer;height:25px;\" title=\"Modifier le critère\" onclick=\"ouvreBoiteModifCritere("+indicateur.id+")\"/>"+

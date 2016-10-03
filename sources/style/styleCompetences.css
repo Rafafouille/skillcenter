@@ -315,14 +315,15 @@ INDICATEURS
 	font-style:italic;
 }
 
-.detailIndicateur
+
+.boutonsIndicateur
 {
-	width:100px;
+	width:150px;
 	padding:0px;
 	text-align:right;
 }
 
-.detailIndicateur img
+.boutonsIndicateur img
 {
 	margin:0px;
 	padding:0px;

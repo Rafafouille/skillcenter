@@ -809,6 +809,7 @@ creeTable("indicateurs","id");
 	creeAttribut("indicateurs","niveaux","MEDIUMINT UNSIGNED DEFAULT 0");
 	creeAttribut("indicateurs","position","MEDIUMINT DEFAULT 0");
 	creeAttribut("indicateurs","competence","MEDIUMINT UNSIGNED DEFAULT 0");
+	creeAttribut("indicateurs","lien","TEXT NOT NULL");
 
 creeTable("liensClassesIndicateurs","idLien");
 	creeAttribut("liensClassesIndicateurs","idLien","MEDIUMINT UNSIGNED AUTO_INCREMENT PRIMARY KEY");

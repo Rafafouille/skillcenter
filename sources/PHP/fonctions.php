@@ -108,7 +108,7 @@ function getBilanDomaines()
 	global $bdd,$BDD_PREFIXE;
 
 	//Mise en place du tableau (sans les notes)
-	$requeteIndicateurClasse="SELECT niveaux, competence FROM ".$BDD_PREFIXE."indicateurs as ind JOIN ".$BDD_PREFIXE."liensClassesIndicateurs as lie ON ind.id=lie.indicateur WHERE classe='".$_SESSION['classe']."'";
+	$requeteIndicateurClasse="SELECT niveaux, competence FROM ".$BDD_PREFIXE."indicateurs as ind JOIN ".$BDD_PREFIXE."liensClassesIndicateurs as lie ON ind.id=lie.indicateur WHERE lie.classe='".$_SESSION['classe']."'";
 	$requeteIndicateurClasseCompetences="SELECT i.niveaux AS niveaux, c.groupe AS idDomaine
 		FROM (".$requeteIndicateurClasse.") AS i JOIN ".$BDD_PREFIXE."competences AS c ON i.competence=c.id";
 	$requeteSommeIndicateurClasseCompetencesDomaine="SELECT g.nom AS nom, SUM(ic.niveaux) AS sommeNiveaux
@@ -139,6 +139,14 @@ function getBilanDomaines()
 	return $bilan;
 }
 
+
+
+
+
+function getBilanCompetence($idCompetence)
+{
+	$requeteIndicateurClasse="SELECT niveaux, competence FROM ".$BDD_PREFIXE."indicateurs as ind JOIN ".$BDD_PREFIXE."liensClassesIndicateurs as lie ON ind.id=lie.indicateur WHERE ind.competence='".$idCompetence."' AND lie.classe='".$_SESSION['classe']."'";
+}
 
 
 

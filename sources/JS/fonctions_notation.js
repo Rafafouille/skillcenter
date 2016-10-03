@@ -77,18 +77,23 @@ function NOTATION_ajouteIndicateur(indicateur,conteneur)
 {
 	numeroIndicateur++;
 
-	if(indicateur.details=="")
-		var styleInfo="style=\"visibility:hidden;\"";
-	else
-		var styleInfo="";
 
 	var rendu=""+
 "								<tr class=\"indicateur\" id=\"NOTATION_indicateur_"+indicateur.id+"\" >"+
 "									<td class=\"intituleIndicateur\">"+
 "										"+numeroCompetence+"."+numeroIndicateur+" - "+indicateur.nom+
 "									</td>"+
-"									<td class=\"detailIndicateur\">"+
-"										<img "+styleInfo+" src=\"./sources/images/icone-info.png\" alt=\"[i]\"  style=\"cursor:help;\" title=\""+indicateur.details+"\"/>"+
+"									<td class=\"boutonsIndicateur\">";
+
+	if(indicateur.lien=="")	{rendu+=""+
+"										<img style=\"visibility:hidden\" src=\"./sources/images/icone-internet.png\"/>";}
+		else				{rendu+=""+
+"										<a href=\""+indicateur.lien+"\"><img src=\"./sources/images/icone-internet.png\" alt=\"[i]\"  style=\"cursor:pointer;\" title=\"Lien vers ressources : "+indicateur.lien+"\"/></a>";}
+	if(indicateur.details==""){rendu+=""+
+	"									<img style=\"visibility:hidden;\" src=\"./sources/images/icone-info.png\"/>";}
+		else				{rendu+=""+
+		"								<img src=\"./sources/images/icone-info.png\" alt=\"[i]\"  style=\"cursor:help;\" title=\""+indicateur.details+"\"/>";}
+	rendu+=""+
 "									</td>"+
 "									<td class=\"niveauxIndicateur\">"+
 "									"+NOTATION_getNiveauxIndicateur(indicateur.niveauEleveMax,indicateur.niveauMax,indicateur.id,STATUT=="admin" || STATUT=="evaluateur" || STATUT=="autoeval",false)

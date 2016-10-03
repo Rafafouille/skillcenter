@@ -369,7 +369,7 @@ if($action=="getNotationEleves")
 			$req_ind="(SELECT * FROM ".$BDD_PREFIXE."indicateurs AS i JOIN ".$BDD_PREFIXE."liensClassesIndicateurs AS l ON i.id=l.indicateur WHERE classe='".$classe."')";
 			$req_comp_gr="(SELECT comp.id AS idComp, comp.nom AS nomComp, gr.id AS idGroup, gr.nom AS nomGroup FROM ".$BDD_PREFIXE."competences AS comp JOIN ".$BDD_PREFIXE."groupes_competences AS gr ON  comp.groupe=gr.id)";
 
-			$requete="SELECT  E1.idComp,  E1.nomComp, E1.idGroup, E1.nomGroup, ind.id AS idInd, ind.nom AS nomInd, ind.details AS detailsInd, ind.niveaux AS niveauxInd FROM ".$req_ind." as ind JOIN ".$req_comp_gr." AS E1 ON ind.competence = E1.idComp";
+			$requete="SELECT  E1.idComp,  E1.nomComp, E1.idGroup, E1.nomGroup, ind.id AS idInd, ind.nom AS nomInd, ind.details AS detailsInd, ind.niveaux AS niveauxInd, ind.lien AS lienInd FROM ".$req_ind." as ind JOIN ".$req_comp_gr." AS E1 ON ind.competence = E1.idComp";
 			$req = $bdd->query($requete);
 
 			while($reponse=$req->fetch())
@@ -384,6 +384,7 @@ if($action=="getNotationEleves")
 				$nomInd=$reponse['nomInd'];
 				$detailsInd=$reponse['detailsInd'];
 				$niveauxInd=intval($reponse['niveauxInd']);
+				$lienInd=$reponse['lienInd'];
 
 				//Si le groupe n'existe pas, on le crée
 				if(!isset($reponseJSON['listeGroupes'][$idGroup]))
@@ -406,6 +407,7 @@ if($action=="getNotationEleves")
 				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["nom"]=$nomInd;
 				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["details"]=$detailsInd;
 				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauMax"]=$niveauxInd;
+				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["lien"]=$lienInd;
 				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveMax"]=-1;//Par defaut
 				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveMoy"]=-1;//Par defaut
 				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveLast"]=-1;//Par defaut
@@ -643,12 +645,14 @@ if($action=="updateCompetencesSelonClasse")
 					$detailsInd=$reponseInd['details'];
 					$niveauxInd=intval($reponseInd['niveaux']);
 					$positionInd=intval($reponseInd['position']);
+					$lien=$reponseInd['lien'];
 					
 					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["id"]=$idInd;
 					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["nom"]=$nomInd;
 					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["details"]=$detailsInd;
 					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveaux"]=$niveauxInd;
 					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["position"]=$positionInd;
+					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["lien"]=$lien;
 					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["selected"]=false;
 				}
 				
@@ -892,15 +896,18 @@ if($action=="addIndicateur")
 		if(isset($_POST['idCompetence'])) $idCompetence=intval($_POST['idCompetence']);
 		$classe="";
 		if(isset($_POST['classe'])) $classe=$_POST['classe'];
+		$lien="";
+		if(isset($_POST['lien'])) $lien=$_POST['lien'];
 		
 		if($nom!="")
 		{
-			$req = $bdd->prepare('INSERT INTO '.$BDD_PREFIXE.'indicateurs (nom,details,niveaux,competence) VALUES(:nom,:details,:niveaux,:idCompetence)');
+			$req = $bdd->prepare('INSERT INTO '.$BDD_PREFIXE.'indicateurs (nom,details,niveaux,competence,lien) VALUES(:nom,:details,:niveaux,:idCompetence,:lien)');
 			$req->execute(array(
 						'nom' => $nom,
 						'details' => $details,
 						'niveaux' => $niveaux,
-						'idCompetence' => $idCompetence
+						'idCompetence' => $idCompetence,
+						'lien' => $lien
 					));
 					
 					
@@ -915,6 +922,7 @@ if($action=="addIndicateur")
 				$reponseJSON["indicateur"]["niveaux"]=$niveaux;
 				$reponseJSON["indicateur"]["id"]=intval($donnees['id']);
 				$reponseJSON["indicateur"]["competence"]=$idCompetence;
+				$reponseJSON["indicateur"]["lien"]=$lien;
 				$reponseJSON["indicateur"]["selected"]=false; //Par défaut
 				
 				
@@ -956,18 +964,21 @@ if($action=="modifCritere")
 		if(isset($_POST['idCompetence'])) $idCompetence=intval($_POST['idCompetence']);
 		$idCritere=0;
 		if(isset($_POST['idCritere'])) $idCritere=intval($_POST['idCritere']);
+		$lien="";
+		if(isset($_POST['lien'])) $lien=$_POST['lien'];
 		
 		if($idCritere!=0)
 		{
 			if($nom!="")
 			{
-				$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'indicateurs SET nom=:nom, details=:details, niveaux=:niveaux, competence=:idCompetence WHERE id=:idCritere');
+				$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'indicateurs SET nom=:nom, details=:details, niveaux=:niveaux, competence=:idCompetence, lien=:lien WHERE id=:idCritere');
 				$req->execute(array(
 							'nom' => $nom,
 							'details' => $details,
 							'niveaux' => $niveaux,
 							'idCompetence' => $idCompetence,
-							'idCritere' => $idCritere
+							'idCritere' => $idCritere,
+							'lien' => $lien
 						));
 
 					$reponseJSON["indicateur"]["nom"]=$nom;
@@ -975,6 +986,7 @@ if($action=="modifCritere")
 					$reponseJSON["indicateur"]["niveaux"]=$niveaux;
 					$reponseJSON["indicateur"]["id"]=$idCritere;
 					$reponseJSON["indicateur"]["competence"]=$idCompetence;
+					$reponseJSON["indicateur"]["lien"]=$lien;
 
 					$reponseJSON["messageRetour"]=":)L'indicateur ".$nom." a bien été modifié.";
 					

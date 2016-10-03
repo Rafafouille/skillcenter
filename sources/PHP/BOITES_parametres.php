@@ -145,23 +145,26 @@
 		<div id="dialog-addIndicateur" title="Ajouter un critère">
 			<p>(Compétence : "<span class="dialog-addIndicateur_nomCompetence"></span>")</p>
 			<form>
-				<label for="dialog-addIndicateur-nom">Nom :</label>
-				<input type="text" name="dialog-addIndicateur-nom" id="dialog-addIndicateur-nom" />
+					<label for="dialog-addIndicateur-nom">Nom :</label>
+					<input type="text" name="dialog-addIndicateur-nom" id="dialog-addIndicateur-nom" />
 				<br/>
-				<label for="dialog-addIndicateur-details">Détails (facultatif) :</label><br/>
-				<input type="text" name="dialog-addIndicateur-details" id="dialog-addIndicateur-details" />
+					<label for="dialog-addIndicateur-details">Détails (facultatif) :</label><br/>
+					<input type="text" name="dialog-addIndicateur-details" id="dialog-addIndicateur-details" />
 				<br/>
-				<label for="dialog-addIndicateur-niveaux">Nombre de niveaux :</label>
-				<select name="dialog-addIndicateur-niveaux" id="dialog-addIndicateur-niveaux">
-					<?php
-						for($i=1;$i<=$NB_NIVEAUX_MAX;$i++)
-							{echo'
-					<option value="'.$i.'"';
-							if($i==$NIVEAU_DEFAUT)
-								echo " selected";
-							echo'>'.$i.'</option>';
-							};
-					?>
+					<label for="dialog-addIndicateur-lien">Lien hypertexte vers une ressource (facultatif) :</label><br/>
+					<input type="url" name="dialog-addIndicateur-lien" id="dialog-addIndicateur-lien" />
+				<br/>
+					<label for="dialog-addIndicateur-niveaux">Nombre de niveaux :</label>
+					<select name="dialog-addIndicateur-niveaux" id="dialog-addIndicateur-niveaux">
+						<?php
+							for($i=1;$i<=$NB_NIVEAUX_MAX;$i++)
+								{echo'
+						<option value="'.$i.'"';
+								if($i==$NIVEAU_DEFAUT)
+									echo " selected";
+								echo'>'.$i.'</option>';
+								};
+						?>
 				</select>
 
 				<input type="hidden" name="dialog-addIndicateur-idCompetence" id="dialog-addIndicateur-idCompetence"/>
@@ -173,7 +176,7 @@
 				autoOpen: false,
 				modal: true,
 				buttons: {
-							"Ajouter": function() {$("#dialog-addIndicateur").dialog( "close" );addIndicateur($("#dialog-addIndicateur-nom").val(),$('#dialog-addIndicateur-details').val(),$('#dialog-addIndicateur-niveaux').val(),parseInt($("#dialog-addIndicateur-idCompetence").val()),((true) ? $("#selectClasseCompetences").val() : ""));},
+							"Ajouter": function() {$("#dialog-addIndicateur").dialog( "close" );addIndicateur($("#dialog-addIndicateur-nom").val(),$('#dialog-addIndicateur-details').val(),$('#dialog-addIndicateur-niveaux').val(),parseInt($("#dialog-addIndicateur-idCompetence").val()),((true) ? $("#selectClasseCompetences").val() : ""),$("#dialog-addIndicateur-lien").val());},
 							"Annuler": function() {$("#dialog-addIndicateur").dialog( "close" );}
 						}
 			});
@@ -193,6 +196,9 @@
 			<br/>
 				<label for="dialog-modifIndicateur-details">Détails (facultatif) :</label><br/>
 				<textarea name="dialog-modifIndicateur-details" id="dialog-modifIndicateur-details"></textarea>
+			<br/>
+				<label for="dialog-modifIndicateur-lien">Lien hypertexte vers une ressource (facultatif) :</label><br/>
+				<input type="url" name="dialog-modifIndicateur-lien" id="dialog-modifIndicateur-lien" />
 			<br/>
 				<label for="dialog-modifIndicateur-niveaux">Nombre de niveaux :</label>
 				<select name="dialog-modifIndicateur-niveaux" id="dialog-modifIndicateur-niveaux">
@@ -216,7 +222,7 @@
 				autoOpen: false,
 				modal: true,
 				buttons: {
-							"Modifier": function() {$("#dialog-modifIndicateur").dialog( "close" );modifCritere($("#dialog-modifIndicateur-nom").val(),$('#dialog-modifIndicateur-details').val(),$('#dialog-modifIndicateur-niveaux').val(),parseInt($("#dialog-modifIndicateur-idCompetence").val()),parseInt($("#dialog-modifIndicateur").data("id_critere")));},
+							"Modifier": function() {$("#dialog-modifIndicateur").dialog( "close" );modifCritere($("#dialog-modifIndicateur-nom").val(),$('#dialog-modifIndicateur-details').val(),$('#dialog-modifIndicateur-niveaux').val(),parseInt($("#dialog-modifIndicateur-idCompetence").val()),parseInt($("#dialog-modifIndicateur").data("id_critere")),$("#dialog-modifIndicateur-lien").val());},
 							"Annuler": function() {$("#dialog-modifIndicateur").dialog( "close" );}
 						}
 			});

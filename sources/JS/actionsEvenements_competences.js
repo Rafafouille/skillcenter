@@ -266,7 +266,7 @@ ouvreBoiteAddIndicateur=function(competence,idComp)
 	$( "#dialog-addIndicateur").dialog("open");
 }
 
-addIndicateur=function(nom,details,niveaux,idCompetence,classe)
+addIndicateur=function(nom,details,niveaux,idCompetence,classe,lien)
 {
 	$.post(
 			'./sources/PHP/actionneurJSON.php',//Requete appelée
@@ -276,6 +276,7 @@ addIndicateur=function(nom,details,niveaux,idCompetence,classe)
 				details:details,
 				niveaux:niveaux,
 				idCompetence:idCompetence,
+				lien:lien,
 				classe: classe//Pour lier tout de suite la classe au nouvel indicateur
 			},
 			addIndicateur_callback,	//Fonction callback
@@ -308,13 +309,16 @@ ouvreBoiteModifCritere=function(idCrit)
 	//Niveau
 	var niveau=$("#ADMIN_COMPETENCES_indicateur_"+idCrit).find(".niveauxIndicateur").data("niveau");
 	$("#dialog-modifIndicateur-niveaux").val(niveau);
+	//Lien
+	var lien=$("#ADMIN_COMPETENCES_indicateur_"+idCrit).data("lien");
+	$("#dialog-modifIndicateur-lien").val(lien);
 	//idCritere à modifier
 	$("#dialog-modifIndicateur").data("id_critere",idCrit)
 
 	$("#dialog-modifIndicateur").dialog("open");
 }
 
-modifCritere=function(nom,details,niveaux,idCompetence,idCritere)
+modifCritere=function(nom,details,niveaux,idCompetence,idCritere,lien)
 {
 	$.post(
 			'./sources/PHP/actionneurJSON.php',//Requete appelée
@@ -324,6 +328,7 @@ modifCritere=function(nom,details,niveaux,idCompetence,idCritere)
 				details:details,
 				niveaux:niveaux,
 				idCompetence:idCompetence,
+				lien:lien,
 				idCritere:idCritere
 			},
 			modifCritere_callback,	//Fonction callback
