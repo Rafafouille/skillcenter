@@ -46,7 +46,7 @@ getUserHTMLfromJSON=function(user)
 	}
 
 	retour= ""
-+"										<div class=\"user "+sousClasse+"\" id=\"user_"+user.id+"\"  onmouseenter =\"$(this).find('.boutons_user').css('visibility','visible');\" onmouseleave=\"$(this).find('.boutons_user').css('visibility','hidden');\">"
++"										<div class=\"user "+sousClasse+"\" id=\"user_"+user.id+"\"  data-id=\""+user.id+"\" onmouseenter =\"$(this).find('.boutons_user').css('visibility','visible');\" onmouseleave=\"$(this).find('.boutons_user').css('visibility','hidden');\">"
 +"											<span class=\"iconeUser\"></span>"
 +"											<span class=\"nom-user\" onclick=\"ouvreBoiteModifieUser("+user.id+")\">"+user.nom+"</span>"
 +"											<span class=\"prenom-user\" onclick=\"ouvreBoiteModifieUser("+user.id+")\">"+user.prenom+"</span>"
