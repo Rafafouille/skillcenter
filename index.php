@@ -64,6 +64,7 @@ include("./sources/PHP/actions.php");
 		<?php if($_SESSION["id"]>0) { //Si connecté ?>
 		<script type="text/javascript" src="./sources/JS/fonctions_notation.js"></script>
 		<script type="text/javascript" src="./sources/JS/actionsEvenements_notation.js"></script>
+		<script type="text/javascript" src="./sources/JS/fonctions_home.js"></script>
 		<?php }
 
 		if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur" || $_SESSION['statut']=="autoeval") {//Si admin ou prof ?>

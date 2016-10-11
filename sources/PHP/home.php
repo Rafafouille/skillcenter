@@ -19,74 +19,99 @@ else //Si connecté
 	//GRAPHIQUES ==================================================
 	if($AUTORISE_GRAPHIQUES && $_SESSION['statut']!="admin" && $_SESSION['statut']!="evaluateur" )	//Si on autorise d'afficher les graphiques
 	{
+		$listeBilanDomaines=getBilanDomaines();//Récupérer la liste des domaines
 ?>
 
 	<!-- Graphiques ------- -->
 	<div id="graphiquesHome">
-		<h3>Bilan par domaines</h3>
-		<canvas id="radarDomaines" width="300" height="300">
-		</canvas>
+		<div style="display:inline-block;width:45%;vertical-align:top;text-align:center;"">
+			<h3>Bilan par domaines</h3>
+			<canvas id="radarDomaines" width="500" height="500">
+			</canvas>
+		</div>
+		<div style="display:inline-block;width:45%;vertical-align:top;"">
+			<h3>Bilan par compétences</h3>
+			<?php
+			foreach($listeBilanDomaines as $dom)
+			{
+				echo "
+			<div class=\"graphe_competence\">
+					<canvas style=\"display;inline-block;\" id=\"radarCompetences_Domaine_".$dom["id"]."\" width=\"300\" height=\"300\">
+					</canvas>
+			</div>";
+			}
+			?>
+		</div>
 	</div>
 
-
-
-
-<?php
-
-//Récupérer la liste des 
-
-$listeBilanDomaines=getBilanDomaines();
-
-
-?>
 <script>
-var radarDomaines=$("#radarDomaines");
+// TRACAGE DES DOMAINES ===================================
 
-var donneesRadarDomaines=[];
-var labelRadarDomaines=[];
-
-<?php
+var donneesDomaines=[<?php
+$first=true;
 foreach($listeBilanDomaines as &$dom)
 {
-	echo "donneesRadarDomaines.push(".intval($dom['sommeEleve']/$dom['sommeNiveaux']*100).");\n";
-	echo "labelRadarDomaines.push('".$dom['nom']."');\n";
+	if($first)	$first=false;
+	else	echo ",";
+	echo intval($dom['sommeEleve']/$dom['sommeNiveaux']*100);
 }
-?>;
+?>];
 
-
-var polarData = {
-    labels: labelRadarDomaines,
-    datasets: [
-        {
-            data: donneesRadarDomaines
-        }]
-};
+var labelsDomaines=[<?php
+$first=true;
+foreach($listeBilanDomaines as &$dom)
+{
+	if($first)	$first=false;
+	else	echo ",";
+	echo '"'.$dom['nom'].'"';
+}
+?>];
  
+traceGraphiqueRecap_Domaine("#radarDomaines",donneesDomaines,labelsDomaines);
 
 
 
-var myRadarChart = new Chart(radarDomaines, {
-    type: 'polarArea',
-    data: {
-    				labels: labelRadarDomaines,
-    				datasets: [
-        			{
-									data: donneesRadarDomaines,
-									backgroundColor:['red','lime','blue','yellow','fuchsia','aqua','green','purple','silver','teal']
-        			}]
-					},
-		options:{
-							responsive: false,
-							scale:{
-											ticks:{max:100,display: false}
-										}
-						}
-});
 
 
+<?php
+// TRACAGE DES COMPETENCES ===================================
+$tableauCouleurs=['red','lime','blue','yellow','fuchsia','aqua','green','purple','silver','teal'];
+$idCouleur=-1;
 
+foreach($listeBilanDomaines as &$dom)//Pour chaque domaine...
+{
+	$idCouleur++;
+	$idDomaine=$dom["id"];
+
+	$listeBilanCompetence=getBilanCompetence($idDomaine);
+?>
+
+	var donneesRadarCompetences=[<?php
+		$first=true;
+		foreach($listeBilanCompetence as &$comp)
+		{
+			if($first)	$first=false;
+			else	echo ",";
+			echo intval($comp['sommeEleve']/$comp['sommeNiveaux']*100);
+		}
+	?>];
+
+	var labelRadarCompetences=[<?php
+		$first=true;
+		foreach($listeBilanCompetence as &$comp)
+		{
+			if($first)	$first=false;
+			else	echo ",";
+			echo '"'.substr($comp['nom'],0,5).'"';
+		}
+	?>];
+
+	traceGraphiqueRecap_Competence("#radarCompetences_Domaine_<?php echo $idDomaine?>",donneesRadarCompetences,labelRadarCompetences,<?php echo '"'.$dom['nom'].'"';?>,<?php echo '"'.$tableauCouleurs[$idCouleur].'"'?>);
+
+<?php
+}
+?>
 </script>
-
 
 
 <?php
