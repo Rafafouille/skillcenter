@@ -150,37 +150,30 @@ function getBilanCompetence($idDomaine)
 	$bilan=array();
 	
 	$requeteIndicateurClasse="SELECT SUM(niveaux) AS somme, competence FROM ".$BDD_PREFIXE."indicateurs as ind JOIN ".$BDD_PREFIXE."liensClassesIndicateurs as lie ON ind.id=lie.indicateur WHERE lie.classe='".$_SESSION['classe']."' GROUP BY ind.competence";
-	$requeteIndicateurClasseCompetences="SELECT i.somme AS sommeNiveaux, c.nom AS nom FROM (".$requeteIndicateurClasse.") AS i JOIN ".$BDD_PREFIXE."competences AS c ON i.competence=c.id WHERE c.groupe=".$idDomaine;
+	$requeteIndicateurClasseCompetences="SELECT i.somme AS sommeNiveaux, c.id AS idComp, c.nom AS nom FROM (".$requeteIndicateurClasse.") AS i JOIN ".$BDD_PREFIXE."competences AS c ON i.competence=c.id WHERE c.groupe=".$idDomaine;
 	
 	$req = $bdd->query($requeteIndicateurClasseCompetences);
 	while($donnees=$req->fetch())
 	{
 		$competence=array(	"nom"=>addslashes($donnees["nom"]),
 							"sommeNiveaux"=>$donnees['sommeNiveaux'],
-							"sommeEleve"=>$donnees['sommeNiveaux']*0.5
+							"sommeEleve"=>0
 				);
-		$bilan[$competence['nom']]=$competence;
+		$bilan[$donnees['idComp']]=$competence;
 	}
-//	$requeteIndicateurClasse="SELECT niveaux, competence FROM ".$BDD_PREFIXE."indicateurs as ind JOIN ".$BDD_PREFIXE."liensClassesIndicateurs as lie ON ind.id=lie.indicateur WHERE ind.competence='".$idCompetence."' AND lie.classe='".$_SESSION['classe']."'";
+
+
+	$requeteNote="SELECT MAX(note) AS maxi, indicateur FROM ".$BDD_PREFIXE."notation WHERE eleve=".$_SESSION['id']." GROUP BY indicateur";
+	$requeteNoteInd="SELECT n.maxi,i.competence FROM (".$requeteNote.") AS n JOIN ".$BDD_PREFIXE."indicateurs AS i ON n.indicateur=i.id";
+	$requeteNoteIndComp="SELECT SUM(ni.maxi) AS sommeEleve,c.id AS idComp, c.nom,c.groupe FROM (".$requeteNoteInd.") AS ni JOIN ".$BDD_PREFIXE."competences AS c ON ni.competence=c.id WHERE c.groupe=".$idDomaine." GROUP BY c.id";
 	
-	/*		$competence=array(	"nom"=>"nomCompetence1",//$donnees["nom"],
-								"sommeNiveaux"=>10,
-								"sommeEleve"=>5
-				);
-		$bilan["nomCompetence1"]=$competence;
-		
-			$competence=array(	"nom"=>"nomCompetence2",//$donnees["nom"],
-								"sommeNiveaux"=>7,
-								"sommeEleve"=>5
-				);
-		$bilan["nomCompetence2"]=$competence;
-		
-			$competence=array(	"nom"=>"nomCompetence3",//$donnees["nom"],
-								"sommeNiveaux"=>5,
-								"sommeEleve"=>5
-				);
-		$bilan["nomCompetence3"]=$competence;*/
-		
+	$req = $bdd->query($requeteNoteIndComp);
+	while($donnees=$req->fetch())
+	{
+		$bilan[$donnees['idComp']]["sommeEleve"]=$donnees['sommeEleve'];
+	}
+
+
 		return $bilan;
 }
 

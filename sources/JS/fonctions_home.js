@@ -26,7 +26,7 @@ function traceGraphiqueRecap_Domaine(context_,donnees_,labels_)
 function traceGraphiqueRecap_Competence(context_,donnees_,labels_,titre_,couleur_)
 {
 	var context=$(context_);//context jquery
-	var type="radar";
+
 	var data={
 								labels:labels_,
 								datasets:[{
@@ -37,9 +37,6 @@ function traceGraphiqueRecap_Competence(context_,donnees_,labels_,titre_,couleur
 						};
 var options={
 								responsive: false,
-								scale:{
-												ticks:{beginAtZero:true,max:100}
-											},
 								legend:{
 												display:false
 											},
@@ -48,5 +45,19 @@ var options={
 												text:titre_
 											}
 					}
+
+	//Modification de l'échelle selon le type de graphique
+	if(labels_.length>2)
+	{
+		var type="radar";
+		options.scale={ticks:{max:100,min:0}};//Pour les radars
+	}
+	else
+	{
+		var type="bar"
+		options.scales={yAxes:[{ticks:{max:100,min:0}}]};//Pour les barres
+	}
+
+
 	return new Chart(context,{type,data,options});
 }

@@ -12,11 +12,12 @@
 	text-align:center;
 }
 
+
 .graphe_competence
 {
 	text-align:center;
 	display:inline-block;
-	width:400px;
+	width:200px;
 }
 #graphiquesHome canvas
 {
@@ -47,7 +48,6 @@
 {
 	color:black;
 }
-
 
 
 .badge_valide_nouveau img

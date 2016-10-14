@@ -26,7 +26,7 @@ else //Si connecté
 	<div id="graphiquesHome">
 		<div style="display:inline-block;width:45%;vertical-align:top;text-align:center;"">
 			<h3>Bilan par domaines</h3>
-			<canvas id="radarDomaines" width="500" height="500">
+			<canvas id="radarDomaines" width="400" height="400">
 			</canvas>
 		</div>
 		<div style="display:inline-block;width:45%;vertical-align:top;"">
@@ -36,7 +36,7 @@ else //Si connecté
 			{
 				echo "
 			<div class=\"graphe_competence\">
-					<canvas style=\"display;inline-block;\" id=\"radarCompetences_Domaine_".$dom["id"]."\" width=\"300\" height=\"300\">
+					<canvas style=\"display;inline-block;\" id=\"radarCompetences_Domaine_".$dom["id"]."\" width=\"200\" height=\"200\">
 					</canvas>
 			</div>";
 			}
@@ -102,7 +102,7 @@ foreach($listeBilanDomaines as &$dom)//Pour chaque domaine...
 		{
 			if($first)	$first=false;
 			else	echo ",";
-			echo '"'.substr($comp['nom'],0,5).'"';
+			echo '"'.substr($comp['nom'],0,10).'"';
 		}
 	?>];
 
