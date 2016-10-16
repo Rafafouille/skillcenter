@@ -122,7 +122,7 @@ if($action=="getUsersList")
 
 		//Requete SQL
 		connectToBDD();
-		$reponse = $bdd->query('SELECT * FROM '.$BDD_PREFIXE.'utilisateurs'.$critere);
+		$reponse = $bdd->query('SELECT * FROM '.$BDD_PREFIXE.'utilisateurs'.$critere.' ORDER BY classe,nom');
 		$reponseJSON["listeUsers"]=array();
 		while ($donnees = $reponse->fetch())
 		{
@@ -321,18 +321,18 @@ if($action=="getListeEleves")
 		{
 			$reponseJSON["classe"]=$classe;//On renvoie la classe (pour info)
 
-			$req = $bdd->prepare('SELECT nom,prenom,id FROM '.$BDD_PREFIXE.'utilisateurs WHERE classe=:classe');
+			$req = $bdd->prepare('SELECT nom,prenom,id FROM '.$BDD_PREFIXE.'utilisateurs WHERE classe=:classe ORDER BY nom');
 			$req->execute(array('classe'=>$classe));
+			$numeroEleve=0;
 			while ($donnees = $req->fetch())
 				{
-					//echo "
-					//	<option value='".$donnees['id']."'>".$donnees['nom']." ".$donnees['prenom']."</option>";
 					$id=$donnees['id'];
 					$nom=$donnees['nom'];
 					$prenom=$donnees['prenom'];
-					$reponseJSON["listeEleves"][$id]["id"]=$id;
-					$reponseJSON["listeEleves"][$id]["nom"]=$nom;
-					$reponseJSON["listeEleves"][$id]["prenom"]=$prenom;
+					$reponseJSON["listeEleves"][$numeroEleve]["id"]=$id;
+					$reponseJSON["listeEleves"][$numeroEleve]["nom"]=$nom;
+					$reponseJSON["listeEleves"][$numeroEleve]["prenom"]=$prenom;
+					$numeroEleve++;
 				}
 		}
 		else
@@ -358,7 +358,6 @@ if($action=="getNotationEleves")
 		connectToBDD();
 
 		//Recupere la classe de l'élève
-		//$reqClasse = $bdd->query('SELECT classe FROM '.$BDD_PREFIXE.'utilisateurs WHERE id='.$eleve);
 		$reqClasse = $bdd->prepare('SELECT classe FROM '.$BDD_PREFIXE.'utilisateurs WHERE id=:eleve');
 		$reqClasse->execute(array('eleve'=>$eleve));
 		
