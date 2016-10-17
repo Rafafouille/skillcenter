@@ -149,25 +149,27 @@ ouvreBoiteAddCompetence=function(groupe,i)
 }
 
 //AJOUTE COMPETENCE -----------------------------
-addCompetence=function(nom,idGroupe)
+addCompetence=function(nom,nomAbrege,idGroupe)
 {
 	$.post(
 			'./sources/PHP/actionneurJSON.php',//Requete appelée
 			{	//Les données à passer par POST
 				action:"addCompetence",
 				nom:nom,
+				nomAbrege:nomAbrege,
 				idGroupe:idGroupe
 			},
 			addCompetence_callback,	//Fonction callback
 			"json"	//Type de réponse
 	);
 }
+
 //Callback qui ajoute la compétence dans la page -----
 addCompetence_callback=function(reponse)
 {
 	var comp=reponse.competence;
 	afficheMessage(reponse.messageRetour);
-	var rendu=ADMIN_COMPETENCES_rendu_HTML_competence(comp.nom,comp.id,0,"competence_unselected");
+	var rendu=ADMIN_COMPETENCES_rendu_HTML_competence(comp.nom,comp.nomAbrege,comp.id,0,"competence_unselected");
 	$("#ADMIN_COMPETENCES_groupe_"+comp.groupe+" .groupe_contenu").append(rendu);
 }
 
@@ -179,25 +181,30 @@ ouvreBoiteModifCompetence=function(idCompetence)
 	//Intitule
 	var intitule=$("#ADMIN_COMPETENCES_competence_"+idCompetence).find(".ADMIN_PARAMETRES_titre_competence_dans_h3").text();
 	$("#dialog-modifCompetence-nom").val(intitule);
+	//Nom abregé
+	nomAbrege=$("#ADMIN_COMPETENCES_competence_"+idCompetence).attr("data-nomAbrege");
+	
+	$("#dialog-modifCompetence-nomAbrege").val(nomAbrege);
 	//idCompetence
 	var idCompetence=$("#ADMIN_COMPETENCES_competence_"+idCompetence).attr("data-id");
 	$("#dialog-modifCompetence").attr("data-idcompetence",idCompetence)
 	//idDomaine
 	var idDomaine=$("#ADMIN_COMPETENCES_competence_"+idCompetence).parent().parent().data("id");
 	getDomainesInFormulaireOption("#dialog-modifCompetence-idDomaine",idDomaine);
-	//$("#dialog-modifCompetence-idDomaine").val(idDomaine);
+	
 
 	$("#dialog-modifCompetence").dialog( "open" );
 }
 
 //MODIF COMPETENCE -----------------------------
-modifCompetence=function(nom,idDomaine,idCompetence)
+modifCompetence=function(nom,nomAbrege,idDomaine,idCompetence)
 {
 	$.post(
 			'./sources/PHP/actionneurJSON.php',//Requete appelée
 			{	//Les données à passer par POST
 				action:"modifCompetence",
 				nom:nom,
+				nomAbrege:nomAbrege,
 				idDomaine:idDomaine,
 				idCompetence:idCompetence
 			},

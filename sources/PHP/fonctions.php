@@ -150,18 +150,18 @@ function getBilanCompetence($idDomaine)
 	$bilan=array();
 	
 	$requeteIndicateurClasse="SELECT SUM(niveaux) AS somme, competence FROM ".$BDD_PREFIXE."indicateurs as ind JOIN ".$BDD_PREFIXE."liensClassesIndicateurs as lie ON ind.id=lie.indicateur WHERE lie.classe='".$_SESSION['classe']."' GROUP BY ind.competence";
-	$requeteIndicateurClasseCompetences="SELECT i.somme AS sommeNiveaux, c.id AS idComp, c.nom AS nom FROM (".$requeteIndicateurClasse.") AS i JOIN ".$BDD_PREFIXE."competences AS c ON i.competence=c.id WHERE c.groupe=".$idDomaine;
+	$requeteIndicateurClasseCompetences="SELECT i.somme AS sommeNiveaux, c.id AS idComp, c.nomAbrege AS nomAbrege,c.nom AS nom FROM (".$requeteIndicateurClasse.") AS i JOIN ".$BDD_PREFIXE."competences AS c ON i.competence=c.id WHERE c.groupe=".$idDomaine;
 	
 	$req = $bdd->query($requeteIndicateurClasseCompetences);
 	while($donnees=$req->fetch())
 	{
 		$competence=array(	"nom"=>addslashes($donnees["nom"]),
+							"nomAbrege"=>addslashes($donnees["nomAbrege"]),
 							"sommeNiveaux"=>$donnees['sommeNiveaux'],
 							"sommeEleve"=>0
 				);
 		$bilan[$donnees['idComp']]=$competence;
 	}
-
 
 	$requeteNote="SELECT MAX(note) AS maxi, indicateur FROM ".$BDD_PREFIXE."notation WHERE eleve=".$_SESSION['id']." GROUP BY indicateur";
 	$requeteNoteInd="SELECT n.maxi,i.competence FROM (".$requeteNote.") AS n JOIN ".$BDD_PREFIXE."indicateurs AS i ON n.indicateur=i.id";

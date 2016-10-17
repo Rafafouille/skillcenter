@@ -74,7 +74,10 @@
 			<p>(Domaine : "<span class="dialog-addCompetence_nomGroupe"></span>")</p>
 			<form>
 				<label for="dialog-addCompetence-nom">Intitulé de la compétence :</label>
-				<input type="text" name="dialog-addCompetence-nom" id="dialog-addCompetence-nom" />
+				<textarea name="dialog-addCompetence-nom" id="dialog-addCompetence-nom"></textarea>
+				<br/>
+				<label for="dialog-addCompetence-nomAbrege">Intitulé Abrégé :</label>
+				<input type="text" name="dialog-addCompetence-nomAbrege" id="dialog-addCompetence-nomAbrege" />
 				<input type="hidden" name="dialog-addCompetence-idGroupe" id="dialog-addCompetence-idGroupe"/>
 			</form>
 		</div>
@@ -83,7 +86,7 @@
 				autoOpen: false,
 				modal: true,
 				buttons: {
-							"Ajouter": function() {$("#dialog-addCompetence").dialog( "close" );addCompetence($("#dialog-addCompetence-nom").val(),parseInt($("#dialog-addCompetence-idGroupe").val()));},
+							"Ajouter": function() {$("#dialog-addCompetence").dialog( "close" );addCompetence($("#dialog-addCompetence-nom").val(),$("#dialog-addCompetence-nomAbrege").val(),parseInt($("#dialog-addCompetence-idGroupe").val()));},
 							"Annuler": function() {$("#dialog-addCompetence").dialog( "close" );}
 						}
 			});
@@ -98,7 +101,10 @@
 				<select id="dialog-modifCompetence-idDomaine" name="dialog-modifCompetence-idDomaine"></select>
 				<br/>
 				<label for="dialog-modifCompetence-nom">Intitulé de la compétence :</label>
-				<input type="text" name="dialog-modifCompetence-nom" id="dialog-modifCompetence-nom" />
+				<textarea name="dialog-modifCompetence-nom" id="dialog-modifCompetence-nom"></textarea>
+				<br/>
+				<label for="dialog-addCompetence-nomAbrege">Intitulé Abrégé :</label>
+				<input type="text" name="dialog-modifCompetence-nomAbrege" id="dialog-modifCompetence-nomAbrege" />
 				<!--<input type="hidden" name="dialog-modifCompetence-idDomaine" id="dialog-modifCompetence-idDomaine"/>-->
 			</form>
 		</div>
@@ -107,7 +113,7 @@
 				autoOpen: false,
 				modal: true,
 				buttons: {
-							"Ajouter": function() {$("#dialog-modifCompetence").dialog( "close" );modifCompetence($("#dialog-modifCompetence-nom").val(),parseInt($("#dialog-modifCompetence-idDomaine").val()),parseInt($("#dialog-modifCompetence").attr("data-idcompetence")));},
+							"Ajouter": function() {$("#dialog-modifCompetence").dialog( "close" );modifCompetence($("#dialog-modifCompetence-nom").val(),$("#dialog-modifCompetence-nomAbrege").val(),parseInt($("#dialog-modifCompetence-idDomaine").val()),parseInt($("#dialog-modifCompetence").attr("data-idcompetence")));},
 							"Annuler": function() {$("#dialog-modifCompetence").dialog( "close" );}
 						}
 			});

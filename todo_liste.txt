@@ -1,4 +1,3 @@
-- Faire bilan "radar" élèves pour chaque domaine
 - Faire d'autres badges
 - Supprimer actionneur XML
 - Mettre une page "A propos"
@@ -9,11 +8,8 @@
 - Mettre les bonnes couleurs quand on active un critère pour un classe (dans la page parametrage)
 - Permettre de réordonner les criteres
 - Enlever la validation des formulaires (des boites) avec la touche "entrer"
-- Mettre dans l'ordre alphabétique les élèves dans l'onglet "utilisateur"
-- Mettre dans l'ordre alphabétique les élèves dans "Bilan"
 - Mettre un bouton "annuler" dans la boite de dialogue, lorsqu'on met une note.
 - Permettre de choisir entre "derniere note / moyenne / Max"
-- Mettre des infos dans les attributs data-...
 - Faire le ménage dans les notes quand on baisse le nombre de niveau d'un critère
 - Ajouter la possibilité de mettre des commentaires à la notation
 - Le message réponse de retour de JSON devrait avoir cette structure : [message, valide ou pas, affiche message ou pas (public ou debug)]

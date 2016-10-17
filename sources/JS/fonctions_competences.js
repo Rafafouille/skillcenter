@@ -54,10 +54,8 @@ function ADMIN_COMPETENCES_ajouteCompetence(competence,conteneur)
 	var styleClass="competence";
 	if(!competence.selected)
 		styleClass+="_unselected";
-toto=competence;
-	
 
-	var rendu=ADMIN_COMPETENCES_rendu_HTML_competence(competence.nom,competence.id,numeroCompetence,styleClass)
+	var rendu=ADMIN_COMPETENCES_rendu_HTML_competence(competence.nom,competence.nomAbrege,competence.id,numeroCompetence,styleClass)
 
 	$(conteneur).append(rendu);
 
@@ -72,10 +70,10 @@ toto=competence;
 
 
 // -------------------------
-function ADMIN_COMPETENCES_rendu_HTML_competence(nom,id,numeroCompetence,styleClass)
+function ADMIN_COMPETENCES_rendu_HTML_competence(nom,nomAbrege,id,numeroCompetence,styleClass)
 {
 	return ""+
-"					<div class=\""+styleClass+"\" id=\"ADMIN_COMPETENCES_competence_"+id+"\" data-id=\""+id+"\">"+
+"					<div class=\""+styleClass+"\" id=\"ADMIN_COMPETENCES_competence_"+id+"\" data-id=\""+id+"\" data-nomAbrege=\""+addslashes(nomAbrege)+"\">"+
 "						<img class=\"boutonModifCompetence\" src=\"./sources/images/icone-modif.png\" alt=\"[§]\" style=\"cursor:pointer;height:25px;\" title=\"Modifier la compétence\" onclick=\"ouvreBoiteModifCompetence("+id+")\"/>"+
 "						<img class=\"boutonSupprimerCompetence\" src=\"./sources/images/poubelle.png\" alt=\"[X]\" onclick=\"ouvreBoiteSupprimeCompetence('"+addslashes(nom)+"',"+id+")\"/>"+
 "						<div class=\"boutonAjouterIndicateur\" onclick=\"ouvreBoiteAddIndicateur('"+addslashes(nom)+"',"+id+");$(this).parent().find('.listeIndicateurs').slideDown('easings');\">"+

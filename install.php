@@ -796,6 +796,7 @@ creeTable("competences","id");
 	creeAttribut("competences","nom","TEXT NOT NULL");
 	creeAttribut("competences","groupe","MEDIUMINT UNSIGNED DEFAULT 0");
 	creeAttribut("competences","position","MEDIUMINT UNSIGNED DEFAULT 0");
+	creeAttribut("competences","nomAbrege","TEXT NOT NULL");
 	
 creeTable("groupes_competences","id");
 	creeAttribut("groupes_competences","id","int AUTO_INCREMENT PRIMARY KEY");

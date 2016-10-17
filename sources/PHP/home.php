@@ -78,6 +78,8 @@ traceGraphiqueRecap_Domaine("#radarDomaines",donneesDomaines,labelsDomaines);
 $tableauCouleurs=['red','lime','blue','yellow','fuchsia','aqua','green','purple','silver','teal'];
 $idCouleur=-1;
 
+$idCompetenceGraphique=1;
+
 foreach($listeBilanDomaines as &$dom)//Pour chaque domaine...
 {
 	$idCouleur++;
@@ -100,9 +102,13 @@ foreach($listeBilanDomaines as &$dom)//Pour chaque domaine...
 		$first=true;
 		foreach($listeBilanCompetence as &$comp)
 		{
+			$label=substr($comp['nomAbrege'],0,20);
+			if($comp['nomAbrege']=="")
+				$label="Comp n°".strval($idCompetenceGraphique++);
+			
 			if($first)	$first=false;
 			else	echo ",";
-			echo '"'.substr($comp['nom'],0,10).'"';
+			echo '"'.$label.'"';
 		}
 	?>];
 

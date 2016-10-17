@@ -601,12 +601,6 @@ if($action=="updateCompetencesSelonClasse")
 
 		$reponseJSON['listeGroupes']=array();
 		
-		//if($classe!="[ALL]")
-		//	$requete="SELECT  E1.idComp,  E1.nomComp, E1.idGroup, E1.nomGroup, ind.id AS idInd, ind.nom AS nomInd, ind.details AS detailsInd, ind.niveaux AS niveauxInd FROM (SELECT * FROM indicateurs AS i JOIN liensClassesIndicateurs AS l ON i.id=l.indicateur WHERE classe='".$classe."') as ind JOIN (SELECT co.id AS idComp, co.nom AS nomComp, gr.id AS idGroup, gr.nom AS nomGroup FROM competences AS co JOIN groupes_competences AS gr ON  co.groupe=gr.id) AS E1 ON ind.competence = E1.idComp";
-		//else
-
-		//NOUVEAU
-		
 		//Liste des groupes ******
 		$reqGr = $bdd->query("SELECT * FROM ".$BDD_PREFIXE."groupes_competences ORDER BY position");
 		while($reponseGr=$reqGr->fetch())
@@ -627,10 +621,12 @@ if($action=="updateCompetencesSelonClasse")
 			{
 				$idComp=intval($reponseComp['id']);
 				$nomComp=$reponseComp['nom'];
+				$nomAbregeComp=$reponseComp['nomAbrege'];
 				$positionComp=intval($reponseComp['position']);
 				
 				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["id"]=$idComp;
 				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["nom"]=$nomComp;
+				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["nomAbrege"]=$nomAbregeComp;
 				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["position"]=$positionComp;
 				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["selected"]=false;
 				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"]=array();
@@ -785,13 +781,16 @@ if($action=="addCompetence")
 		connectToBDD();
 		$nom="";
 		if(isset($_POST['nom'])) $nom=$_POST['nom'];
+		$nomAbrege="";
+		if(isset($_POST['nomAbrege'])) $nomAbrege=$_POST['nomAbrege'];
 		$idGroupe=0;
 		if(isset($_POST['idGroupe'])) $idGroupe=intval($_POST['idGroupe']);
 		if($nom!="")
 		{
-			$req = $bdd->prepare('INSERT INTO '.$BDD_PREFIXE.'competences (nom,groupe) VALUES(:nom,:idGroupe)');
+			$req = $bdd->prepare('INSERT INTO '.$BDD_PREFIXE.'competences (nom,nomAbrege,groupe) VALUES(:nom,:nomAbrege,:idGroupe)');
 			$req->execute(array(
 						'nom' => $nom,
+						'nomAbrege' => $nomAbrege,
 						'idGroupe' => $idGroupe
 					));
 
@@ -803,6 +802,7 @@ if($action=="addCompetence")
 			{
 				$reponseJSON["messageRetour"]=":)La compétence ".$nom." a bien été créé.";
 				$reponseJSON["competence"]["nom"]=$nom;
+				$reponseJSON["competence"]["nomAbrege"]=$nomAbrege;
 				$reponseJSON["competence"]["id"]=intval($donnees['id']);
 				$reponseJSON["competence"]["groupe"]=$idGroupe;
 			}
@@ -825,6 +825,8 @@ if($action=="modifCompetence")
 		connectToBDD();
 		$nom="";
 		if(isset($_POST['nom'])) $nom=$_POST['nom'];
+		$nomAbrege="";
+		if(isset($_POST['nomAbrege'])) $nomAbrege=$_POST['nomAbrege'];
 		$idDomaine=0;
 		if(isset($_POST['idDomaine'])) $idDomaine=intval($_POST['idDomaine']);
 		$idCompetence=0;
@@ -832,15 +834,17 @@ if($action=="modifCompetence")
 		
 		if($idCompetence!=0)
 		{
-			$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'competences SET nom=:nom, groupe=:idDomaine WHERE id=:idCompetence');
+			$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'competences SET nom=:nom, nomAbrege=:nomAbrege, groupe=:idDomaine WHERE id=:idCompetence');
 			$req->execute(array(
 						'nom' => $nom,
+						'nomAbrege' => $nomAbrege,
 						'idDomaine' => $idDomaine,
 						'idCompetence' => $idCompetence
 					));
 
 			$reponseJSON["messageRetour"]=":)La compétence ".$nom." a bien été modifiée.";
 			$reponseJSON["competence"]["nom"]=$nom;
+			$reponseJSON["competence"]["nomAbrege"]=$nomAbrege;
 			$reponseJSON["competence"]["id"]=$idCompetence;
 			$reponseJSON["competence"]["groupe"]=$idDomaine;
 		}
