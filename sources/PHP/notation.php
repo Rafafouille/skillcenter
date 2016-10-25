@@ -23,6 +23,7 @@
 						</select>
 						<select name="notationListeEleves" id="notationListeEleves" onchange="getNotationEleve($(this).val());">
 						</select>
+						<span id="bilanBoutonEleveSuivant" onclick="bilanBoutonEleveSuivant();">&#8626;</span>
 					</form>
 					<?php
 					}

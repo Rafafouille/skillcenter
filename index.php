@@ -42,6 +42,7 @@ include("./sources/PHP/actions.php");
 		<?php } ?>
 		<link rel="stylesheet" href="./sources/style/styleCompetences.css" />
 		<link rel="stylesheet" href="./sources/style/styleHome.css" />
+		<link rel="stylesheet" href="./sources/style/styleBilan.css" />
 		
 		<!-- JQUERY -->
 		<link rel="stylesheet" href="./sources/JS/libraries/jquery-ui/jquery-ui.css">

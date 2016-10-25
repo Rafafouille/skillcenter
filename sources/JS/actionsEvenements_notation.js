@@ -23,8 +23,6 @@ NotationGetListeEleves=function(classe)
 //Callback
 updateListeEleves=function(reponse)
 {
-
-	//$("#notationListeEleves").html(reponse);
 	$("#notationListeEleves").empty();
 	var listeEleves=reponse.listeEleves;
 	a=reponse;
@@ -38,6 +36,13 @@ updateListeEleves=function(reponse)
 	
 	NOTATION_REDESSINE_DE_ZERO=true;	//Pour effacer puis tout redessiner
 	getNotationEleve($("#notationListeEleves").val());
+}
+
+
+//Passage à l'éleve suivant ***************************
+bilanBoutonEleveSuivant=function()
+{
+	$('#notationListeEleves').data("selectBox-selectBoxIt").moveDown();
 }
 
 //METTRE A JOUR LA NOTATION POUR UN ELEVE**********************
