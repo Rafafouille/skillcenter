@@ -1,7 +1,5 @@
 - Faire d'autres badges
-- Supprimer actionneur XML
 - Mettre une page "A propos"
-- Crypter les Mdp
 - Rajouter un domaine "fantôme" pour les indicateurs et les compétences, dont le parent a été supprimé
 - Virer les boites d'information
 - Renommer les variables gourpes/indicateurs, etc.

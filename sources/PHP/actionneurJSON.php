@@ -5,6 +5,7 @@ include_once('fonctions.php');
 
 initSession();
 
+$SALT="$232#;E";//Grain de sel pour le hachage du mot de passe
 
 /* ******************************
 	Programme pour ajax (avec réponse JSON)
@@ -40,8 +41,9 @@ if($action=="login")
 	
 	if($login!="" && $mdp!="")	//Si les paramètres ne sont pas vides
 	{
-		$req = $bdd->prepare('SELECT * FROM '.$BDD_PREFIXE.'utilisateurs WHERE login=:login  AND mdp = :mdp');
-		$req->execute(array('login' => $login, 'mdp' => $mdp));
+		usleep(300000);//Pause pour ne pas tester 500000 mot de passe par seconde (3/seconde, max)
+		$req = $bdd->prepare('SELECT * FROM '.$BDD_PREFIXE.'utilisateurs WHERE login=:login AND (mdp = :mdp OR mdp=:mdpCrypt)');
+		$req->execute(array('login' => $login, 'mdp' => $mdp, 'mdpCrypt' => crypt($mdp,$SALT)));
 		if($donnees = $req->fetch())	//Si l'utilisateur est dans la BDD, avec le bon mot de passe
 		{
 			$_SESSION['nom']=$donnees['nom'];
@@ -154,7 +156,7 @@ if($action=="addUser")
 				'nom' => strtoupper($_POST["newUser_nom"]),
 				'prenom' => ucwords($_POST['newUser_prenom']),
 				'login' => $_POST['newUser_login'],
-				'mdp' => $_POST['newUser_psw'],
+				'mdp' => crypt($_POST['newUser_psw'],$SALT),//Le 2ème paramètre : voir la fonction crypt (salt (pas très efficace si constant... mais tant pis)
 				'classe' => strtoupper($_POST['newUser_classe'])
 			);
 		$req = $bdd->prepare('SELECT id FROM '.$BDD_PREFIXE.'utilisateurs WHERE login=:login');
@@ -199,7 +201,7 @@ if($action=="updateUser")
 						'nom' => $_POST["newUser_nom"],
 						'prenom' => $_POST['newUser_prenom'],
 						'login' => $_POST['newUser_login'],
-						'mdp' => $_POST['newUser_psw'],
+						'mdp' => crypt($_POST['newUser_psw'],$SALT),
 						'classe' => $_POST['newUser_classe'],
 						'id'	=>	$_POST['id']
 					));
