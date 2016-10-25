@@ -142,69 +142,6 @@ callBack_supprimeUser=function(reponse)
 }
 
 
-// A SUPPRIMER <<<<<
-//UPGRADE USER
-/*ouvreBoiteUpgradeUser=function(id,nom)
-{
-	$("#boiteUpgrade-id").text(id);
-	$("#boiteUpgrade-nom").text(nom);
-	$("#dialog-upgradeUser").dialog("open");
-}
-
-upgradeUser=function(id)
-{
-	$.post(
-			'./sources/PHP/actionneur.php',//Requete appelée
-			{	//Les données à passer par POST
-				action:"upgradeUser",
-				id:id
-			},
-			callBackUpgradeUser,	//Fonction callback
-			"text"	//Type de réponse
-	);
-}
-
-callBackUpgradeUser=function(reponse)
-{
-	debug(reponse);//Debug la réponse
-	afficheMessage(reponse);
-	$("#boutonModifieStatut_"+$("#boiteUpgrade-id").text()).replaceWith(getBoutonUpAndDowngradeUserFromJSON({id:$("#boiteUpgrade-id").text(),statut:"admin",nom:$("#boiteUpgrade-nom").text(),prenom:$("#boiteUpgrade-prenom").text()}));
-	//$("#boutonModifieStatut_"+$("#boiteUpgrade-id").text()).attr('src', './sources/images/super.png');
-}
-
-
-//DOWNGRADE USER
-ouvreBoiteDowngradeUser=function(id,nom)
-{
-	$("#boiteDowngrade-id").text(id);
-	$("#boiteDowngrade-nom").text(nom);
-	$("#dialog-downgradeUser").dialog("open");
-}
-
-downgradeUser=function(id)
-{
-	$.post(
-			'./sources/PHP/actionneur.php',//Requete appelée
-			{	//Les données à passer par POST
-				action:"downgradeUser",
-				id:id
-			},
-			callBackDowngradeUser,	//Fonction callback
-			"text"	//Type de réponse
-	);
-}
-
-callBackDowngradeUser=function(reponse)
-{
-	debug(reponse);//Debug la réponse
-	afficheMessage(reponse);
-	$("#boutonModifieStatut_"+$("#boiteDowngrade-id").text()).replaceWith(getBoutonUpAndDowngradeUserFromJSON({id:$("#boiteDowngrade-id").text(),statut:"",nom:$("#boiteDowngrade-nom").text(),prenom:$("#boiteDowngrade-prenom").text()}));
-//	$("#boutonModifieStatut_"+$("#boiteDowngrade-id").text()).attr('src', './sources/images/student.png');
-}*/
-//>>>>>>>>>>>>>>>>>>>>>>>>
-
-
-
 ADMIN_USER_change_statut=function(id,statut)
 {
 	$.post(

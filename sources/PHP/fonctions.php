@@ -512,21 +512,6 @@ function getNiveauMaxIndicateur($idIndicateur)
 
 
 
-
-//==================================================
-//A SUPPRIMER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//Fonction qui initialise la réponse XML en Ajax
-function initReponseXML()
-{
-$initXML= <<<XML
-<?xml version='1.0' standalone='yes'?>
-<reponse>
-	<messageRetour>Message Retour</messageRetour>
-</reponse>
-XML;
-	return new SimpleXMLElement($initXML);
-}
-
 //Fonction qui initialise la réponse XML en Ajax
 function initReponseJSON()
 {
