@@ -113,7 +113,7 @@
 				autoOpen: false,
 				modal: true,
 				buttons: {
-							"Ajouter": function() {$("#dialog-modifCompetence").dialog( "close" );modifCompetence($("#dialog-modifCompetence-nom").val(),$("#dialog-modifCompetence-nomAbrege").val(),parseInt($("#dialog-modifCompetence-idDomaine").val()),parseInt($("#dialog-modifCompetence").attr("data-idcompetence")));},
+							"Modifier": function() {$("#dialog-modifCompetence").dialog( "close" );modifCompetence($("#dialog-modifCompetence-nom").val(),$("#dialog-modifCompetence-nomAbrege").val(),parseInt($("#dialog-modifCompetence-idDomaine").val()),parseInt($("#dialog-modifCompetence").attr("data-idcompetence")));},
 							"Annuler": function() {$("#dialog-modifCompetence").dialog( "close" );}
 						}
 			});
