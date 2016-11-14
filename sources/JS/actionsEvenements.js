@@ -54,6 +54,7 @@ login=function(login,mdp)
 			"json"	//Type de réponse
 	);
 }
+
 // Déconnection (commande AJAX)
 logout=function()
 {

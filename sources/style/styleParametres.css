@@ -204,8 +204,8 @@ COMPETENCES
 	margin-left:3px;
 	margin-bottom:-6px;
 	margin-right:-3px;
- -webkit-filter: drop-shadow(2px 2px 3px #555577);
-  filter: drop-shadow(2px 2px 3px #555577);
+	-webkit-filter: drop-shadow(2px 2px 3px #555577);
+	filter: drop-shadow(2px 2px 3px #555577);
 }
 /* ************************************
 INDICATEURS
@@ -317,14 +317,17 @@ INDICATEURS
 
 .intituleIndicateur
 {
+	width:520px;
 	font-weight:bold;
 	font-style:italic;
+	overflow:hidden;
+	white-space: nowrap;
 }
 
 
 .boutonsIndicateur
 {
-	width:150px;
+	width:82px;
 	padding:0px;
 	text-align:right;
 }

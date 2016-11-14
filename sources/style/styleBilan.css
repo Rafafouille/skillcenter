@@ -1,3 +1,7 @@
+
+/********************************
+Boutons
+*******************************/
 #bilanBoutonEleveSuivant
 {
 	display:inline-block;
@@ -15,4 +19,88 @@
 	vertical-align:middle;
 	margin-top:5px;
 	margin-bottom:-5px;
+}
+
+/*******************************
+Indicateurs
+******************************/
+
+.listeIndicateurs .indicateurs
+{
+table-layout: fixed;
+}
+
+.intituleIndicateur .titreIndicateur
+{
+	display:inline-block;
+	width:100%;
+	/*display:none;*/
+}
+
+.intituleIndicateur .commentaireIndicateur
+{
+	font-size:small;
+	display:inline-block;
+	overflow:hidden;
+	display:none;
+	height:30px;
+}
+
+.boutonValideCommentaireEval, .boutonAnnuleCommentaireEval
+{
+	cursor:pointer;
+	display:inline-block;
+	vertical-align:middle;
+	margin:0px;
+	-webkit-filter: drop-shadow(3px 3px 3px #777799);
+	filter: drop-shadow(3px 3px 3px #777799);
+}
+
+.boutonValideCommentaireEval:hover, .boutonAnnuleCommentaireEval:hover
+{
+	margin-top:3px;
+	margin-left:3px;
+	margin-bottom:-3px;
+	margin-right:-3px;
+	-webkit-filter: drop-shadow(1px 1px 1px #555577);
+	filter: drop-shadow(1px 1px 1px #555577);
+}
+
+
+/***************************
+COMMENTAIRES
+***************************/
+
+#dialog-commentaireEvaluation p
+{
+	text-align:center;
+}
+
+#dialog-commentaireEvaluation .commentairesListeContextes
+{
+	display:none;	
+}
+
+#dialog-commentaireEvaluation .commentairesContexte
+{
+	background-color:gray;
+	font-weight:bold;
+	border-radius:5px;
+	box-shadow: 4px 4px 6px #555;
+	padding:4px;
+	color:white;
+	text-align:center;
+}
+
+#dialog-commentaireEvaluation .commentairesDate
+{
+	font-size:small;
+	color:#FF9999;
+}
+
+#dialog-commentaireEvaluation .commentairesListeCommentaires
+{
+	margin-top:10px;
+	margin-bottom:10px;
+	padding-left:20px;
 }

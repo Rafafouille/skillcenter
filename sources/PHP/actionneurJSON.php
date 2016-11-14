@@ -310,7 +310,7 @@ if($action=="delUser")
 
 
 // =====================================================
-// NOTATION
+// BILAN
 // =====================================================
 if($action=="getListeEleves")
 {
@@ -412,7 +412,10 @@ if($action=="getNotationEleves")
 				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveMax"]=-1;//Par defaut
 				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveMoy"]=-1;//Par defaut
 				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveLast"]=-1;//Par defaut
-
+				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["commentaires"]=false;//Dit si il y a des commentaires ou non
+				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["selected"]=true;
+				
+				//Note max
 				$reqNote = $bdd->prepare("SELECT MAX(note) as max FROM ".$BDD_PREFIXE."notation WHERE eleve=:eleve AND indicateur=".$idInd);
 				$reqNote->execute(array('eleve'=>$eleve));
 				if($donneesNote=$reqNote->fetch())
@@ -420,6 +423,7 @@ if($action=="getNotationEleves")
 					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveMax"]=$donneesNote["max"];
 					}
 
+				//Note moyenne
 				$reqNote = $bdd->prepare("SELECT AVG(note) as moy FROM ".$BDD_PREFIXE."notation WHERE eleve=:eleve AND indicateur=".$idInd);
 				$reqNote->execute(array('eleve'=>$eleve));
 				if($donneesNote=$reqNote->fetch())
@@ -427,13 +431,20 @@ if($action=="getNotationEleves")
 					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveMoy"]=$donneesNote["moy"];
 					}
 
+				//Derniere note
 				$reqNote = $bdd->prepare("SELECT note as last FROM ".$BDD_PREFIXE."notation WHERE eleve=:eleve AND indicateur=".$idInd." ORDER BY date DESC LIMIT 1");
 				$reqNote->execute(array('eleve'=>$eleve));
 				if($donneesNote=$reqNote->fetch())
 					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveLast"]=$donneesNote["last"];
 
-
-			$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["selected"]=true;
+				//Commentaires ou non ?
+				if($AUTORISE_COMMENTAIRES)
+				{
+					$reqCom = $bdd->prepare("SELECT id FROM ".$BDD_PREFIXE."notation WHERE eleve=:eleve AND indicateur=".$idInd." AND commentaire<>\"\" LIMIT 1");
+					$reqCom->execute(array('eleve'=>$eleve));
+					if($donneesCom=$reqCom->fetch())
+						$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["commentaires"]=true;
+				}
 			}	
 
 			$reponseJSON["messageRetour"]=":)Evaluation récupérées.";
@@ -448,8 +459,46 @@ if($action=="getNotationEleves")
 }
 
 
-
-
+//OBTIENT LA NOTATION DES ELEVES=================
+if($action=="getComments")
+{
+	if($AUTORISE_COMMENTAIRES)
+	{
+		$idInd=0;
+			if(isset($_POST['idInd'])) $idInd=intval($_POST['idInd']);
+		$idEleve=$_SESSION['id'];//Par defaut, on prendra les comments de l'utilisateur
+			if(isset($_POST['idEleve']) && ($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur"))	$idEleve=intval($_POST['idEleve']);//...mais si on envoit un élève et qu'on est examinateur
+		if($idInd)
+		{
+			if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur" || $_SESSION['statut']=="autoeval" && $_SESSION['id']==$idEleve)
+			{
+				connectToBDD();
+				$req= $bdd->prepare('SELECT id,date,contexte,commentaire FROM '.$BDD_PREFIXE.'notation WHERE eleve=:idEleve AND indicateur=:idInd AND commentaire<>"" ORDER BY contexte');
+				$req->execute(array(	'idInd'=>$idInd,
+							'idEleve'=>$idEleve
+							));
+				while($donnees=$req->fetch())
+				{
+					$contexte=$donnees['contexte'];
+					$idEval=intval($donnees['id']);
+					$commentaire=$donnees['commentaire'];
+					$date=date_format(date_create($donnees['date']),'d/m/y H:i');
+					$reponseJSON['commentaires'][$contexte][$idEval]["texte"]=$commentaire;
+					$reponseJSON['commentaires'][$contexte][$idEval]["date"]=$date;
+				}
+				$reponseJSON['debug']=$idEleve;
+				$reponseJSON["messageRetour"]=":)Les commentaires ont bien été récupérés.";
+			}
+			else		
+				$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de voir ces commentaires.";
+		}
+		else
+			$reponseJSON["messageRetour"]=":(Aucune évaluation demandée pour le commentaire.";
+	}
+	else
+	$reponseJSON["messageRetour"]=":(La fonction 'Commentaires' est désactivée.";
+	
+}
 
 // Action qui ajoute une nouvelle note **************************************
 if($action=="newNote")
@@ -469,10 +518,10 @@ if($action=="newNote")
 		connectToBDD();
 		$req = $bdd->prepare('INSERT INTO '.$BDD_PREFIXE.'notation (note,date,eleve,indicateur,examinateur) VALUES(:note,NOW(),:eleve,:indicateur,'.$_SESSION['id'].')');
 		$req->execute(array(
-						'note' => $note,
-						'eleve' => $eleve,
-						'indicateur' => $indicateur
-					));
+				'note' => $note,
+				'eleve' => $eleve,
+				'indicateur' => $indicateur
+				));
 			
 
 		
@@ -515,7 +564,50 @@ if($action=="newNote")
 	}
 }
 
+// Action qui ajoute une nouvelle note **************************************
 
+if($action=="addCommentaireEval")
+{
+	if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur" || $_SESSION['statut']=="autoeval" && $_SESSION['id']==$eleve)
+	{
+		$idEval=0;
+		if(isset($_POST['idEval'])) $idEval=intval($_POST['idEval']);
+
+		if($idEval)
+		{
+			$contexte="";
+			if(isset($_POST['contexte'])) $contexte=$_POST['contexte'];
+			$commentaire="";
+			if(isset($_POST['commentaire'])) $commentaire=$_POST['commentaire'];
+
+			connectToBDD();
+			$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'notation SET contexte=:contexte, commentaire=:commentaire WHERE id=:idEval');
+			$req->execute(array(
+					'idEval' => $idEval,
+					'contexte' => $contexte,
+					'commentaire' => $commentaire
+					));
+
+			$req = $bdd->prepare('SELECT * FROM '.$BDD_PREFIXE.'notation WHERE id=:idEval');
+			$req->execute(array(
+					'idEval' => $idEval
+					));
+			if($donnees=$req->fetch())
+			{
+				$reponseJSON["evaluation"]["id"]=$idEval;
+				$reponseJSON["evaluation"]["eval"]=$donnees['note'];
+				$reponseJSON["evaluation"]["indicateur"]=$donnees['indicateur'];
+				$reponseJSON["messageRetour"]=":)Commentaire ajouté.";
+			}
+			else
+				$reponseJSON["messageRetour"]=":(Aucune évaluation associée au commentaire.";
+		}
+		else
+			$reponseJSON["messageRetour"]=":(Aucune évaluation choisie pour le commentaire.";
+	}
+	else
+		$reponseJSON["messageRetour"]=":(Vous ne pouvez pas ajouter de commentaires à une évaluation.";
+}
 
 
 // =====================================================

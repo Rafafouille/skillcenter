@@ -43,7 +43,10 @@
 		include_once("./sources/PHP/BOITES_parametres.php");
 	
 	if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur" || $_SESSION['statut']=="autoeval")
+	{
 		include_once("./sources/PHP/BOITES_historique.php");
+		include_once("./sources/PHP/BOITES_bilan.php");
+	}
 
 	?>	
 		

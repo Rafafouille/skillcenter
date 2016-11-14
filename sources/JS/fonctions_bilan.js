@@ -79,12 +79,25 @@ function NOTATION_ajouteIndicateur(indicateur,conteneur)
 
 
 	var rendu=""+
-"								<tr class=\"indicateur\" id=\"NOTATION_indicateur_"+indicateur.id+"\" >"+
+"								<tr class=\"indicateur\" id=\"NOTATION_indicateur_"+indicateur.id+"\" data-id=\""+indicateur.id+"\">"+
 "									<td class=\"intituleIndicateur\">"+
-"										"+numeroCompetence+"."+numeroIndicateur+" - "+indicateur.nom+
+"										<div class=\"titreIndicateur\"  nowrap=\"nowrap\">"+
+"											"+numeroCompetence+"."+numeroIndicateur+" - "+indicateur.nom+
+"										</div>"+
+"										<div class=\"commentaireIndicateur\">"+
+"											<form data-ideval=\"0\">"+
+"												<img class=\"boutonValideCommentaireEval\" alt=\"[V]\" src=\"./sources/images/valide.png\" onclick=\"valideCommentaireEval("+indicateur.id+");\"/>"+
+"												<img class=\"boutonAnnuleCommentaireEval\" alt=\"[X]\" src=\"./sources/images/invalide.png\" onclick=\"bilanFermeCommentaire("+indicateur.id+");\"/>"+
+(AUTORISE_CONTEXT?"												<input type=\"text\" class=\"commentaireIndicateur-contexte\" name=\"commentaireIndicateur-contexte\" placeholder=\"Contexte (ex : TP1)\" size=\"15\"/>":"")+
+(AUTORISE_COMMENTAIRES?"												<input type=\"text\" class=\"commentaireIndicateur-commentaire"+(!AUTORISE_COMMENTAIRES?"-invisible":"")+"\" name=\"commentaireIndicateur-commentaire\" placeholder=\"Commentaire (ex : N'a pas posé les hypothèses)\" size=\"38\"/>":"")+
+"											</form>"+
+"										</div>"+
 "									</td>"+
 "									<td class=\"boutonsIndicateur\">";
-
+	if(indicateur.commentaires)	{rendu+=""+
+"										<img src=\"./sources/images/icone-comment.png\" alt=\"[c]\" style=\"cursor:pointer;\" title=\"Commentaires d'évaluation\" onclick=\"ouvreBoiteCommentairesBilan("+indicateur.id+")\"/>";}
+		else			 {rendu+=""+
+"										<img style=\"visibility:hidden\" src=\"./sources/images/icone-comment.png\"/>";}
 	if(indicateur.lien=="")	{rendu+=""+
 "										<img style=\"visibility:hidden\" src=\"./sources/images/icone-internet.png\"/>";}
 		else				{rendu+=""+
@@ -165,3 +178,31 @@ function NOTATION_getNiveauxIndicateur(val,maxi,indicateur, clickable,degrade)
 	}
 	return rendu;
 }
+
+
+
+// Fonction qui ouvre la ligne de commentaire
+bilanOuvreCommentaire=function(idInd,idEval)
+{
+	if(AUTORISE_CONTEXT || AUTORISE_COMMENTAIRES)
+	{
+		//Update idEval
+		$("#NOTATION_indicateur_"+idInd+" .commentaireIndicateur form").attr("data-ideval",idEval);
+		//Animation
+		$("#NOTATION_indicateur_"+idInd+" .titreIndicateur").hide("slide",{direction: "left" }, 500);
+		setTimeout(function(){$("#NOTATION_indicateur_"+idInd+" .commentaireIndicateur").show("slide", { direction: "right" }, 500);},510);
+	}
+}
+
+// Fonction qui ouvre la ligne de commentaire
+bilanFermeCommentaire=function(idInd)
+{
+	//Update idEval
+	$("#NOTATION_indicateur_"+idInd+" .commentaireIndicateur form").attr("data-ideval",0);
+	//Animation
+	$("#NOTATION_indicateur_"+idInd+" .commentaireIndicateur").hide("slide", { direction: "left" }, 500);
+	setTimeout(function(){	$("#NOTATION_indicateur_"+idInd+" .titreIndicateur").show("slide", { direction: "right" }, 500 );},510);
+}
+
+
+

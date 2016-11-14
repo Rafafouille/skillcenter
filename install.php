@@ -36,6 +36,9 @@ if(isset($_POST['input_NOM_NIVEAU_1-0']))	//Recupere les noms de niveaux
 	}
 }
 
+if(isset($_POST['AUTORISE_CONTEXT']))		$_SESSION['AUTORISE_CONTEXT']=$_POST['AUTORISE_CONTEXT']=="oui";
+if(isset($_POST['AUTORISE_COMMENTAIRES']))	$_SESSION['AUTORISE_COMMENTAIRES']=$_POST['AUTORISE_COMMENTAIRES']=="oui";
+
 if(isset($_POST['AUTORISE_BADGES']))	$_SESSION['AUTORISE_BADGES']=$_POST['AUTORISE_BADGES']=="oui";
 if(isset($_POST['AUTORISE_GRAPHIQUES']))	$_SESSION['AUTORISE_GRAPHIQUES']=$_POST['AUTORISE_GRAPHIQUES']=="oui";
 
@@ -187,6 +190,8 @@ if($etape=="sauvOptions")
 	$NB_NIVEAUX_MAX=5;		//Nombre de niveau max possible à donner aux élèves
 	$NIVEAU_DEFAUT=4;		//Niveau par défaut quand on crée un critères
 	$INTITULES_NIVEAUX_CRITERES=Array();	//Noms des niveaux
+	$AUTORISE_CONTEXT=true;			//Autorise de mettre un context aux évaluations
+	$AUTORISE_COMMENTAIRES=true;		//Autorise de mettre des commentaires aux évaluations
 
 	$AUTORISE_BADGES=true;	//Utilise les badges ou non
 	$AUTORISE_GRAPHIQUES=true;	//Utilise les graphiques dans home ou non
@@ -237,8 +242,10 @@ if($etape=="sauvOptions")
 	$_SESSION['BDD_PREFIXE']=$BDD_PREFIXE;		//Préfixe de toute les tables de la BDD
 
 	$_SESSION['NB_NIVEAUX']=$NB_NIVEAUX_MAX;		//Nombre de niveau max possible à donner aux élèvess
-	$_SESSION['NIVEAU_DEFAUT']=$NIVEAU_DEFAUT;
-	$_SESSION['NOMS_NIVEAUX']=$INTITULES_NIVEAUX_CRITERES;
+	$_SESSION['NIVEAU_DEFAUT']=$NIVEAU_DEFAUT;		//Niveau par défaut
+	$_SESSION['NOMS_NIVEAUX']=$INTITULES_NIVEAUX_CRITERES;	//Nom des niveaux
+	$_SESSION['AUTORISE_CONTEXT']=$AUTORISE_CONTEXT;		//Permet de mettre un context
+	$_SESSION['AUTORISE_COMMENTAIRES']=$AUTORISE_COMMENTAIRES;	//Permet de mettre des commentaires
 
 	$_SESSION['AUTORISE_BADGES']=$AUTORISE_BADGES;
 	$_SESSION['AUTORISE_GRAPHIQUES']=$AUTORISE_GRAPHIQUES;
@@ -472,6 +479,9 @@ if($etape=="rentreNotation")
 			de nouvelles compétences.
 
 			<form method="POST" action="" id="formRentreNotation">
+
+				<h3>Niveaux d'évaluation</h3>
+
 				<table>
 					<tr>
 						<td><label for="input_NB_NIVEAUX">Nombre de niveaux maximum pour chaque critère <span title="Il s'agit du nombre maximum de niveaux qui seront proposés lors de la création d'un nouveau critère." alt="[i]"/></span> :</label></td>
@@ -485,6 +495,32 @@ if($etape=="rentreNotation")
 						<td><label for="input_NIVEAU_DEFAUT">Niveau par défaut pour un critère <span title="Il s'agit du niveau maximum par défaut proposé lors de la création d''une compétence."><img src="./sources/images/icone-info.png" alt="[i]"/></span> :</label></td>
 						<td><input type="number" min="1" step="1" placeholder="Nombre supérieur à 0" id="input_NIVEAU_DEFAUT" name="NIVEAU_DEFAUT" value="<?php echo $_SESSION['NIVEAU_DEFAUT'];?>"/></td>
 					</tr>
+				</table>
+
+				<h3>Commentaires/Context des évaluations</h3>
+
+				<table>
+					<tr>
+						<td><label for="input_AUTORISE_CONTEXT">Context <span title="Permet à l'évaluateur d'ajouter un context à l'évaluation (exemple : DS, TD, TPn°1, etc.)."><img src="./sources/images/icone-info.png" alt="[i]"/></span> :</label></td>
+						<td><select id="input_AUTORISE_CONTEXT" name="AUTORISE_CONTEXT">
+									<option value="oui" <?php if($_SESSION['AUTORISE_CONTEXT']) echo "selected";?>>Oui</options>
+									<option value="non" <?php if(!$_SESSION['AUTORISE_CONTEXT']) echo "selected";?>>Non</options>
+								</select>
+						</td>
+					</tr>
+					<tr>
+						<td><label for="input_AUTORISE_COMMENTAIRES">Commentaires <span title="Permet à l'évaluateur de mettre un commentaire lors d'une évaluation. Les commentaires seront accessibles par l'étudiant."><img src="./sources/images/icone-info.png" alt="[i]"/></span> :</label></td>
+						<td><select id="input_AUTORISE_COMMENTAIRES" name="AUTORISE_COMMENTAIRES">
+									<option value="oui" <?php if($_SESSION['AUTORISE_COMMENTAIRES']) echo "selected";?>>Oui</options>
+									<option value="non" <?php if(!$_SESSION['AUTORISE_COMMENTAIRES']) echo "selected";?>>Non</options>
+								</select>
+						</td>
+					</tr>
+				</table>
+	
+				<h3>Bilan général</h3>
+
+				<table>
 					<tr>
 						<td><label for="input_AUTORISE_BADGES">Autorise l'acquisition des badges <span title="Les 'badges' sont des récompenses acquises par l'élève lorsque certaines actions sont réalisée (comme 'atteindre un certain nombre de compétences...')"><img src="./sources/images/icone-info.png" alt="[i]"/></span> :</label></td>
 						<td><select id="input_AUTORISE_BADGES" name="AUTORISE_BADGES">
@@ -545,7 +581,7 @@ if($etape=="ecritFichier")
 \$BDD_MOT_DE_PASSE=\"".$_SESSION['BDD_MOT_DE_PASSE']."\";	//Mot de passe associé au nom d'utilisateur
 \$BDD_PREFIXE=\"".$_SESSION['BDD_PREFIXE']."\";		//Préfixe à donner aux tables de la BDD
 
-//Paramètre des niveaux des critères ********
+//Paramètre sur l'évaluation ********
 \$NB_NIVEAUX_MAX=".$_SESSION['NB_NIVEAUX'].";		//Nombre de niveaux maximums qu'un critère pourra prendre
 \$NIVEAU_DEFAUT=".$_SESSION['NIVEAU_DEFAUT'].";		//Niveau max initialement proposé lors de la création d'un critère
 //Noms des criteres :
@@ -565,16 +601,9 @@ if($etape=="ecritFichier")
 	}
 $contenu.=");\n";
 
-/*for($i=1;$i<=$_SESSION['NB_NIVEAUX'];$i++)
-{
-	$contenu.="//     Critere de niveau max : ".$i."\n";
-	for($j=0;$j<=$i;$j++)
-	{
-		$contenu.="       \$INTITULE_NIVEAU_".$i."_".$j."=\"".$_SESSION['NOMS_NIVEAUX'][$i][$j]."\";\n";
-	}
-}*/
+$contenu.="\$AUTORISE_CONTEXT=".($_SESSION['AUTORISE_CONTEXT']?"true":"false").";		//Autorise (ou non) de mettre des contextes sur chaque évaluations (TD, TP, etc.)
+\$AUTORISE_COMMENTAIRES=".($_SESSION['AUTORISE_COMMENTAIRES']?"true":"false").";	//Autorise (ou non) de mettre des commentaires sur chaque évaluations.
 
-$contenu.="
 //Autres ************************************
 \$AUTORISE_BADGES=".($_SESSION['AUTORISE_BADGES']?"true":"false").";		//Autorise (ou non) les étudiants à recevoir des badges de validation
 \$AUTORISE_GRAPHIQUES=".($_SESSION['AUTORISE_GRAPHIQUES']?"true":"false").";		//Autorise (ou non) à afficher les graphiques sur la page d'accueil
@@ -824,6 +853,8 @@ creeTable("notation","id");
 	creeAttribut("notation","eleve","MEDIUMINT UNSIGNED DEFAULT 0");
 	creeAttribut("notation","indicateur","MEDIUMINT UNSIGNED DEFAULT 0");
 	creeAttribut("notation","examinateur","MEDIUMINT UNSIGNED DEFAULT 0");
+	creeAttribut("notation","contexte","TEXT NOT NULL");
+	creeAttribut("notation","commentaire","TEXT NOT NULL");
 	
 creeTable("utilisateurs","id");
 	creeAttribut("utilisateurs","id","MEDIUMINT UNSIGNED AUTO_INCREMENT PRIMARY KEY");

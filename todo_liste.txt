@@ -11,4 +11,3 @@
 - Faire le ménage dans les notes quand on baisse le nombre de niveau d'un critère
 - Ajouter la possibilité de mettre des commentaires à la notation
 - Le message réponse de retour de JSON devrait avoir cette structure : [message, valide ou pas, affiche message ou pas (public ou debug)]
-- Mettre un bouton "eleve suivant"

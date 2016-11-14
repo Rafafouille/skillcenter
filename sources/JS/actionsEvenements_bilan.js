@@ -103,12 +103,24 @@ donneNote=function(note,eleve,indicateur)
 //Met à jour l'affichge des notes d'un élève (recu par ajax)
 valideNouvelleNote=function(reponse)
 {
-	a=reponse;
 	afficheMessage(reponse.messageRetour);
 
 	//MAJ de l'arc en ciel
 	var html_barre_arc_en_ciel=NOTATION_getNiveauxIndicateur(reponse.note.max,reponse.note.niveauMax,reponse.note.idIndicateur,true);
 	$("#NOTATION_indicateur_"+reponse.note.idIndicateur+" .niveauxIndicateur").html(html_barre_arc_en_ciel);
+
+
+	//Ouverture des commentaires
+	if(AUTORISE_CONTEXT || AUTORISE_COMMENTAIRES) //Si les commentaires sont autorisés
+	{
+		var idIndicateur=reponse.note.idIndicateur;
+		var idEval=reponse.notation.id;
+		$(".commentaireIndicateur:visible").each(function(index,element)//Fermeture des bilan deja ouverts
+					{var i=parseInt($(this).parent().parent().attr("data-id"));
+					bilanFermeCommentaire(i)})
+		bilanOuvreCommentaire(idIndicateur,idEval);//Ouverture
+	}
+
 
 	//Ajout dans l'historique
 	var contenu="\n"+
@@ -126,5 +138,89 @@ valideNouvelleNote=function(reponse)
 	$("#liste_historique").prepend(contenu);
 }
 
+//Fonction qui envoie les commentaires d'une évaluation fraichement donnée
+valideCommentaireEval=function(idInd)
+{
 
+	var idEval=parseInt($("#NOTATION_indicateur_"+idInd).find(".commentaireIndicateur").find("form").attr('data-ideval'));
+	var contexte=$("#NOTATION_indicateur_"+idInd).find(".commentaireIndicateur").find(".commentaireIndicateur-contexte").val();
+	var commentaire=$("#NOTATION_indicateur_"+idInd).find(".commentaireIndicateur").find(".commentaireIndicateur-commentaire").val();
+
+	$.post(
+		'./sources/PHP/actionneurJSON.php',//Requete appelée
+		{	//Les données à passer par POST
+			action:"addCommentaireEval",
+			idEval:idEval,
+			contexte:contexte,
+			commentaire:commentaire
+		},
+		valideCommentaireEval_callback,	//Fonction callback
+		"json"	//Type de réponse
+	);
+}
+
+valideCommentaireEval_callback=function(reponse)
+{
+	afficheMessage(reponse.messageRetour);
+	var idIndicateur=reponse.evaluation.indicateur;
+	bilanFermeCommentaire(idIndicateur);
+}
  
+
+
+
+/* *****************************
+COMMENTAIRES
+*********************************** */
+
+//Ouvre la boite pour LIRE les commentaires =====================
+ouvreBoiteCommentairesBilan=function(idInd)
+{
+
+	idEleve=parseInt($("#notationListeEleves").val());//On prend le n° de l'eleve choisi dans la liste
+	if(idEleve==undefined)idEleve=-1;	//S'il n'y a pas de liste c'est que c'est l'eleve. Dans ce cas, on ne passe pas le n°Id (-1 par defaut)
+
+	$("#dialog-commentaireEvaluation .commentairesListeContextes").empty();
+	$("#dialog-commentaireEvaluation .commentairesListeContextes").css("display","none");
+	$("#dialog-commentaireEvaluation p").css("display","block");
+	$("#dialog-commentaireEvaluation").dialog( "open" );
+	$.post(
+		'./sources/PHP/actionneurJSON.php',//Requete appelée
+		{	//Les données à passer par POST
+			action:"getComments",
+			idInd:idInd,
+			idEleve:idEleve
+		},
+		updateBoiteCommentBilan_callback,	//Fonction callback
+		"json"	//Type de réponse
+	);
+}
+
+//Fonction callback qui affiche les commentaires dans la boite de commentaire.==============
+updateBoiteCommentBilan_callback=function(reponse)
+{
+	var commentaires=reponse['commentaires'];
+	for(var context in commentaires)
+	{
+		if(context!="")//S'il y a un context
+			$("#dialog-commentaireEvaluation .commentairesListeContextes").append("<div class=\"commentairesContexte\">"+context+"</div>");//On affiche le titre. (sinon, non)
+		var comSTR="<div class=\"commentairesListeCommentaires\">";//Liste des commentaires pour un contexte donné
+		for(var idCom in commentaires[context])
+		{
+			comSTR+="<div class=\"commentairesCom\"><span class=\"commentairesDate\">["+commentaires[context][idCom]['date']+"]</span> "+commentaires[context][idCom]['texte']+"</div>";
+		}
+		comSTR+="</div>";
+			$("#dialog-commentaireEvaluation .commentairesListeContextes").append(comSTR);
+	}
+	$("#dialog-commentaireEvaluation p").css("display","none");
+	$("#dialog-commentaireEvaluation .commentairesListeContextes").css("display","block");
+}
+
+//Fonction qui referme la boite de commentaires =====================
+fermerFenetreCommenairesBilan=function()
+{
+	$("#dialog-commentaireEvaluation").dialog( "close" );
+	$("#dialog-commentaireEvaluation .commentairesListeContextes").empty();
+	$("#dialog-commentaireEvaluation .commentairesListeContextes").css("display","none");
+	$("#dialog-commentaireEvaluation p").css("display","block");
+}

@@ -40,7 +40,7 @@ include("./sources/PHP/actions.php");
 		if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur" || $_SESSION['statut']=="autoeval") { ?>
 		<link rel="stylesheet" href="./sources/style/styleHistorique.css" />
 		<?php } ?>
-		<link rel="stylesheet" href="./sources/style/styleCompetences.css" />
+		<link rel="stylesheet" href="./sources/style/styleParametres.css" />
 		<link rel="stylesheet" href="./sources/style/styleHome.css" />
 		<link rel="stylesheet" href="./sources/style/styleBilan.css" />
 		
@@ -63,8 +63,8 @@ include("./sources/PHP/actions.php");
 
 
 		<?php if($_SESSION["id"]>0) { //Si connecté ?>
-		<script type="text/javascript" src="./sources/JS/fonctions_notation.js"></script>
-		<script type="text/javascript" src="./sources/JS/actionsEvenements_notation.js"></script>
+		<script type="text/javascript" src="./sources/JS/fonctions_bilan.js"></script>
+		<script type="text/javascript" src="./sources/JS/actionsEvenements_bilan.js"></script>
 		<script type="text/javascript" src="./sources/JS/fonctions_home.js"></script>
 		<?php }
 
@@ -106,7 +106,9 @@ include("./sources/PHP/actions.php");
 								if($i!=$NB_NIVEAUX_MAX)
 									echo ",";
 						}
- ?>]
+ ?>];
+			AUTORISE_CONTEXT=<?php if($AUTORISE_CONTEXT) echo "true"; else echo "false";?>;
+			AUTORISE_COMMENTAIRES=<?php if($AUTORISE_COMMENTAIRES) echo "true"; else echo "false";?>;
 		</script>
     </head>
 
