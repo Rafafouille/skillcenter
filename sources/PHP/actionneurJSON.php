@@ -467,10 +467,11 @@ if($action=="getComments")
 		$idInd=0;
 			if(isset($_POST['idInd'])) $idInd=intval($_POST['idInd']);
 		$idEleve=$_SESSION['id'];//Par defaut, on prendra les comments de l'utilisateur
-			if(isset($_POST['idEleve']) && ($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur"))	$idEleve=intval($_POST['idEleve']);//...mais si on envoit un élève et qu'on est examinateur
+			if(isset($_POST['idEleve']) && ($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur"))
+				$idEleve=intval($_POST['idEleve']);//...mais si on envoit un élève et qu'on est examinateur
 		if($idInd)
 		{
-			if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur" || $_SESSION['statut']=="autoeval" && $_SESSION['id']==$idEleve)
+			if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur" || $_SESSION['id']==$idEleve)
 			{
 				connectToBDD();
 				$req= $bdd->prepare('SELECT id,date,contexte,commentaire FROM '.$BDD_PREFIXE.'notation WHERE eleve=:idEleve AND indicateur=:idInd AND commentaire<>"" ORDER BY contexte');
@@ -564,49 +565,69 @@ if($action=="newNote")
 	}
 }
 
-// Action qui ajoute une nouvelle note **************************************
+// Action qui ajoute un commentaire à une note **************************************
 
 if($action=="addCommentaireEval")
 {
-	if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur" || $_SESSION['statut']=="autoeval" && $_SESSION['id']==$eleve)
-	{
-		$idEval=0;
+	$idEval=0;
 		if(isset($_POST['idEval'])) $idEval=intval($_POST['idEval']);
 
-		if($idEval)
-		{
-			$contexte="";
-			if(isset($_POST['contexte'])) $contexte=$_POST['contexte'];
-			$commentaire="";
-			if(isset($_POST['commentaire'])) $commentaire=$_POST['commentaire'];
-
-			connectToBDD();
-			$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'notation SET contexte=:contexte, commentaire=:commentaire WHERE id=:idEval');
-			$req->execute(array(
-					'idEval' => $idEval,
-					'contexte' => $contexte,
-					'commentaire' => $commentaire
-					));
-
-			$req = $bdd->prepare('SELECT * FROM '.$BDD_PREFIXE.'notation WHERE id=:idEval');
-			$req->execute(array(
+	if($idEval)//Si un numero d'evaluation a été envoyé
+	{
+		//Verifiction de l'éleve qui doit obtenir ce commnetaire (nécessaire de la vérifier s'il est en autoeval, ^par sécurité)
+		connectToBDD();
+		$req = $bdd->prepare('SELECT eleve FROM '.$BDD_PREFIXE.'notation WHERE id=:idEval');
+		$req->execute(array(
 					'idEval' => $idEval
 					));
-			if($donnees=$req->fetch())
-			{
-				$reponseJSON["evaluation"]["id"]=$idEval;
-				$reponseJSON["evaluation"]["eval"]=$donnees['note'];
-				$reponseJSON["evaluation"]["indicateur"]=$donnees['indicateur'];
-				$reponseJSON["messageRetour"]=":)Commentaire ajouté.";
-			}
-			else
-				$reponseJSON["messageRetour"]=":(Aucune évaluation associée au commentaire.";
+		$idEleve=0;
+		if($donnees=$req->fetch())
+			$idEleve=$donnees['eleve'];//On recupere le n° de l'eleve concerne par l'evaluation
+		
+		
+		if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur" || $_SESSION['statut']=="autoeval" && $_SESSION['id']==$idEleve)
+		{
+			$idEval=0;
+			if(isset($_POST['idEval'])) $idEval=intval($_POST['idEval']);
+
+
+				$contexte="";
+				if(isset($_POST['contexte'])) $contexte=$_POST['contexte'];
+				$commentaire="";
+				if(isset($_POST['commentaire'])) $commentaire=$_POST['commentaire'];
+
+				connectToBDD();
+				$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'notation SET contexte=:contexte, commentaire=:commentaire WHERE id=:idEval');
+				$req->execute(array(
+						'idEval' => $idEval,
+						'contexte' => $contexte,
+						'commentaire' => $commentaire
+						));
+						
+				
+				$reponseJSON["commentaire"]["contexte"]=$contexte;
+				$reponseJSON["commentaire"]["commentaire"]=$commentaire;
+						
+
+				$req = $bdd->prepare('SELECT * FROM '.$BDD_PREFIXE.'notation WHERE id=:idEval');
+				$req->execute(array(
+						'idEval' => $idEval
+						));
+				if($donnees=$req->fetch())
+				{
+					$reponseJSON["evaluation"]["id"]=$idEval;
+					$reponseJSON["evaluation"]["eval"]=$donnees['note'];
+					$reponseJSON["evaluation"]["indicateur"]=$donnees['indicateur'];
+					$reponseJSON["messageRetour"]=":)Commentaire ajouté.";
+				}
+				else
+					$reponseJSON["messageRetour"]=":(Aucune évaluation associée au commentaire.";
 		}
 		else
-			$reponseJSON["messageRetour"]=":(Aucune évaluation choisie pour le commentaire.";
+			$reponseJSON["messageRetour"]=":(Vous ne pouvez pas ajouter de commentaires à une évaluation.";
 	}
 	else
-		$reponseJSON["messageRetour"]=":(Vous ne pouvez pas ajouter de commentaires à une évaluation.";
+		$reponseJSON["messageRetour"]=":(Aucune évaluation choisie pour le commentaire.";
 }
 
 

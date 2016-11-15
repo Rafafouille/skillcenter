@@ -45,10 +45,10 @@
 	if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur" || $_SESSION['statut']=="autoeval")
 	{
 		include_once("./sources/PHP/BOITES_historique.php");
-		include_once("./sources/PHP/BOITES_bilan.php");
 	}
-
-	?>	
+	if($_SESSION['id']>0)//Si connecté
+		include_once("./sources/PHP/BOITES_bilan.php");
+?>	
 		
 
 	

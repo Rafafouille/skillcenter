@@ -162,7 +162,9 @@ valideCommentaireEval=function(idInd)
 valideCommentaireEval_callback=function(reponse)
 {
 	afficheMessage(reponse.messageRetour);
-	var idIndicateur=reponse.evaluation.indicateur;
+	var idIndicateur=reponse.evaluation.indicateur;//Recupere le numero de l'indicateur
+	if(reponse.commentaire.commentaire!="")
+		$("#NOTATION_indicateur_"+idIndicateur+" .boutonCommentaires").css("visibility","visible");//Affiche la bulle, si elle n'est pas visible
 	bilanFermeCommentaire(idIndicateur);
 }
  
@@ -176,7 +178,6 @@ COMMENTAIRES
 //Ouvre la boite pour LIRE les commentaires =====================
 ouvreBoiteCommentairesBilan=function(idInd)
 {
-
 	idEleve=parseInt($("#notationListeEleves").val());//On prend le n° de l'eleve choisi dans la liste
 	if(idEleve==undefined)idEleve=-1;	//S'il n'y a pas de liste c'est que c'est l'eleve. Dans ce cas, on ne passe pas le n°Id (-1 par defaut)
 

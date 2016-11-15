@@ -93,11 +93,9 @@ function NOTATION_ajouteIndicateur(indicateur,conteneur)
 "											</form>"+
 "										</div>"+
 "									</td>"+
-"									<td class=\"boutonsIndicateur\">";
-	if(indicateur.commentaires)	{rendu+=""+
-"										<img src=\"./sources/images/icone-comment.png\" alt=\"[c]\" style=\"cursor:pointer;\" title=\"Commentaires d'évaluation\" onclick=\"ouvreBoiteCommentairesBilan("+indicateur.id+")\"/>";}
-		else			 {rendu+=""+
-"										<img style=\"visibility:hidden\" src=\"./sources/images/icone-comment.png\"/>";}
+"									<td class=\"boutonsIndicateur\">"+
+"										<img class=\"boutonCommentaires\" src=\"./sources/images/icone-comment.png\" alt=\"[c]\" style=\""+(indicateur.commentaires==""?"visibility:hidden;":"")+"cursor:pointer;\" title=\"Commentaires d'évaluation\" onclick=\"ouvreBoiteCommentairesBilan("+indicateur.id+")\"/>";
+
 	if(indicateur.lien=="")	{rendu+=""+
 "										<img style=\"visibility:hidden\" src=\"./sources/images/icone-internet.png\"/>";}
 		else				{rendu+=""+
