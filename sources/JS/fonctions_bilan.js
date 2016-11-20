@@ -99,7 +99,7 @@ function NOTATION_ajouteIndicateur(indicateur,conteneur)
 	if(indicateur.lien=="")	{rendu+=""+
 "										<img style=\"visibility:hidden\" src=\"./sources/images/icone-internet.png\"/>";}
 		else				{rendu+=""+
-"										<a href=\""+indicateur.lien+"\"><img src=\"./sources/images/icone-internet.png\" alt=\"[i]\"  style=\"cursor:pointer;\" title=\"Lien vers ressources : "+indicateur.lien+"\"/></a>";}
+"										<a href=\""+indicateur.lien+"\" onclick=\"window.open(this.href);return false;\"><img src=\"./sources/images/icone-internet.png\" alt=\"[i]\"  style=\"cursor:pointer;\" title=\"Lien vers ressources : "+indicateur.lien+"\"/></a>";}
 	if(indicateur.details==""){rendu+=""+
 	"									<img style=\"visibility:hidden;\" src=\"./sources/images/icone-info.png\"/>";}
 		else				{rendu+=""+
