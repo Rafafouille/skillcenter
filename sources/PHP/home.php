@@ -75,7 +75,7 @@ traceGraphiqueRecap_Domaine("#radarDomaines",donneesDomaines,labelsDomaines);
 
 <?php
 // TRACAGE DES COMPETENCES ===================================
-$tableauCouleurs=['red','lime','blue','yellow','fuchsia','aqua','green','purple','silver','teal'];
+$tableauCouleurs=array('red','lime','blue','yellow','fuchsia','aqua','green','purple','silver','teal');
 $idCouleur=-1;
 
 $idCompetenceGraphique=1;
