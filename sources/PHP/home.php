@@ -25,12 +25,12 @@ else //Si connecté
 	<!-- Graphiques ------- -->
 	<div id="graphiquesHome">
 		<div id="HOME_graphiqueDomaines">
-			<h3>Bilan par domaines</h3>
+			<h3>Bilan par domaine</h3>
 			<canvas id="radarDomaines" width="400" height="400">
 			</canvas>
 		</div>
 		<div id="HOME_graphiquesCompetences">
-			<h3>Bilan par compétences</h3>
+			<h3>Bilan par compétence</h3>
 			<?php
 			foreach($listeBilanDomaines as &$dom)
 			{
