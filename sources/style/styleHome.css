@@ -6,24 +6,56 @@
 
 
 
+/*GRAPHIQUES ----- */
 
+/*Ensemble de tous les graphes*/
 #graphiquesHome
 {
 	text-align:center;
-}
-
-
-.graphe_competence
-{
-	text-align:center;
-	display:inline-block;
-	width:200px;
 }
 #graphiquesHome canvas
 {
 	margin:auto;
 	width:100%;
 }
+
+
+/*Graphe des domaines*/
+#HOME_graphiqueDomaines
+{
+	display:inline-block;
+	width:45%;
+	vertical-align:top;
+	text-align:center;
+	cursor:pointer;
+}
+
+
+/*Ensemble des graphes des compétences*/
+#HOME_graphiquesCompetences
+{
+	display:none;
+	width:45%;
+	vertical-align:top;
+}
+
+
+/*Chaque graphe de compétence*/
+.HOME_graphe_competence
+{
+	text-align:center;
+	display:inline-block;
+	/*width:600px;*/
+}
+
+
+
+
+
+
+
+
+/* BADGES =============================================*/
 
 #liste_badges
 {

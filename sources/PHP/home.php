@@ -19,24 +19,24 @@ else //Si connecté
 	//GRAPHIQUES ==================================================
 	if($AUTORISE_GRAPHIQUES && $_SESSION['statut']!="admin" && $_SESSION['statut']!="evaluateur" )	//Si on autorise d'afficher les graphiques
 	{
-		$listeBilanDomaines=getBilanDomaines();//Récupérer la liste des domaines
+		$listeBilanDomaines=getBilanDomaines();//Récupérer la liste des domaines (tableau avec l'id de chaque domaine dans lequel il y a un sous-tableau avec toutes les infos)
 ?>
 
 	<!-- Graphiques ------- -->
 	<div id="graphiquesHome">
-		<div style="display:inline-block;width:45%;vertical-align:top;text-align:center;"">
+		<div id="HOME_graphiqueDomaines">
 			<h3>Bilan par domaines</h3>
 			<canvas id="radarDomaines" width="400" height="400">
 			</canvas>
 		</div>
-		<div style="display:inline-block;width:45%;vertical-align:top;"">
+		<div id="HOME_graphiquesCompetences">
 			<h3>Bilan par compétences</h3>
 			<?php
-			foreach($listeBilanDomaines as $dom)
+			foreach($listeBilanDomaines as &$dom)
 			{
 				echo "
-			<div class=\"graphe_competence\">
-					<canvas style=\"display;inline-block;\" id=\"radarCompetences_Domaine_".$dom["id"]."\" width=\"200\" height=\"200\">
+			<div class=\"HOME_graphe_competence\" id=\"HOME_graphe_competences_Domaine_".$dom["id"]."\">
+					<canvas style=\"display;inline-block;\" id=\"radarCompetences_Domaine_".$dom["id"]."\" width=\"350\" height=\"350\">
 					</canvas>
 			</div>";
 			}
@@ -49,7 +49,7 @@ else //Si connecté
 
 var donneesDomaines=[<?php
 $first=true;
-foreach($listeBilanDomaines as &$dom)
+foreach($listeBilanDomaines as &$dom)//Construction des valeurs (ne pourcentage)
 {
 	if($first)	$first=false;
 	else	echo ",";
@@ -59,15 +59,40 @@ foreach($listeBilanDomaines as &$dom)
 
 var labelsDomaines=[<?php
 $first=true;
-foreach($listeBilanDomaines as &$dom)
+foreach($listeBilanDomaines as &$dom)	//Construction des labels
 {
 	if($first)	$first=false;
 	else	echo ",";
 	echo '"'.$dom['nom'].'"';
 }
 ?>];
+
+var idDomaines=[<?php
+$first=true;
+foreach($listeBilanDomaines as &$dom)	//Construction des labels
+{
+	if($first)	$first=false;
+	else	echo ",";
+	echo $dom['id'];
+}
+?>];//liste des id de domaines (permet de retrouver l'iD du domaine quand on clique sur le graphe)
  
-traceGraphiqueRecap_Domaine("#radarDomaines",donneesDomaines,labelsDomaines);
+graphiqueDomainesChartJS=traceGraphiqueRecap_Domaine("#radarDomaines",donneesDomaines,labelsDomaines,idDomaines);
+
+//Gestion des clicks
+document.getElementById("radarDomaines").onclick = function(evt){
+            var activePoints = graphiqueDomainesChartJS.getElementsAtEvent(evt);
+	          var firstPoint = activePoints[0];
+						if(firstPoint!=undefined)
+						{
+		          //var label = graphiqueDomainesChartJS.data.labels[firstPoint._index]; //Affiche le label
+		          //var value = graphiqueDomainesChartJS.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+							idDomaine=graphiqueDomainesChartJS.data.idDomaines[firstPoint._index];
+							ouvreGraphiqueCompetence(idDomaine);
+						}
+						else
+						fermeGraphiquesCompetences();
+        };
 
 
 

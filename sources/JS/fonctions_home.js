@@ -1,5 +1,6 @@
+
 //Fonction trace le graphique récapitulatif des domaines ******************************
-function traceGraphiqueRecap_Domaine(context_,donnees_,labels_)
+function traceGraphiqueRecap_Domaine(context_,donnees_,labels_,idDomaines_)
 {
 	var context=$(context_);//context jquery
 	var type="polarArea";
@@ -8,7 +9,8 @@ function traceGraphiqueRecap_Domaine(context_,donnees_,labels_)
 						datasets:[{
 												data : donnees_,
 												backgroundColor:['red','lime','blue','yellow','fuchsia','aqua','green','purple','silver','teal']
-										}]
+										}],
+						idDomaines:idDomaines_
 					}
 	var options={
 							responsive: false,
@@ -16,10 +18,39 @@ function traceGraphiqueRecap_Domaine(context_,donnees_,labels_)
 											ticks:{max:100,display: false}
 										}
 					}
-	return new Chart(context,{type,data,options});
+	var	chart=new Chart(context,{type,data,options});//Création du graphique
+
+
+
+	return chart;
 }
 
+//Fonction qui ferme les graphiques de competences ***************
+ouvreGraphiqueCompetence=function(idDomaine)
+{
+//	$("#HOME_graphiquesCompetences").css("display","inline-block");
 
+	if(!$("#HOME_graphe_competences_Domaine_"+idDomaine).is(':visible'))//si le graphique n'est pas DEJA apparant
+	{
+		if(!$("#HOME_graphiquesCompetences").is(':visible'))//Si on n'a pas encore ouvert
+		{
+			$(".HOME_graphe_competence").hide();//{duration:1000, start:function(){if ($(this).is(':visible'))$(this).css('display','inline-block');}});
+			$("#HOME_graphe_competences_Domaine_"+idDomaine).show();//{duration:1000, start:function(){if ($(this).is(':visible'))$(this).css('display','inline-block');}});		
+			$("#HOME_graphiquesCompetences").show({duration:500, start:function(){if ($(this).is(':visible'))$(this).css('display','inline-block');}});
+		}
+		else
+		{
+			$(".HOME_graphe_competence").hide({duration:500, start:function(){if ($(this).is(':visible'))$(this).css('display','inline-block');}});
+			$("#HOME_graphe_competences_Domaine_"+idDomaine).show({duration:500, start:function(){if ($(this).is(':visible'))$(this).css('display','inline-block');}});		
+		}
+	}
+}
+
+//Fonction qui ferme les graphiques de competences ***************
+fermeGraphiquesCompetences=function()
+{
+	$("#HOME_graphiquesCompetences").hide(500);
+}
 
 
 //Fonction trace le graphique récapitulatif des competences ******************************

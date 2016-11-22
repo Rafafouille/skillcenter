@@ -122,7 +122,7 @@ function getBilanDomaines()
 							"sommeNiveaux"=>intval($donnees["sommeNiveaux"]),
 							"sommeEleve"=>0
 				);
-		$bilan[$donnees["nom"]]=$domaine;
+		$bilan[$donnees["idDomaine"]]=$domaine;
 	}
 
 
@@ -130,12 +130,12 @@ function getBilanDomaines()
 	$requeteNotes ="SELECT MAX(note) as note, indicateur AS idInd FROM ".$BDD_PREFIXE."notation WHERE eleve=".$_SESSION['id']." GROUP BY indicateur";
 	$requeteNotesInd="SELECT n.note AS note,i.competence AS idComp FROM (".$requeteNotes.") AS n JOIN ".$BDD_PREFIXE."indicateurs AS i ON n.idInd=i.id";
 	$requeteNotesIndCom="SELECT ni.note AS note,c.groupe as idDomaine FROM (".$requeteNotesInd.") AS ni JOIN ".$BDD_PREFIXE."competences AS c ON ni.idComp=c.id";
-	$requeteNotesIndComDom="SELECT sum(note) as sommeNote, g.nom AS nom FROM (".$requeteNotesIndCom.") AS nic JOIN ".$BDD_PREFIXE."groupes_competences as g ON nic.idDomaine=g.id GROUP BY g.id";
+	$requeteNotesIndComDom="SELECT sum(note) as sommeNote, g.nom AS nom, g.id AS idDomaine FROM (".$requeteNotesIndCom.") AS nic JOIN ".$BDD_PREFIXE."groupes_competences as g ON nic.idDomaine=g.id GROUP BY g.id";
 	$req = $bdd->query($requeteNotesIndComDom);
 
 	while($donnees=$req->fetch())
 	{
-		$bilan[$donnees["nom"]]['sommeEleve']=intval($donnees["sommeNote"]);
+		$bilan[$donnees["idDomaine"]]['sommeEleve']=intval($donnees["sommeNote"]);
 	}
 	return $bilan;
 }
