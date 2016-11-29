@@ -310,6 +310,11 @@ INDICATEURS
 	box-shadow: 3px 3px 6px #777766;
 }
 
+.indicateurAllumeModifiable .indicateur_chargement_note, .indicateurEteintModifiable .indicateur_chargement_note
+{
+	display:none;
+}
+
 .ADMIN_PARAMETRAGE_checkbox_indicateur
 {
 	width:20px;

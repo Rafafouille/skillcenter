@@ -163,7 +163,7 @@ function NOTATION_getNiveauxIndicateur(val,maxi,indicateur, clickable,degrade)
 				var couleur=setArcEnCiel(val,maxi);
 			
 			rendu+=""+
-"										<div class=\""+cl+"\" style=\"background-color:"+couleur+";\" onclick=\""+actionOnClick+"\" ><span style=\"color:rgba(0,0,0,"+alpha+");\">"+intitule_critere(i,maxi)+"</span></div>";
+"										<div class=\""+cl+"\" data-valeur=\""+i+"\" style=\"background-color:"+couleur+";\" onclick=\""+actionOnClick+"\" ><span class=\"indicateur_initiales_note\" style=\"color:rgba(0,0,0,"+alpha+");\">"+intitule_critere(i,maxi)+"</span><span class=\"indicateur_chargement_note\"><img src=\"./sources/images/chargement.gif\" alt=\"&#8987;\"/></span></div>";
 		}
 		else
 		{
@@ -171,7 +171,7 @@ function NOTATION_getNiveauxIndicateur(val,maxi,indicateur, clickable,degrade)
 			if(clickable)
 				cl+="Modifiable";
 			rendu+=""+
-"										<div class=\""+cl+"\" onclick=\""+actionOnClick+"\"><span style=\"color:rgba(0,0,0,"+alpha+");\">"+intitule_critere(i,maxi)+"</span></div>";
+"										<div class=\""+cl+"\" data-valeur=\""+i+"\" onclick=\""+actionOnClick+"\"><span style=\"color:rgba(0,0,0,"+alpha+");\">"+intitule_critere(i,maxi)+"</span></div>";
 		}
 	}
 	return rendu;

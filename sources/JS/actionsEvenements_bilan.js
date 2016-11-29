@@ -86,6 +86,8 @@ updateNotationEleve=function(reponse)
 //Envoie une nouvelle note au serveur
 donneNote=function(note,eleve,indicateur)
 {
+	$("#NOTATION_indicateur_"+indicateur+" .niveauxIndicateur .indicateurAllumeModifiable[data-valeur='"+note+"'] .indicateur_initiales_note").css("display","none");
+	$("#NOTATION_indicateur_"+indicateur+" .niveauxIndicateur .indicateurAllumeModifiable[data-valeur='"+note+"'] .indicateur_chargement_note").css("display","inline");
 	$.post(
 			'./sources/PHP/actionneurJSON.php',//Requete appelée
 			{	//Les données à passer par POST
