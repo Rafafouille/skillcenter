@@ -136,9 +136,9 @@ function ADMIN_COMPETENCES_rendu_HTML_indicateur(indicateur,numeroCompetence,num
 		else				{rendu+=""+
 "										<a href=\""+indicateur.lien+"\" onclick=\"window.open(this.href);return false;\"><img src=\"./sources/images/icone-internet.png\" alt=\"[i]\"  style=\"cursor:pointer;\" title=\"Lien vers ressources : "+indicateur.lien+"\"/></a>";}
 	if(indicateur.details==""){rendu+=""+
-	"									<img style=\"visibility:hidden;\" src=\"./sources/images/icone-info.png\"/>";}
+	"									<img class=\"icone-info\" style=\"visibility:hidden;\" src=\"./sources/images/icone-info.png\"/>";}
 		else				{rendu+=""+
-		"								<img src=\"./sources/images/icone-info.png\" alt=\"[i]\"  style=\"cursor:help;\" title=\""+indicateur.details+"\"/>";}
+		"								<img class=\"icone-info\" src=\"./sources/images/icone-info.png\" alt=\"[i]\"  style=\"cursor:help;\" title=\""+indicateur.details+"\"/>";}
 
 		rendu+=""+
 "										<img class=\"icone-poubelle\" src=\"./sources/images/poubelle.png\" alt=\"[X]\" style=\"cursor:pointer;\" title=\"Supprimer le critère\" onclick=\"ouvreBoiteSupprimeIndicateur('"+indicateur.nom+"',"+indicateur.id+")\"/>"+
