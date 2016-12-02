@@ -4,8 +4,15 @@
 		<div id="dialog-modifNotation" title="Modifier une évaluation">
 			<p>Évaluation n°<span id="modifNotation_num_critere"></span> : </p>
 			<form>
-				<label for="modifNotation_input">Critère : </label>
-				<input type="number" placeholder="0" size="2" id="modifNotation_input" name="modifNotation_input" min="0" max="0" step="1"/>/<span id="modifNotation_max">0</span>
+				<label for="modifNotation_input_evaluation">Critère : </label>
+				<input type="number" placeholder="0" size="2" id="modifNotation_input_evaluation" name="modifNotation_input_evaluation" min="0" max="0" step="1"/>
+				/<span id="modifNotation_max">0</span>
+				<br/>
+				<label for="modifNotation_contexte">Contexte : </label>
+				<input type="text" placeholder="Ex : TP, DM1, ..." id="modifNotation_contexte" name="modifNotation_contexte"/>
+				<br/>
+				<label for="modifNotation_commentaire">Commentaire de l'évaluation : </label>
+				<textarea  placeholder="A sur faire ceci, doit revoir cela..." id="modifNotation_commentaire" name="modifNotation_commentaire"></textarea>
 			</form>
 		</div>
 		<script>
@@ -13,7 +20,7 @@
 				autoOpen: false,
 				modal: true,
 				buttons: {
-							"Modifier": function() {$("#dialog-modifNotation").dialog( "close" );modifieNotation(parseInt($("#modifNotation_num_critere").text()),parseInt($("#modifNotation_input").val()));},
+							"Modifier": function() {$("#dialog-modifNotation").dialog( "close" );modifieNotation(parseInt($("#modifNotation_num_critere").text()),parseInt($("#modifNotation_input_evaluation").val()),$("#modifNotation_contexte").val(),$("#modifNotation_commentaire").val());},
 							"Annuler": function() {$("#dialog-modifNotation").dialog( "close" );}
 						}
 			});

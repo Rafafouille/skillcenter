@@ -2,12 +2,15 @@
 	HISTORIQUE
 ********************************************/
 
-ouvreBoite_modifNotation=function(id,val,maxi)
+ouvreBoite_modifNotation=function(id,val,maxi,contexte,commentaire)
 {
-	$('#modifNotation_input').val(val);	//$('#historique_".$donnees['id']." .note_historique span').text()
-	$('#modifNotation_input').attr('max',maxi);
+	$('#modifNotation_input_evaluation').val(val);	//$('#historique_".$donnees['id']." .note_historique span').text()
+	$('#modifNotation_input_evaluation').attr('max',maxi);
 	$('#modifNotation_max').text(maxi);
 	$('#modifNotation_num_critere').text(id);
+	$('#modifNotation_contexte').val(contexte);
+	$('#modifNotation_commentaire').text(commentaire);
+	
 	$('#dialog-modifNotation').dialog('open');
 }
 
@@ -21,14 +24,16 @@ ouvreBoite_supprimeNotation=function(id)
 
 
 
-modifieNotation=function(id,note)
+modifieNotation=function(id,note,contexte,commentaire)
 {
 	$.post(
 			'./sources/PHP/actionneurJSON.php',//Requete appelée
 			{	//Les données à passer par POST
 				action:"modifieNotation",
 				idNotation:id,
-				note:note
+				note:note,
+				contexte:contexte,
+				commentaire:commentaire
 			},
 			modifieNotation_CallBack,	//Fonction callback
 			"json"	//Type de réponse
@@ -45,6 +50,10 @@ modifieNotation_CallBack=function(reponse)
 	$("#historique_"+id+" .prof_historique").text(reponse.evaluateur);//MAJ prof
 	$("#historique_"+id+" .date_historique").text(reponse.date);//MAJ prof
 	//$("#historique_"+id).insertBefore($("#liste_historique").children()[0]);
+	
+	$("#historique_"+id).attr("data-contexte",reponse.contexte);
+	$("#historique_"+id).attr("data-commentaire",reponse.commentaire);
+	
 	$("#historique_"+id).slideUp(function(){$(this).insertBefore($("#liste_historique").children()[0]).slideDown();});
 	
 	NOTATION_LOADED=false;//Impose de recharger la notation en cas de modif

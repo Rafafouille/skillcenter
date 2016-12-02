@@ -645,20 +645,28 @@ if($action=="modifieNotation")
 		if(isset($_POST['idNotation'])) $id=intval($_POST['idNotation']);
 		$note="-1";
 		if(isset($_POST['note'])) $note=intval($_POST['note']);
-
+		$contexte="";
+		if(isset($_POST['contexte'])) $contexte=$_POST['contexte'];
+		$commentaire="";
+		if(isset($_POST['commentaire'])) $commentaire=$_POST['commentaire'];
 
 	if(autoriseModifNoteSelonStatut($id))
 	{
-
 		if($id>0)
 		{
 
-			$req=$bdd->prepare("UPDATE ".$BDD_PREFIXE."notation SET note=:note, date=NOW(),examinateur=".$_SESSION['id']." WHERE id=:id");
-			$req->execute(array('id'=>$id,'note'=>$note));
+			$req=$bdd->prepare("UPDATE ".$BDD_PREFIXE."notation SET note=:note, date=NOW(),examinateur=".$_SESSION['id'].", contexte=:contexte, commentaire=:commentaire WHERE id=:id");
+			$req->execute(array('id'=>$id,
+								'note'=>$note,
+								'contexte'=>$contexte,
+								'commentaire'=>$commentaire
+								));
 			$reponseJSON["idNotation"]=$id;
 			$reponseJSON["note"]=$note;
 			$reponseJSON["date"]=date("Y-m-d H:i");
 			$reponseJSON["evaluateur"]=$_SESSION['prenom']." ".$_SESSION['nom'];
+			$reponseJSON["contexte"]=$contexte;
+			$reponseJSON["commentaire"]=$commentaire;
 			$reponseJSON["messageRetour"]=":)L'évaluation a bien été mise à jour.";
 
 		}
