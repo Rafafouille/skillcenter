@@ -220,7 +220,7 @@ if($etape=="sauvOptions")
 			</td>
 			<td>
 				<form action="" method="POST" style="display:inline;">
-					<input type="hidden" name="etape" value="rentreConfigGenerale"/>
+					<input type="hidden" name="etape" value="connexionAdmin"/>
 					<input type="submit" class="bouton" value="Suivant -->"/>
 				</form>
 			</td>
@@ -251,6 +251,124 @@ if($etape=="sauvOptions")
 	$_SESSION['AUTORISE_GRAPHIQUES']=$AUTORISE_GRAPHIQUES;
 }
 
+
+
+
+
+
+
+
+
+
+//Etape 2 BISBIS-avant : Test de la connexion si admin =================================
+if($etape=="TestconnexionAdminMdP")
+{
+	$login="";
+	if(isset($_POST['connexionAdminLogin'])) $login=$_POST['connexionAdminLogin'];
+	$mdp="";
+	if(isset($_POST['connexionAdminMdP'])) $mdp=$_POST['connexionAdminMdP'];
+
+	$connexionReussie=false;
+	try
+	{
+		$bdd = new PDO('mysql:host='.$_SESSION['BDD_SERVER'].';dbname='.$_SESSION['BDD_NOM_BDD'].';charset=utf8',$_SESSION['BDD_LOGIN'],$_SESSION['BDD_MOT_DE_PASSE']);
+
+		$requete=$bdd->prepare("SELECT * FROM ".$_SESSION['BDD_PREFIXE']."utilisateurs WHERE statut='admin' AND login=:login AND (mdp=:mdp OR mdp=:mdp2)");
+		$requete->execute(array("login"=>$login,"mdp"=>$mdp,"mdp2"=>crypt($mdp,"$232#;E")));
+
+
+		if($requete->fetch())//S'il y a au moins un admin
+			$connexionReussie=true;
+		
+	}
+	catch(PDOException $e)
+	{}
+
+	if($connexionReussie)	//Si connexion reussie...
+		$etape="rentreConfigGenerale";	//On saute a l'etape d'apres
+	else
+		$etape="connexionAdmin";	//Sinon on retente
+}
+
+
+
+//Etape 2 BISBIS : connexion si admin ==============================
+if($etape=="connexionAdmin")
+{
+	$connexionReussie=false;
+	try
+	{
+		$bdd = new PDO('mysql:host='.$_SESSION['BDD_SERVER'].';dbname='.$_SESSION['BDD_NOM_BDD'].';charset=utf8',$_SESSION['BDD_LOGIN'],$_SESSION['BDD_MOT_DE_PASSE']);
+
+		$requete=$bdd->query("SELECT * FROM ".$_SESSION['BDD_PREFIXE']."utilisateurs WHERE statut='admin'");
+		if($requete->fetch())//S'il y a au moins un admin
+		{
+		?>
+	<div class="boite">
+		<h2>Connexion</h2>
+		<p>
+			<?php
+			if(isset($_POST['connexionAdminLogin']))
+			{
+				echo "<span style=\"color:red;font-weight:bold;\">La connexion n'a pas fonctionné.<br/> Rentrez à nouveau le login/mot de passe administrateur.</span>";
+			}
+			else
+			{
+				echo "Il semblerait qu'un administrateur soit déjà enregistré dans la base de donnée.
+				Merci de vous connecter avec votre compte administrateur.";
+			}?>
+			<br/>
+			<form method="POST" action="" id="formConnexionAdmin">
+				<table>
+					<tr>
+						<td>
+							<label for="connexionAdminLogin">Nom d'utilisateur : </label>
+						</td>
+						<td>
+							<input type="text" name="connexionAdminLogin" id="connexionAdminLogin"/>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label for="connexionAdminMdP">Mot de passe : </label>
+						</td>
+						<td>
+							<input type="password" name="connexionAdminMdP" id="connexionAdminMdP"/>
+					</tr>
+				</table>
+				<input type="hidden" name="etape" value="TestconnexionAdminMdP"/>
+
+			</form>
+		</p>
+		<table class="boutons"><tr>
+			<td>
+				<form action="" method="POST" style="display:inline;">
+					<input type="hidden" name="etape" value="debut"/>
+					<input type="submit" class="bouton" value="<-- Précédent"/>
+				</form>
+			</td>
+				<td>
+					<div class="bouton" onclick="$('#formConnexionAdmin').submit();"/>Suivant --></div>
+				</td>
+		</tr></table>
+	</div>
+	<?php	
+		$connexionReussie=true;
+		}//Fin si il existe des admins
+
+	}
+	catch(PDOException $e)	//Fin si on arrive pas à se connecter à la BDD
+	{
+	}
+
+
+	if($connexionReussie)
+	{
+		
+	}
+	else
+		$etape="rentreConfigGenerale";
+}
 
 
 
@@ -914,7 +1032,7 @@ if($etape=="enregistreAdmin")
 		$login="";
 		if(isset($_POST['admin_login'])) $login=strtolower($_POST['admin_login']);
 		$mdp="";
-		if(isset($_POST['admin_mdp'])) $mdp=$_POST['admin_mdp'];
+		if(isset($_POST['admin_mdp'])) $mdp=crypt($_POST['admin_mdp'],"$232#;E");
 		$mail="";
 		if(isset($_POST['admin_mail'])) $mail=strtolower($_POST['admin_mail']);
 
@@ -923,10 +1041,10 @@ if($etape=="enregistreAdmin")
 		{
 			$req=$bdd->prepare("INSERT INTO ".$_SESSION['BDD_PREFIXE']."utilisateurs(nom,prenom,login,mdp,classe,statut,mail,notifieMail) VALUES(:nom,:prenom,:login,:mdp,'','admin',:mail,1)");
 			$req->execute(array(	'nom'=>$nom,
-												'prenom'=>$prenom,
-												'login'=>$login,
-												'mdp'=>$mdp,
-												'mail'=>$mail
+						'prenom'=>$prenom,
+						'login'=>$login,
+						'mdp'=>$mdp,
+						'mail'=>$mail
 					));
 			$etape="confirmeAdmin";
 		}
