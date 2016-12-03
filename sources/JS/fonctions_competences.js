@@ -243,3 +243,27 @@ function getCompetencesInFormulaireOption(idOption,numIdComp)
 	$(idOption).append(competenceSelect);
 }
 
+
+
+
+
+//Fonction qui remet les bonnes mises en forme CSS selon les domaines/compétences/criteres qui sont sélectionné ou non
+function PARAMETRES_update_selected_unselected_domaines_competences()
+{
+	//On remet tout en mode "non selectionné"
+	$("#liste_competences .groupe_competences").attr("class","groupe_competences_unselected");
+	$("#liste_competences .competence").attr("class","competence_unselected");
+	$("#liste_competences .indicateur").attr("class","indicateur_unselected");	//Pas forcement utilse...
+	//On remet les compétences et domaines selectionnes avec la bonne classes
+	$("#liste_competences .ADMIN_PARAMETRAGE_checkbox_indicateur form input[type='checkbox']:checked").each(function(index){
+		var ind=$(this).parent().parent().parent();
+		ind.attr("class","indicateur")
+		
+		var comp=ind.parent().parent().parent();
+		comp.attr("class","competence");
+		
+		var dom=comp.parent().parent();
+		dom.attr("class","groupe_competences");
+	});
+	
+}

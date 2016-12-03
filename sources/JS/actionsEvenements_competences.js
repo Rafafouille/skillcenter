@@ -407,6 +407,7 @@ function lierDelierIndicateurClasse(ind,classe,lier)
 			lierDelierIndicateurClasse_callback,	//Fonction callback
 			"json"	//Type de réponse
 	);
+	PARAMETRES_update_selected_unselected_domaines_competences();//Met à jour le style des éléments sélectionné (ou pas)
 }
 
 function lierDelierIndicateurClasse_callback(reponse)
