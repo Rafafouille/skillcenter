@@ -102,7 +102,7 @@ donneNote=function(note,eleve,indicateur)
 }
 
 
-//Met à jour l'affichge des notes d'un élève (recu par ajax)
+//Met à jour l'affichge des notes d'un élève (recu par ajax) **********************
 valideNouvelleNote=function(reponse)
 {
 	afficheMessage(reponse.messageRetour);
@@ -140,13 +140,20 @@ valideNouvelleNote=function(reponse)
 	$("#liste_historique").prepend(contenu);
 }
 
-//Fonction qui envoie les commentaires d'une évaluation fraichement donnée
+
+
+//Fonction qui envoie les commentaires d'une évaluation fraichement donnée ********************
 valideCommentaireEval=function(idInd)
 {
 
 	var idEval=parseInt($("#NOTATION_indicateur_"+idInd).find(".commentaireIndicateur").find("form").attr('data-ideval'));
 	var contexte=$("#NOTATION_indicateur_"+idInd).find(".commentaireIndicateur").find(".commentaireIndicateur-contexte").val();
 	var commentaire=$("#NOTATION_indicateur_"+idInd).find(".commentaireIndicateur").find(".commentaireIndicateur-commentaire").val();
+
+	//Mise a jour de la liste d'autocompletion des contextes
+	if($("#listeContexteAutocompletion option[value='"+contexte+"']").size()==0)//Si le contexte n'a pas été ajouté à la liste...
+		$("#listeContexteAutocompletion").append("<option value=\""+contexte+"\">");//On le rajoute
+
 
 	$.post(
 		'./sources/PHP/actionneurJSON.php',//Requete appelée
@@ -168,6 +175,7 @@ valideCommentaireEval_callback=function(reponse)
 	if(reponse.commentaire.commentaire!="")
 		$("#NOTATION_indicateur_"+idIndicateur+" .boutonCommentaires").css("visibility","visible");//Affiche la bulle, si elle n'est pas visible
 	bilanFermeCommentaire(idIndicateur);
+
 }
  
 

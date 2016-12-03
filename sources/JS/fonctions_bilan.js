@@ -88,8 +88,8 @@ function NOTATION_ajouteIndicateur(indicateur,conteneur)
 "											<form data-ideval=\"0\">"+
 "												<img class=\"boutonValideCommentaireEval\" alt=\"[V]\" src=\"./sources/images/valide.png\" onclick=\"valideCommentaireEval("+indicateur.id+");\"/>"+
 "												<img class=\"boutonAnnuleCommentaireEval\" alt=\"[X]\" src=\"./sources/images/invalide.png\" onclick=\"bilanFermeCommentaire("+indicateur.id+");\"/>"+
-(AUTORISE_CONTEXT?"												<input type=\"text\" class=\"commentaireIndicateur-contexte\" name=\"commentaireIndicateur-contexte\" placeholder=\"Contexte (ex : TP1)\" size=\"15\"/>":"")+
-(AUTORISE_COMMENTAIRES?"												<input type=\"text\" class=\"commentaireIndicateur-commentaire"+(!AUTORISE_COMMENTAIRES?"-invisible":"")+"\" name=\"commentaireIndicateur-commentaire\" placeholder=\"Commentaire (ex : N'a pas posé les hypothèses)\" size=\"38\"/>":"")+
+(AUTORISE_CONTEXT?"												<input list=\"listeContexteAutocompletion\" type=\"text\" class=\"commentaireIndicateur-contexte\" name=\"commentaireIndicateur-contexte\" placeholder=\"Contexte (ex : TP1)\" size=\"15\"/>":"")+
+(AUTORISE_COMMENTAIRES?"											<input type=\"text\" class=\"commentaireIndicateur-commentaire"+(!AUTORISE_COMMENTAIRES?"-invisible":"")+"\" name=\"commentaireIndicateur-commentaire\" placeholder=\"Commentaire (ex : N'a pas posé les hypothèses)\" size=\"38\"/>":"")+
 "											</form>"+
 "										</div>"+
 "									</td>"+
@@ -186,6 +186,10 @@ bilanOuvreCommentaire=function(idInd,idEval)
 	{
 		//Update idEval
 		$("#NOTATION_indicateur_"+idInd+" .commentaireIndicateur form").attr("data-ideval",idEval);
+		//Propose le dernier contexte utilise
+	/*	var lastContext=parseInt($("#listeContexteAutocompletion").attr("data-lastused"));
+		if(lastContext>=0)
+			$("#NOTATION_indicateur_"+idInd+" .commentaireIndicateur-contexte").val(lastContext);*/
 		//Animation
 		$("#NOTATION_indicateur_"+idInd+" .titreIndicateur").hide("slide",{direction: "left" }, 500);
 		setTimeout(function(){$("#NOTATION_indicateur_"+idInd+" .commentaireIndicateur").show("slide", { direction: "right" }, 500);},510);

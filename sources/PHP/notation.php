@@ -1,7 +1,16 @@
 			
 				<div id="tab-notation">
 
-
+					<!-- Liste de contextes pour l'auto-completion -->
+					<datalist id="listeContexteAutocompletion" data-lastused="-1">
+						<?php
+						$reponse=$bdd->query("SELECT DISTINCT contexte FROM ".$BDD_PREFIXE."notation WHERE contexte<>''");
+						while($donnees=$reponse->fetch())
+						{
+							echo "<option value=\"".$donnees["contexte"]."\">\n";
+						}
+						?>
+					</datalist>
 
 					<div class="bouton_top" onclick="$('#RecapNotationEleve .groupe_contenu,#RecapNotationEleve .listeIndicateurs').slideUp();">
 						<img src="./sources/images/icone-reduire.png" alt="[&#8607;]"/>
