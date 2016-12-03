@@ -168,7 +168,7 @@
 						<option value="'.$i.'"';
 								if($i==$NIVEAU_DEFAUT)
 									echo " selected";
-								echo'>'.$i.'</option>';
+								echo'>'.($i+1).'</option>';
 								};
 						?>
 				</select>
@@ -214,7 +214,7 @@
 					<option value="'.$i.'"';
 							if($i==$NIVEAU_DEFAUT)
 								echo " selected";
-							echo'>'.$i.'</option>';
+							echo'>'.($i+1).'</option>';
 							};
 					?>
 				</select>

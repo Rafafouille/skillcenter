@@ -16,8 +16,8 @@ if(isset($_POST['BDD_LOGIN']))		$_SESSION['BDD_LOGIN']=$_POST['BDD_LOGIN'];
 if(isset($_POST['BDD_MOT_DE_PASSE']))	$_SESSION['BDD_MOT_DE_PASSE']=$_POST['BDD_MOT_DE_PASSE'];
 if(isset($_POST['BDD_PREFIXE']))	$_SESSION['BDD_PREFIXE']=$_POST['BDD_PREFIXE'];
 
-if(isset($_POST['NB_NIVEAUX']))		$_SESSION['NB_NIVEAUX']=$_POST['NB_NIVEAUX'];
-if(isset($_POST['NIVEAU_DEFAUT']))	$_SESSION['NIVEAU_DEFAUT']=$_POST['NIVEAU_DEFAUT'];
+if(isset($_POST['NB_NIVEAUX']))		$_SESSION['NB_NIVEAUX']=$_POST['NB_NIVEAUX']-1;
+if(isset($_POST['NIVEAU_DEFAUT']))	$_SESSION['NIVEAU_DEFAUT']=$_POST['NIVEAU_DEFAUT']-1;
 
 if(isset($_POST['input_NOM_NIVEAU_1-0']))	//Recupere les noms de niveaux
 {
@@ -210,7 +210,7 @@ if($etape=="sauvOptions")
 	$BDD_PREFIXE="";		//Préfixe de toute les tables de la BDD
 
 	$NB_NIVEAUX_MAX=5;		//Nombre de niveau max possible à donner aux élèves
-	$NIVEAU_DEFAUT=4;		//Niveau par défaut quand on crée un critères
+	$NIVEAU_DEFAUT=3;		//Niveau par défaut quand on crée un critères
 	$INTITULES_NIVEAUX_CRITERES=Array();	//Noms des niveaux
 	$AUTORISE_CONTEXT=true;			//Autorise de mettre un context aux évaluations
 	$AUTORISE_COMMENTAIRES=true;		//Autorise de mettre des commentaires aux évaluations
@@ -560,7 +560,7 @@ if($etape=="rentreNotation")
 		{
 			$(".inputNomsNiveaux").parent().parent().remove();
 			
-			nbMax=parseInt($("#input_NB_NIVEAUX").val());
+			nbMax=parseInt($("#input_NB_NIVEAUX").val())-1;
 			
 			//Tableau des noms dejà existants
 			tabNoms=Array(<?php
@@ -589,7 +589,7 @@ if($etape=="rentreNotation")
 			{
 					var texte=""+
 "					<tr>"+
-"						<td style=\"text-align:right;\"><label for=\"input_NOM_NIVEAU_"+i+"-0\">"+i+" niveau(x) :</label></td>"+
+"						<td style=\"text-align:right;\"><label for=\"input_NOM_NIVEAU_"+i+"-0\">"+(i+1)+" niveau(x) :</label></td>"+
 "						<td>";
 				for(var j=0;j<=i;j++)
 				{
@@ -625,7 +625,7 @@ if($etape=="rentreNotation")
 				<table>
 					<tr>
 						<td><label for="input_NB_NIVEAUX">Nombre de niveaux maximum pour chaque critère <span title="Il s'agit du nombre maximum de niveaux qui seront proposés lors de la création d'un nouveau critère." alt="[i]"/></span> :</label></td>
-						<td><input type="number" min="1" step="1" placeholder="Nombre supérieur à 0" id="input_NB_NIVEAUX" name="NB_NIVEAUX" value="<?php echo $_SESSION['NB_NIVEAUX'];?>" onchange="updateNomsNiveaux();"/></td>
+						<td><input type="number" min="2" step="1" placeholder="Nombre supérieur à 0" id="input_NB_NIVEAUX" name="NB_NIVEAUX" value="<?php echo $_SESSION['NB_NIVEAUX']+1;?>" onchange="updateNomsNiveaux();"/></td>
 					</tr>
 					<tr>
 						<td>Intitulés des niveaux : </td>
@@ -633,7 +633,7 @@ if($etape=="rentreNotation")
 					</tr>
 					<tr>
 						<td><label for="input_NIVEAU_DEFAUT">Niveau par défaut pour un critère <span title="Il s'agit du niveau maximum par défaut proposé lors de la création d''une compétence."><img src="./sources/images/icone-info.png" alt="[i]"/></span> :</label></td>
-						<td><input type="number" min="1" step="1" placeholder="Nombre supérieur à 0" id="input_NIVEAU_DEFAUT" name="NIVEAU_DEFAUT" value="<?php echo $_SESSION['NIVEAU_DEFAUT'];?>"/></td>
+						<td><input type="number" min="2" step="1" placeholder="Nombre supérieur à 0" id="input_NIVEAU_DEFAUT" name="NIVEAU_DEFAUT" value="<?php echo $_SESSION['NIVEAU_DEFAUT']+1;?>"/></td>
 					</tr>
 				</table>
 
