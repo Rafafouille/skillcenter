@@ -141,6 +141,28 @@ if(isset($_POST['AUTORISE_GRAPHIQUES']))	$_SESSION['AUTORISE_GRAPHIQUES']=$_POST
 			margin-left:auto;
 			margin-right:auto;
 		}
+
+		.bouton
+		{
+			background-color:#CCCCCC;
+			border-top:solid 1px #DDDDDD;
+			border-left:solid 1px #DDDDDD;
+			border-right:solid 1px #555555;
+			border-bottom:solid 1px #555555;
+
+			color:black;
+			font-size:small;
+			font-weight:bold;
+		}
+		.bouton:hover
+		{
+			background-color:#AAAAAA;
+			border-top:solid 1px #555555;
+			border-left:solid 1px #555555;
+			border-right:solid 1px #DDDDDD;
+			border-bottom:solid 1px #DDDDDD;
+		}
+
 	</style>
 </head>
 <body>
@@ -393,8 +415,8 @@ if($etape=="rentreConfigGenerale")
 			</form>
 			
 		</p>
-		<div class="boutons">
-			<table><tr>
+		<table class="boutons">
+			<tr>
 				<td>
 					<form action="" method="POST" style="display:inline;">
 						<input type="hidden" name="etape" value="debut"/>
@@ -404,8 +426,8 @@ if($etape=="rentreConfigGenerale")
 				<td>
 						<div class="bouton" onclick="$('#formRentreConfigGenerale').submit();"/>Suivant --></div>
 				</td>
-			</tr></table>
-		</div>
+			</tr>
+		</table>
 	</div>
 <?php }
 
@@ -480,8 +502,8 @@ if($etape=="rentreBDD")
 			</form>
 			
 		</p>
-		<div class="boutons">
-			<table><tr>
+		<table class="boutons">
+			<tr>
 				<td>
 					<form action="" method="POST" style="display:inline;">
 						<input type="hidden" name="etape" value="debut"/>
@@ -491,8 +513,8 @@ if($etape=="rentreBDD")
 				<td>
 						<div class="bouton" onclick="$('#rentreBDD').submit();"/>Suivant --></div>
 				</td>
-			</tr></table>
-		</div>
+			</tr>
+		</table>
 	</div>
 <?php }
 
@@ -507,8 +529,8 @@ if($etape=="valideBDD")
 			La connexion-test à la base de donnée a réussie.
 			Les paramètres fournis sont donc corrects.
 		</p>
-		<div class="boutons">
-			<table><tr>
+		<table class="boutons">
+			<tr>
 				<td>
 					<form action="" method="POST" style="display:inline;">
 						<input type="hidden" name="etape" value="rentreBDD"/>
@@ -521,8 +543,8 @@ if($etape=="valideBDD")
 						<input type="submit" class="bouton" value="Suivant -->"/>
 					</form>
 				</td>
-			</tr></table>
-		</div>
+			</tr>
+		</table>
 	</div>
 <?php }
 
@@ -660,8 +682,8 @@ if($etape=="rentreNotation")
 			</form>
 			
 		</p>
-		<div class="boutons">
-			<table><tr>
+		<table class="boutons">
+			<tr>
 				<td>
 					<form action="" method="POST" style="display:inline;">
 						<input type="hidden" name="etape" value="rentreBDD"/>
@@ -671,8 +693,8 @@ if($etape=="rentreNotation")
 				<td>
 						<div class="bouton" onclick="$('#formRentreNotation').submit();"/>Créer le fichier 'options.php' --></div>
 				</td>
-			</tr></table>
-		</div>
+			</tr>
+		</table>
 	</div>
 	<script>updateNomsNiveaux();</script>
 <?php }
@@ -751,8 +773,8 @@ $contenu.="\$AUTORISE_CONTEXT=".($_SESSION['AUTORISE_CONTEXT']?"true":"false")."
 			Le fichier de configuration "options.php" a bien été créé.
 			<br/>Le fichier de sauvegarde des anciennes options a été supprimé.
 		</p>
-		<div class="boutons">
-			<table><tr>
+		<table class="boutons">
+			<tr>
 				<td>
 					<form action="" method="POST" style="display:inline;">
 						<input type="hidden" name="etape" value="rentreNotation"/>
@@ -765,8 +787,8 @@ $contenu.="\$AUTORISE_CONTEXT=".($_SESSION['AUTORISE_CONTEXT']?"true":"false")."
 						<input type="submit" class="bouton" value="Suivant -->"/>
 					</form>
 				</td>
-			</tr></table>
-		</div>
+			</tr>
+		</table>
 	</div>
 		<?php
 		}
@@ -824,8 +846,8 @@ $contenu.="\$AUTORISE_CONTEXT=".($_SESSION['AUTORISE_CONTEXT']?"true":"false")."
 				<textarea rows="15" cols="70"><?php echo $contenu;?></textarea>
 			</form>
 		</p>
-		<div class="boutons">
-			<table><tr>
+		<table class="boutons">
+			<tr>
 				<td>
 					<form action="" method="POST" style="display:inline;">
 						<input type="hidden" name="etape" value="rentreNotation"/>
@@ -844,8 +866,8 @@ $contenu.="\$AUTORISE_CONTEXT=".($_SESSION['AUTORISE_CONTEXT']?"true":"false")."
 						<input type="submit" class="bouton" value="Passer -->"/>
 					</form>
 				</td>
-			</tr></table>
-		</div>
+			</tr>
+		</table>
 	</div>
 	<?php
 	}
@@ -867,8 +889,8 @@ if($etape=="creerBDD_Info")
 			<br/>
 			Note : cela peut prendre quelques secondes, soyez patient...
 		</p>
-		<div class="boutons">
-			<table><tr>
+		<table class="boutons">
+			<tr>
 				<td>
 					<form action="" method="POST" style="display:inline;">
 						<input type="hidden" name="etape" value="rentreNotation"/>
@@ -881,8 +903,8 @@ if($etape=="creerBDD_Info")
 						<input type="submit" class="bouton" value="Suivant -->"/>
 					</form>
 				</td>
-			</tr></table>
-		</div>
+			</tr>
+		</table>
 	</div>
 <?php }
 
@@ -992,8 +1014,8 @@ creeTable("utilisateurs","id");
 
 ?>
 		</ul>
-		<div class="boutons">
-			<table><tr>
+		<table class="boutons">
+			<tr>
 				<td>
 					<form action="" method="POST" style="display:inline;">
 						<input type="hidden" name="etape" value="creerBDD_Info"/>
@@ -1006,8 +1028,8 @@ creeTable("utilisateurs","id");
 						<input type="submit" class="bouton" value="Suivant -->"/>
 					</form>
 				</td>
-			</tr></table>
-		</div>
+			</tr>
+		</table>
 	</div>
 <?php
 }
@@ -1074,8 +1096,8 @@ if($etape=="testAdmin")
 			La base de donnée semble déjà avoir un admin.
 			Nous n'allons donc pas en créer un supplémentaire.
 		</p>
-		<div class="boutons">
-			<table><tr>
+		<table class="boutons">
+			<tr>
 				<td>
 					<form action="" method="POST" style="display:inline;">
 						<input type="hidden" name="etape" value="creerBDD"/>
@@ -1088,7 +1110,8 @@ if($etape=="testAdmin")
 						<input type="submit" class="bouton" value="Suivant -->"/>
 					</form>
 				</td>
-			</tr></table>
+			</tr>
+		</table>
 		</div>
 	</div>
 		<?php }
@@ -1129,16 +1152,16 @@ if($etape=="testAdmin")
 						<input type="submit" class="bouton" value="Suivant -->"/>
 			</form>
 		</p>
-		<div class="boutons">
-			<table><tr>
+		<table class="boutons">
+			<tr>
 				<td>
 					<form action="" method="POST" style="display:inline;">
 						<input type="hidden" name="etape" value="creerBDD"/>
 						<input type="submit" class="bouton" value="<-- Précédent"/>
 					</form>
 				</td>
-			</tr></table>
-		</div>
+			</tr>
+		</table>
 	</div>
 		<?php }
 }
@@ -1155,8 +1178,8 @@ if($etape=="confirmeAdmin")
 		<p>
 			Le compte administrateur a bien été créé.
 		</p>
-		<div class="boutons">
-			<table><tr>
+		<table class="boutons">
+			<tr>
 				<td>
 					<form action="" method="POST" style="display:inline;">
 						<input type="hidden" name="etape" value="testAdmin"/>
@@ -1169,8 +1192,8 @@ if($etape=="confirmeAdmin")
 						<input type="submit" class="bouton" value="Suivant -->"/>
 					</form>
 				</td>
-			</tr></table>
-		</div>
+			</tr>
+		</table>
 	</div>
 <?php }
 
@@ -1188,8 +1211,8 @@ if($etape=="supprimeInstall")
 			Il reste une étape (qui n'est pas encore automatique...) : <span style="color:red;">Supprimer le fichier "install.php" de votre serveur</span>.
 			Car sinon, des petits malins pourront l'utiliser pour modifier vos données.
 		</p>
-		<div class="boutons">
-			<table><tr>
+		<table class="boutons">
+			<tr>
 				<td>
 					<form action="" method="POST" style="display:inline;">
 						<input type="hidden" name="etape" value="testAdmin"/>
@@ -1201,8 +1224,8 @@ if($etape=="supprimeInstall")
 						<input type="submit" class="bouton" value="Lancer SkillCenter"/>
 					</form>
 				</td>
-			</tr></table>
-		</div>
+			</tr>
+		</table>
 	</div>
 <?php }
 
