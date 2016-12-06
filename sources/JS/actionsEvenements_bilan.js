@@ -150,9 +150,9 @@ valideCommentaireEval=function(idInd)
 	var contexte=$("#NOTATION_indicateur_"+idInd).find(".commentaireIndicateur").find(".commentaireIndicateur-contexte").val();
 	var commentaire=$("#NOTATION_indicateur_"+idInd).find(".commentaireIndicateur").find(".commentaireIndicateur-commentaire").val();
 
+	
 	//Mise a jour de la liste d'autocompletion des contextes
-	if($("#listeContexteAutocompletion option[value='"+contexte+"']").size()==0)//Si le contexte n'a pas été ajouté à la liste...
-		$("#listeContexteAutocompletion").append("<option value=\""+contexte+"\">");//On le rajoute
+	ajouteListeContextSiAbsent(contexte);
 
 
 	$.post(

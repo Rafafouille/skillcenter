@@ -9,7 +9,7 @@
 				/<span id="modifNotation_max">0</span>
 				<br/>
 				<label for="modifNotation_contexte">Contexte : </label>
-				<input type="text" placeholder="Ex : TP, DM1, ..." id="modifNotation_contexte" name="modifNotation_contexte"/>
+				<input type="text" placeholder="Ex : TP, DM1, ..." id="modifNotation_contexte" list="listeContexteAutocompletion" name="modifNotation_contexte"/>
 				<br/>
 				<label for="modifNotation_commentaire">Commentaire de l'évaluation : </label>
 				<textarea  placeholder="A sur faire ceci, doit revoir cela..." id="modifNotation_commentaire" name="modifNotation_commentaire"></textarea>

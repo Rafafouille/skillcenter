@@ -38,6 +38,9 @@ modifieNotation=function(id,note,contexte,commentaire)
 			modifieNotation_CallBack,	//Fonction callback
 			"json"	//Type de réponse
 	);
+	
+	//Mise a jour de la liste d'autocompletion des contextes
+	ajouteListeContextSiAbsent(contexte);
 }
 
 
