@@ -9,7 +9,8 @@ function NOTATION_ajouteGroupeCompetences(groupe,conteneur,modeNotation,recreeDe
 {
 	//Paramètres par défaut (ancien)
 	var recreeDeZero = typeof recreeDeZero !== 'undefined' ? recreeDeZero : false;
-
+	var sommeNiveaux=0;		//Somme des niveaux (~notes) de l'eleve pour chaque critere de ce domaine
+	var sommeNiveauxMax=0;	//Somme des niveaux maxi atteignables
 
 	//Si le groupe n'existe pas (ou si il faut recréer de zéro) --> on le crée
 	if(recreeDeZero || !$("#NOTATION_groupe_"+groupe.id).length)
@@ -32,19 +33,28 @@ function NOTATION_ajouteGroupeCompetences(groupe,conteneur,modeNotation,recreeDe
 	for(idComp in groupe.listeCompetences)
 	{
 		var competence=groupe.listeCompetences[idComp];
-		NOTATION_ajouteCompetence(competence,"#NOTATION_groupe_"+groupe.id+" .groupe_contenu",modeNotation,recreeDeZero);
+		var evaluation=NOTATION_ajouteCompetence(competence,"#NOTATION_groupe_"+groupe.id+" .groupe_contenu",modeNotation,recreeDeZero);$
+		sommeNiveaux+=evaluation.niveau;
+		sommeNiveauxMax+=evaluation.niveauMax;
+		
 	}
+	
+	//Renvoie la valeur de l'evaluation et le nombre de niveaux max
+	return {niveau:sommeNiveaux,niveauMax:sommeNiveauxMax};
 }
 
 
 
 //Fonction qui ajoute une competence dans un groupe
+//Renvoie la valeur de la somme des evaluation et la somme de niveaux max
 function NOTATION_ajouteCompetence(competence,conteneur,modeNotation,recreeDeZero)
 {
 	//Paramètres par défaut (ancien)
 	var recreeDeZero = typeof recreeDeZero !== 'undefined' ? recreeDeZero : false;
 
-
+	var sommeNiveaux=0;		//Somme des niveaux (~notes) de l'eleve pour chaque critere de cette competence
+	var sommeNiveauxMax=0;	//Somme des niveaux maxi atteignables
+	
 	numeroCompetence++;	//Globale
 	numeroIndicateur=0;	//Globale
 
@@ -68,11 +78,19 @@ function NOTATION_ajouteCompetence(competence,conteneur,modeNotation,recreeDeZer
 	for(idInd in competence.listeIndicateurs)
 	{
 		var indicateur=competence.listeIndicateurs[idInd];
-		NOTATION_ajouteIndicateur(indicateur,"#NOTATION_competence_"+competence.id+" .listeIndicateurs table");
+		var evaluation=NOTATION_ajouteIndicateur(indicateur,"#NOTATION_competence_"+competence.id+" .listeIndicateurs table");
+
+		sommeNiveaux+=evaluation.niveau;
+		sommeNiveauxMax+=evaluation.niveauMax;
+
 	}
+	
+	//Renvoie la valeur de l'evaluation et le nombre de niveaux max
+	return {niveau:sommeNiveaux,niveauMax:sommeNiveauxMax};
 }
 
 //Fonction qui ajoute une indicateur dans une compétence
+//Renvoie la valeur de l'evaluation et le nombre de niveaux max
 function NOTATION_ajouteIndicateur(indicateur,conteneur)
 {
 	numeroIndicateur++;
@@ -116,6 +134,14 @@ function NOTATION_ajouteIndicateur(indicateur,conteneur)
 		$("#NOTATION_indicateur_"+indicateur.id).replaceWith(rendu);
 	else	//Sinon on l'ajoute
 		$(conteneur).append(rendu);
+
+		
+	/*a=indicateur.niveauEleveMax;
+	console.log((a+Math.abs(a)));
+	console.log(((a+Math.abs(a))*0.5)+" - "+parseInt(indicateur.niveauMax));*/
+		
+	//Renvoie la valeur de l'evaluation et le nombre de niveaux max
+	return {niveau:parseInt((parseInt(indicateur.niveauEleveMax)+Math.abs(parseInt(indicateur.niveauEleveMax)))*0.5),niveauMax:parseInt(indicateur.niveauMax)};
 }
 
 

@@ -67,6 +67,8 @@ updateNotationEleve=function(reponse)
 	//VARIABLES GLOABLES !!
 	numeroCompetence=0;
 	numeroIndicateur=0;
+	var sommeNiveaux=0;		//Somme des niveaux (~notes) de l'eleve pour chaque critere de ce domaine
+	var sommeNiveauxMax=0;	//Somme des niveaux maxi atteignables
 
 	if(NOTATION_REDESSINE_DE_ZERO)
 		$("#RecapNotationEleve").empty();
@@ -76,8 +78,16 @@ updateNotationEleve=function(reponse)
 	for(idGr in listeGroupes)
 	{
 		var groupe=listeGroupes[idGr];
-		NOTATION_ajouteGroupeCompetences(groupe,"#RecapNotationEleve","RecapNote",NOTATION_REDESSINE_DE_ZERO);
+		var evaluation=NOTATION_ajouteGroupeCompetences(groupe,"#RecapNotationEleve","RecapNote",NOTATION_REDESSINE_DE_ZERO);
+		sommeNiveaux+=evaluation.niveau;
+		sommeNiveauxMax+=evaluation.niveauMax;
 	}
+	
+	//Mise à jour de l'affichage du pourcentage
+	$("#BILAN_pourcentage").text(parseInt(sommeNiveaux/sommeNiveauxMax*100)+"%");
+	
+	
+	
 	NOTATION_REDESSINE_DE_ZERO=false;//Si on change d'élève, on ne redessine pas tout
 }
 
@@ -175,7 +185,6 @@ valideCommentaireEval_callback=function(reponse)
 	if(reponse.commentaire.commentaire!="")
 		$("#NOTATION_indicateur_"+idIndicateur+" .boutonCommentaires").css("visibility","visible");//Affiche la bulle, si elle n'est pas visible
 	bilanFermeCommentaire(idIndicateur);
-
 }
  
 
