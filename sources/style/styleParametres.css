@@ -67,8 +67,8 @@ GROUPE COMPETENCES
 	margin:auto;
 	margin-bottom:5px;
 	background-color:#DDDDFF;
-	border-radius:15px;
-	box-shadow: 8px 8px 12px #aaa;
+	border-radius:5px;
+	box-shadow: 3px 3px 4px #aaa;
 	width:90%;
 	overflow:hidden;
 }
@@ -80,13 +80,13 @@ GROUPE COMPETENCES
 	padding:0px;
 	/*padding-top:1px;
 	padding-bottom:1px;*/
-	border-radius:15px;
+	border-radius:5px;
 	cursor:pointer;
 	color:white;
 }
 .groupe_competences .entete_groupe_competences	/* Entete/Titre Groupe de competence non-selectionné*/
 {
-	background-color:#AAAAFF;
+	background-color:#BBBBFF;
 }
 .groupe_competences_unselected .entete_groupe_competences	/* Entete/Titre Groupe de competence non-selectionné*/
 {
