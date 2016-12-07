@@ -84,7 +84,8 @@ updateNotationEleve=function(reponse)
 	}
 	
 	//Mise à jour de l'affichage du pourcentage
-	$("#BILAN_pourcentage").text(parseInt(sommeNiveaux/sommeNiveauxMax*100)+"%");
+	if(STATUT=="admin" || STATUT=="evaluateur")
+		$("#BILAN_pourcentage").text("(Total : "+parseInt(sommeNiveaux/sommeNiveauxMax*100)+"%)");
 	
 	
 	

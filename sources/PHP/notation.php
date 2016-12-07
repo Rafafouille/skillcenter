@@ -39,7 +39,7 @@
 						}
 						?>
 
-						<h2>Évaluations (Total : <span id="BILAN_pourcentage"></span>)</h2>
+						<h2>Évaluations <span id="BILAN_pourcentage"></span></h2>
 					</div>
 					
 					
