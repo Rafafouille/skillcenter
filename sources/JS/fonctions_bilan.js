@@ -234,9 +234,9 @@ bilanFermeCommentaire=function(idInd)
 
 
 
-//Fonction qui vérivie si un contexte est déjà présent dans la data-liste contexte, et qui le renvoie le cas échéant.
+//Fonction qui vérivie si un contexte est déjà présent dans la data-liste contexte, et qui l'ajoute le cas échéant.
 //Renvoie vrai si le contexte éxistait deja
-listeContexteAutocompletion=function(contexte)
+ajouteListeContextSiAbsent=function(contexte)
 {
 	if($("#listeContexteAutocompletion option[value='"+contexte+"']").size()==0)//Si le contexte n'a pas été ajouté à la liste...
 	{
