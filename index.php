@@ -148,6 +148,7 @@ include("./sources/PHP/actions.php");
 					if($_SESSION['statut']=="admin")	//Si admin
 					include("./sources/PHP/competences.php");//Administration Compétences
 
+
 				?>
 	
 			</div>
@@ -155,8 +156,12 @@ include("./sources/PHP/actions.php");
 
 	
 
-		<?php include('./sources/PHP/boites.php');?>
+		<?php
+		//Boites 
+		include('./sources/PHP/boites.php');
 		
+		//Listes de données pour les inputs
+		include("./sources/PHP/listes_input.php");?>
 		<footer>
 			<!-- Placez ici le contenu du pied de page -->
 		</footer>

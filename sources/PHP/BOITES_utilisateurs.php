@@ -13,7 +13,7 @@
 					</tr>
 					<tr>
 						<td><label for="newUser_classe"/>Classe : </label></td>
-						<td><input type="text" name="newUser_classe" id="newUser_classe" placeholder="Classe" /></td>
+						<td><input type="text" name="newUser_classe" list="listeClassesAutocompletion" id="newUser_classe" placeholder="Classe" /></td>
 					</tr>
 					<tr>
 						<td><label for="newUser_login"/>Nom d'utilisateur : </label></td>
