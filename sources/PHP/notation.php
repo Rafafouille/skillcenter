@@ -1,8 +1,6 @@
 			
 				<div id="tab-notation">
 
-
-
 					<div id="enteteTabNotation">
 
 						<div class="bouton_top" onclick="$('#RecapNotationEleve .groupe_contenu,#RecapNotationEleve .listeIndicateurs').slideUp();">
@@ -20,9 +18,12 @@
 						if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur")
 						{?>
 						<form id="notationFormulaireListesClasseEtEleves" style="float:right;">
+							<select id="BILAN_listeContextes" name="BILAN_listeContextes" onchange="getNotationEleve($('#notationListeEleves').val(),$(this).val());">
+								<option value="ALL_CONTEXTE">Choix du contexte</option>
+							</select>
 							<select name="notationListeClasses" id="notationListeClasses" onchange="NotationGetListeEleves($(this).val());">
 							</select>
-							<select name="notationListeEleves" id="notationListeEleves" onchange="getNotationEleve($(this).val());">
+							<select name="notationListeEleves" id="notationListeEleves" onchange="getNotationEleve($(this).val(),$('#BILAN_listeContextes').val());">
 							</select>
 							<span id="bilanBoutonEleveSuivant" class="selectboxit test selectboxit-enabled selectboxit-btn" onclick="bilanBoutonEleveSuivant();" title="Élève suivant"><span>&#8626;</span></span>
 						</form>

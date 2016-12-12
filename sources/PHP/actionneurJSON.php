@@ -354,6 +354,11 @@ if($action=="getNotationEleves")
 {
 	$eleve=0;
 	if(isset($_POST['eleve'])) $eleve=intval($_POST['eleve']);
+	
+	$contexte="ALL_CONTEXTE";
+	if(isset($_POST['contexte'])) $contexte=$_POST['contexte'];
+	$conditionSurContexte="";
+	if($contexte!="ALL_CONTEXTE") $conditionSurContexte=" AND contexte='".$contexte."'";
 
 	if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur" || $eleve==$_SESSION['id'] && $eleve>0)	//Si admin, ou utilisateur connecté qui demande sa propre notation
 	{
@@ -363,7 +368,7 @@ if($action=="getNotationEleves")
 		$reqClasse = $bdd->prepare('SELECT classe FROM '.$BDD_PREFIXE.'utilisateurs WHERE id=:eleve');
 		$reqClasse->execute(array('eleve'=>$eleve));
 		
-		if($donneesClasse=$reqClasse->fetch())//Si pas d'eleve selectionné
+		if($donneesClasse=$reqClasse->fetch())
 		{		
 			$classe=$donneesClasse['classe'];
 			
@@ -416,7 +421,7 @@ if($action=="getNotationEleves")
 				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["selected"]=true;
 				
 				//Note max
-				$reqNote = $bdd->prepare("SELECT MAX(note) as max FROM ".$BDD_PREFIXE."notation WHERE eleve=:eleve AND indicateur=".$idInd);
+				$reqNote = $bdd->prepare("SELECT MAX(note) as max FROM ".$BDD_PREFIXE."notation WHERE eleve=:eleve AND indicateur=".$idInd.$conditionSurContexte);
 				$reqNote->execute(array('eleve'=>$eleve));
 				if($donneesNote=$reqNote->fetch())
 					{if($donneesNote["max"]==null) $donneesNote["max"]=-1;
@@ -424,7 +429,7 @@ if($action=="getNotationEleves")
 					}
 
 				//Note moyenne
-				$reqNote = $bdd->prepare("SELECT AVG(note) as moy FROM ".$BDD_PREFIXE."notation WHERE eleve=:eleve AND indicateur=".$idInd);
+				$reqNote = $bdd->prepare("SELECT AVG(note) as moy FROM ".$BDD_PREFIXE."notation WHERE eleve=:eleve AND indicateur=".$idInd.$conditionSurContexte);
 				$reqNote->execute(array('eleve'=>$eleve));
 				if($donneesNote=$reqNote->fetch())
 					{if($donneesNote["moy"]==null) $donneesNote["moy"]=-1;
@@ -432,7 +437,7 @@ if($action=="getNotationEleves")
 					}
 
 				//Derniere note
-				$reqNote = $bdd->prepare("SELECT note as last FROM ".$BDD_PREFIXE."notation WHERE eleve=:eleve AND indicateur=".$idInd." ORDER BY date DESC LIMIT 1");
+				$reqNote = $bdd->prepare("SELECT note as last FROM ".$BDD_PREFIXE."notation WHERE eleve=:eleve AND indicateur=".$idInd.$conditionSurContexte." ORDER BY date DESC LIMIT 1");
 				$reqNote->execute(array('eleve'=>$eleve));
 				if($donneesNote=$reqNote->fetch())
 					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveLast"]=$donneesNote["last"];
@@ -440,7 +445,7 @@ if($action=="getNotationEleves")
 				//Commentaires ou non ?
 				if($AUTORISE_COMMENTAIRES)
 				{
-					$reqCom = $bdd->prepare("SELECT id FROM ".$BDD_PREFIXE."notation WHERE eleve=:eleve AND indicateur=".$idInd." AND commentaire<>\"\" LIMIT 1");
+					$reqCom = $bdd->prepare("SELECT id FROM ".$BDD_PREFIXE."notation WHERE eleve=:eleve AND indicateur=".$idInd.$conditionSurContexte." AND commentaire<>\"\" LIMIT 1");
 					$reqCom->execute(array('eleve'=>$eleve));
 					if($donneesCom=$reqCom->fetch())
 						$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["commentaires"]=true;

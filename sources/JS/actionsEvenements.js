@@ -16,6 +16,7 @@ onChangeTab=function(event,ui)
 	//1er affichage de l'onglet "Notation"
 	if(listeOnglets[iOnglet]=="Bilan" && !NOTATION_LOADED)//Si la page "notation" n'a jamais été chargée
 	{
+		updateListeContexteDansMenu();
 		NOTATION_LOADED=true;
 		if(STATUT=="admin" || STATUT=="evaluateur")	//Si c'est un prof qui est connecté
 		{

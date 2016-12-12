@@ -46,13 +46,14 @@ bilanBoutonEleveSuivant=function()
 }
 
 //METTRE A JOUR LA NOTATION POUR UN ELEVE**********************
-getNotationEleve=function(eleve)
+getNotationEleve=function(eleve,contexte="ALL_CONTEXTE")
 {
 	$.post(
 			'./sources/PHP/actionneurJSON.php',//Requete appelée
 			{	//Les données à passer par POST
 				action:"getNotationEleves",
-				eleve:eleve//$("#notationListeEleves").val()
+				eleve:eleve,
+				contexte:contexte
 			},
 			updateNotationEleve,	//Fonction callback
 			"json"	//Type de réponse

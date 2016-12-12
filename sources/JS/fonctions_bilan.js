@@ -246,3 +246,16 @@ ajouteListeContextSiAbsent=function(contexte)
 	return true;
 }
 
+//Fonction qui vérivie si un contexte est déjà présent dans la data-liste contexte, et qui l'ajoute le cas échéant.
+//Renvoie vrai si le contexte éxistait deja
+updateListeContexteDansMenu=function()
+{
+	$("#BILAN_listeContextes").empty();
+	$("#BILAN_listeContextes").append("<option value=\"ALL_CONTEXTE\">Choix du contexte</option>");
+	$("#listeContexteAutocompletion option").each(function(index)
+	{
+		var contexte=$(this).val();
+		$("#BILAN_listeContextes").append("<option value=\""+contexte+"\">"+contexte+"</option>");
+	});
+	$("#BILAN_listeContextes").data("selectBox-selectBoxIt").refresh();
+}

@@ -9,7 +9,7 @@
 	$reponse=$bdd->query("SELECT DISTINCT contexte FROM ".$BDD_PREFIXE."notation WHERE contexte<>''");
 	while($donnees=$reponse->fetch())
 	{
-		echo "<option value=\"".$donnees["contexte"]."\">\n";
+		echo "<option value=\"".$donnees["contexte"]."\">".$donnees["contexte"]."</option>\n";
 	}
 	?>
 </datalist>
