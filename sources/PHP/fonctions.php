@@ -32,9 +32,100 @@ function connectToBDD()
 }
 
 
+// ==============================================
+// UTILISATEUR
+// ================================================
+
+//Envoie un bilan à l'utilisateur. Renvoie 1 si ca a marché et false sinon.
+function envoieBilan($id)
+{
+	global $bdd,$BDD_PREFIXE;
+	$req=$bdd->prepare("SELECT mail, date_dernier_envoi_bilan, notifieMail FROM ".$BDD_PREFIXE."utilisateurs WHERE id=:id AND mail<>''");
+	$req->execute(array('id'=>$id));
+	if($donnee=$req->fetch())
+	{
+		if(intval($donnee["notifieMail"]))
+		{
+			$sujet="[SkillCenter] Bilan des compétences";
+			$mail=$donnee["mail"];
+
+			//Header du mail
+			$passage_ligne = "\n";//Choix du retour à la ligne selon serveur
+			if (!preg_match("#^[a-z0-9._-]+@(hotmail|live|msn).[a-z]{2,4}$#", $mail))
+				$passage_ligne = "\r\n";
+			$boundary = "-----=".md5(rand());
+			$header = "From: \"SkillCenter (Ne pas répondre)\" <noreply@allais.eu>".$passage_ligne;
+			$header .= "Reply-to: noreply@allais.eu".$passage_ligne;
+			$header .= "MIME-Version: 1.0".$passage_ligne;
+			$header .= "Content-Type: multipart/alternative;".$passage_ligne." boundary=\"$boundary\"".$passage_ligne;
+
+
+
+			$req2=$bdd->prepare("SELECT MAX(n.note) AS note,i.nom AS nomInd, i.id AS idInd, c.nom AS nomComp, c.id AS idComp, g.nom AS nomGr, g.id AS idGr FROM ".$BDD_PREFIXE."notation AS n JOIN ".$BDD_PREFIXE."indicateurs AS i ON n.indicateur=i.id JOIN ".$BDD_PREFIXE."competences AS c ON i.competence=c.id JOIN ".$BDD_PREFIXE."groupes_competences AS g ON c.groupe=g.id WHERE n.date>'".$donnee['date_dernier_envoi_bilan']."' AND n.eleve=:id GROUP BY n.indicateur ORDER BY g.id,c.id,i.id");
+			$req2->execute(array('id'=>$id));
+
+			//Début message txt
+			$messageTXT="Bonjour !".$passage_ligne.$passage_ligne."Vous avez obtenu les évaluations suivantes :".$passage_ligne;
+			//Début Message HTML
+			$messageHTML = "<html><head></head><body>";
+			$messageHTML.="<h1>Bonjour,</h1>
+	<p>Vous avez obtenu les évaluations suivantes :</p>";
+			//Liste des criteres
+			$domaine=-1;
+			$competence=-1;
+			$indicateur=-1;
+
+
+			while($data2=$req2->fetch())
+			{
+				if($domaine!=intval($data2["idGr"]))//Si on change de domaine
+				{
+					$domaine=intval($data2["idGr"]);
+					$messageHTML.="<h2>".$data2["nomGr"]."</h2>".$passage_ligne;
+					$messageTXT.="=============================".$passage_ligne.$data2["nomGr"].$passage_ligne."=============================".$passage_ligne;
+				}
+				if($competence!=intval($data2["idComp"]))//Si on change de domaine
+				{
+					$competence=intval($data2["idComp"]);
+					$messageHTML.="<h3>".$data2["nomComp"]."</h3>".$passage_ligne;
+					$messageTXT.="*** ".$data2["nomComp"]." ***".$passage_ligne;
+				}
+				$messageHTML.="<div>".$data2["nomInd"]." --> ".$data2["note"]."</div>";
+				$messageTXT.="  - ".$data2["nomInd"]." --> ".$data2["note"].$passage_ligne;
+			}
+			$messageHTML.="<br/>SkillCenter";
+			$messageHTML.="</body></html>";
+			$messageTXT.="-- ".$passage_ligne."SkillCenter";
+		
+			//Message complet
+			$message = $passage_ligne."--".$boundary.$passage_ligne;
+			//Message au format TXT
+			$message.="Content-Type: text/plain; charset=\"UTF-8\"".$passage_ligne;
+			$message.="Content-Transfer-Encoding: 8bit".$passage_ligne;
+			$message.=$passage_ligne.$messageTXT.$passage_ligne;
+			//Fin du message TXT
+			$message .= $passage_ligne."--".$boundary.$passage_ligne;
+			//Ajout du message HTML
+			$message.= "Content-Type: text/html; charset=\"UTF-8\"".$passage_ligne;
+			$message.= "Content-Transfer-Encoding: 8bit".$passage_ligne;
+			$message.= $passage_ligne.$messageHTML.$passage_ligne;
+			//==========
+			$message.= $passage_ligne."--".$boundary."--".$passage_ligne;
+		//	$message.= $passage_ligne."--".$boundary."--".$passage_ligne;
+			//==========
+			//Envoi
+
+
+			mail($mail,$sujet,$message,$header);
+			return 1;
+		}//Fin du "si on peut notifier"
+	}
+	return 0;
+}
+
 
 // ==============================================
-// NOTATION 
+// BILAN
 // ================================================
 
 
@@ -433,7 +524,7 @@ function supprimeDomaine($idDomaine,$supprComp=true,$supprInd=true)
 // =================================
 // A SUPPRIMER ?????
 //Renvoie une couleur de l'arc en ciel entre rouge et vert (pour les compétences)
-function setArcEnCiel($val,$maxi)
+/*function setArcEnCiel($val,$maxi)
 {
 	if($val<0)
 		return "#FF0000";
@@ -444,7 +535,7 @@ function setArcEnCiel($val,$maxi)
 		return "#FF".substr("00".dechex(2*$n*255),-2,2)."00";
 	else
 		return "#".substr("00".dechex((2-2*$n)*255),-2,2)."FF00";
-}
+}*/
 
 
 
@@ -457,7 +548,7 @@ function setArcEnCiel($val,$maxi)
 // $modifiable : true si c'est le prof (qui peut cliquer et modifier), false sinon
 // $maxi : valeur maxi de l'échelle
 // $indicateur donne le numéro ID de l'indicateur (pour pouvoir cliquer dessus et enregistrer la note)
-function printEchelleCouleur($note,$maxi,$modifiable=false,$indicateur=0)
+/*function printEchelleCouleur($note,$maxi,$modifiable=false,$indicateur=0)
 {
 	for($i=0;$i<=$maxi;$i++)
 	{
@@ -484,7 +575,7 @@ function printEchelleCouleur($note,$maxi,$modifiable=false,$indicateur=0)
 			<div class="'.$classCSS.'" style="'.$styleBackground.'" onclick="'.$actionJS.'">'.$i.'</div>';
 		
 	}
-}
+}*/
 
 
 

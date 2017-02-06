@@ -157,7 +157,9 @@ if($action=="addUser")
 				'prenom' => ucwords($_POST['newUser_prenom']),
 				'login' => $_POST['newUser_login'],
 				'mdp' => crypt($_POST['newUser_psw'],$SALT),//Le 2ème paramètre : voir la fonction crypt (salt (pas très efficace si constant... mais tant pis)
-				'classe' => strtoupper($_POST['newUser_classe'])
+				'classe' => strtoupper($_POST['newUser_classe']),
+				'mail' => $_POST['newUser_mail'],
+				'notifieMail' => $_POST['newUser_notifieMail']
 			);
 		$req = $bdd->prepare('SELECT id FROM '.$BDD_PREFIXE.'utilisateurs WHERE login=:login');
 		$req->execute(array('login'=>$_POST['newUser_login']));
@@ -165,7 +167,7 @@ if($action=="addUser")
 			$reponseJSON["messageRetour"]=":(Le login \"".$_POST["newUser_login"]."\" existe déjà !";
 		else
 		{
-			$req2 = $bdd->prepare('INSERT INTO '.$BDD_PREFIXE.'utilisateurs(nom, prenom, login, mdp, classe) VALUES(:nom, :prenom, :login, :mdp, :classe)');
+			$req2 = $bdd->prepare('INSERT INTO '.$BDD_PREFIXE.'utilisateurs(nom, prenom, login, mdp, classe,mail,notifieMail) VALUES(:nom, :prenom, :login, :mdp, :classe, :mail, :notifieMail)');
 			$req2->execute($tableau);
 			$reponseJSON["messageRetour"]=":)L'utilisateur << ".$_POST["newUser_prenom"]." ".$_POST['newUser_nom']." >> a bien été ajouté !";
 		}
@@ -196,24 +198,28 @@ if($action=="updateUser")
 			//Modifications
 			if($_POST['newUser_psw']!="")//Si un nouveau mot de passe est proposé
 			{
-				$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'utilisateurs SET nom=:nom, prenom=:prenom, mdp=:mdp, login=:login, classe=:classe WHERE id=:id');
+				$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'utilisateurs SET nom=:nom, prenom=:prenom, mdp=:mdp, login=:login, classe=:classe, mail=:mail, notifieMail=:notifieMail WHERE id=:id');
 				$req->execute(array(
 						'nom' => $_POST["newUser_nom"],
 						'prenom' => $_POST['newUser_prenom'],
 						'login' => $_POST['newUser_login'],
 						'mdp' => crypt($_POST['newUser_psw'],$SALT),
 						'classe' => $_POST['newUser_classe'],
+						'mail' => $_POST['newUser_mail'],
+						'notifieMail' => $_POST['newUser_notifieMail'],
 						'id'	=>	$_POST['id']
 					));
 			}
 			else
 			{
-				$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'utilisateurs SET nom=:nom, prenom=:prenom, login=:login, classe=:classe WHERE id=:id');
+				$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'utilisateurs SET nom=:nom, prenom=:prenom, login=:login, classe=:classe, mail=:mail, notifieMail=:notifieMail WHERE id=:id');
 				$req->execute(array(
 						'nom' => $_POST["newUser_nom"],
 						'prenom' => $_POST['newUser_prenom'],
 						'login' => $_POST['newUser_login'],
 						'classe' => $_POST['newUser_classe'],
+						'mail' => $_POST['newUser_mail'],
+						'notifieMail' => $_POST['newUser_notifieMail'],
 						'id'	=>	$_POST['id']
 					));
 			}
@@ -301,7 +307,28 @@ if($action=="delUser")
 }
 
 
+// Envoie un bilan à UN utilisateur ************************
 
+if($action=="envoieBilan")
+{
+	if($_SESSION['statut']=="admin")
+	{
+		connectToBDD();
+		$id=0;
+		if(isset($_POST['id'])) $id=intval($_POST['id']);
+		if($id)
+		{
+			$reponseJSON["debug"]=envoieBilan($id);//Envoi du bilan
+				$reponseJSON["messageRetour"]=":)Le bilan a bien été envoyé.";	
+//			else
+//				$reponseJSON["messageRetour"]=":(Le bilan n'a pas été envoyé.";	
+		}
+		else //Si pas d'id
+			$reponseJSON["messageRetour"]=":(Aucune utilisateur à qui envoyer un bilan.";
+	}
+	else //Si pas admin
+		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit d'envoyer le bilan à un utilisateur.";
+}
 
 
 

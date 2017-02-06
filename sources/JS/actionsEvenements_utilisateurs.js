@@ -30,7 +30,7 @@ updateListeUsersAdmin=function(reponse)
 }
 
 
-//Transforme les donées users de JSON en code HTML
+//Transforme les données users de JSON en code HTML
 getUserHTMLfromJSON=function(user)
 {
 	var sousClasse=user.statut;
@@ -46,13 +46,17 @@ getUserHTMLfromJSON=function(user)
 	}
 
 	retour= ""
-+"										<div class=\"user "+sousClasse+"\" id=\"user_"+user.id+"\"  data-id=\""+user.id+"\" onmouseenter =\"$(this).find('.boutons_user').css('visibility','visible');\" onmouseleave=\"$(this).find('.boutons_user').css('visibility','hidden');\">"
++"										<div class=\"user "+sousClasse+"\" id=\"user_"+user.id+"\"  data-id=\""+user.id+"\" data-mail=\""+user.mail+"\" data-notifiemail=\""+user.notifieMail+"\" onmouseenter =\"$(this).find('.boutons_user').css('visibility','visible');\" onmouseleave=\"$(this).find('.boutons_user').css('visibility','hidden');\">"
 +"											<span class=\"iconeUser\"></span>"
 +"											<span class=\"nom-user\" onclick=\"ouvreBoiteModifieUser("+user.id+")\">"+user.nom+"</span>"
 +"											<span class=\"prenom-user\" onclick=\"ouvreBoiteModifieUser("+user.id+")\">"+user.prenom+"</span>"
 +"											<span class=\"classe-user\" onclick=\"ouvreBoiteModifieUser("+user.id+")\">"+user.classe+"</span>"
-+"											<span class=\"login-user\" onclick=\"ouvreBoiteModifieUser("+user.id+")\" >"+user.login+"</span>"
-+"											<span class=\"boutons_user\" >"
++""//"											<span class=\"login-user\" onclick=\"ouvreBoiteModifieUser("+user.id+")\" >"+user.login+"</span>"
++"											<span class=\"boutons_user\" >";
+		if(user.mail!="")
+	retour += ""
++"												<span class=\"bouton_user ADMIN_USER_bouton_envoie_bilan\" title=\"Envoyer le bilan\" onclick=\"envoieBilan("+user.id+")\"></span>";
+	retour+= ""
 +"												<span class=\"bouton_user ADMIN_USER_bouton_Modif\" title=\"Modifier l'utilisateur\" onclick=\"ouvreBoiteModifieUser("+user.id+")\"></span>"
 +"												<span class=\"bouton_user ADMIN_USER_bouton_Supprime\" title=\"Supprimer l'utilisateur\" onclick=\""+onClickBoutonModif+"\"></span>"
 +"												<span class=\"bouton_user ADMIN_USER_bouton_Change_Statut\" title=\"Modifier le statut de l'utilisateur\" onclick=\""+onClickBoutonStatut+"\"></span>"
@@ -72,10 +76,11 @@ ajouteUpdateUser=function()
 	var login=$("#newUser_login").val();
 	var mdp=$("#newUser_psw").val();
 	var id=$("#newUser_id").val();
-	if(id==-1)
-		var action="addUser";
-	else
-		var action="updateUser";
+	var mail=$("#newUser_mail").val();
+	var notifieMail=$("#newUser_notifieMail").prop('checked')?"1":"0";
+
+	if(id==-1)	var action="addUser";
+	else				var action="updateUser";
 	$.post(
 			'./sources/PHP/actionneurJSON.php',//Requete appelée
 			{	//Les données à passer par POST
@@ -85,7 +90,9 @@ ajouteUpdateUser=function()
 				newUser_prenom:prenom,
 				newUser_classe:classe,
 				newUser_login:login,
-				newUser_psw:mdp
+				newUser_psw:mdp,
+				newUser_mail:mail,
+				newUser_notifieMail:notifieMail,
 			},
 			valideNewUpdateUser,	//Fonction callback
 			"json"	//Type de réponse
@@ -108,9 +115,14 @@ ouvreBoiteModifieUser=function(i)
 	var login=$( "#newUser_login").val($("#user_"+i+" .login-user").text());
 	var mdp=$( "#newUser_psw").val("");
 	var id=$( "#newUser_id").val(i);
+	var mail=$("#newUser_mail").val($("#user_"+i).attr("data-mail"));
+	if($("#user_"+i).attr("data-notifiemail")=="1")
+		$("#newUser_notifieMail").prop('checked', true);
+	else
+		$("#newUser_notifieMail").prop('checked', false);
+
 	$('#dialog-addUser').dialog('open');
 }
-
 
 // SUPPRIMER USER --------
 ouvreBoiteSupprimeUser=function(i,nom)
@@ -162,3 +174,24 @@ callBack_changeStatut=function(reponse)
 	//$("#boutonModifieStatut_"+user.id).replaceWith(getBoutonUpAndDowngradeUserFromJSON(user));
 	$("#user_"+user.id).attr('class', 'user '+user.statut);
 }
+
+//Fonction qui envoie un bilan à l'utilisateur
+envoieBilan=function(idEleve)
+{
+	$.post(
+		'./sources/PHP/actionneurJSON.php',//Requete appelée
+		{	//Les données à passer par POST
+			action:"envoieBilan",
+			id:idEleve
+		},
+		callBack_envoieBilan,	//Fonction callback
+		"json"	//Type de réponse
+	);
+}
+
+callBack_envoieBilan=function(reponse)
+{
+	afficheMessage(reponse.messageRetour);
+}
+
+

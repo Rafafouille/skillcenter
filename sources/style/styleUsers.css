@@ -129,6 +129,7 @@ INTERIEUR DES USERS
 .user .boutons_user
 {
 	visibility:hidden;
+	width:158px;
 }
 .user .boutons_user img
 {
@@ -146,6 +147,11 @@ INTERIEUR DES USERS
 	height:32px;
 	vertical-align:middle;
 	cursor:pointer;
+}
+
+.user .bouton_user.ADMIN_USER_bouton_envoie_bilan
+{
+	background-image:url('../images/icone-envoieBilan.png');
 }
 
 .user .bouton_user.ADMIN_USER_bouton_Modif

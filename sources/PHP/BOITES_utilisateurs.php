@@ -23,6 +23,14 @@
 						<td><label for="newUser_psw"/>Mot de passe : </label></td>
 						<td><input type="password" name="newUser_psw" id="newUser_psw" placeholder="(Secret)" required /></td>
 					</tr>
+					<tr>
+						<td><label for="newUser_mail"/>Adresse courriel : </label></td>
+						<td><input type="mail" name="newUser_mail" id="newUser_mail" placeholder="Ex : comte@serveur.fr"/></td>
+					</tr>
+					<tr>
+						<td><label for="newUser_notifieMail"/>Recevoir des notifications ? </label></td>
+						<td><input type="checkbox" name="newUser_notifieMail" id="newUser_notifieMail" checked="checked"/></td>
+					</tr>
 				</table>
 				<input type="hidden" name="newUser_id" id="newUser_id" value="-1"/>
 			</form>
