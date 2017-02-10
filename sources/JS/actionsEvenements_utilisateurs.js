@@ -53,7 +53,7 @@ getUserHTMLfromJSON=function(user)
 +"											<span class=\"classe-user\" onclick=\"ouvreBoiteModifieUser("+user.id+")\">"+user.classe+"</span>"
 +""//"											<span class=\"login-user\" onclick=\"ouvreBoiteModifieUser("+user.id+")\" >"+user.login+"</span>"
 +"											<span class=\"boutons_user\" >";
-		if(user.mail!="")
+		if(user.mail!="" && parseInt(user.notifieMail)==1)
 	retour += ""
 +"												<span class=\"bouton_user ADMIN_USER_bouton_envoie_bilan\" title=\"Envoyer le bilan\" onclick=\"envoieBilan("+user.id+")\"></span>";
 	retour+= ""

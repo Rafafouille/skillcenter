@@ -40,7 +40,7 @@ function connectToBDD()
 function envoieBilan($id)
 {
 	global $bdd,$BDD_PREFIXE;
-	$req=$bdd->prepare("SELECT mail, date_dernier_envoi_bilan, notifieMail FROM ".$BDD_PREFIXE."utilisateurs WHERE id=:id AND mail<>''");
+	$req=$bdd->prepare("SELECT nom, prenom, mail, date_dernier_envoi_bilan, notifieMail FROM ".$BDD_PREFIXE."utilisateurs WHERE id=:id AND mail<>''");
 	$req->execute(array('id'=>$id));
 	if($donnee=$req->fetch())
 	{
@@ -61,41 +61,92 @@ function envoieBilan($id)
 
 
 
-			$req2=$bdd->prepare("SELECT MAX(n.note) AS note,i.nom AS nomInd, i.id AS idInd, c.nom AS nomComp, c.id AS idComp, g.nom AS nomGr, g.id AS idGr FROM ".$BDD_PREFIXE."notation AS n JOIN ".$BDD_PREFIXE."indicateurs AS i ON n.indicateur=i.id JOIN ".$BDD_PREFIXE."competences AS c ON i.competence=c.id JOIN ".$BDD_PREFIXE."groupes_competences AS g ON c.groupe=g.id WHERE n.date>'".$donnee['date_dernier_envoi_bilan']."' AND n.eleve=:id GROUP BY n.indicateur ORDER BY g.id,c.id,i.id");
+			$req2=$bdd->prepare("SELECT MAX(n.note) AS note,i.nom AS nomInd, i.id AS idInd, i.niveaux AS niveaux, c.nom AS nomComp, c.id AS idComp, g.nom AS nomGr, g.id AS idGr FROM ".$BDD_PREFIXE."notation AS n JOIN ".$BDD_PREFIXE."indicateurs AS i ON n.indicateur=i.id JOIN ".$BDD_PREFIXE."competences AS c ON i.competence=c.id JOIN ".$BDD_PREFIXE."groupes_competences AS g ON c.groupe=g.id WHERE n.date>'".$donnee['date_dernier_envoi_bilan']."' AND n.eleve=:id GROUP BY n.indicateur ORDER BY g.id,c.id,i.id");
 			$req2->execute(array('id'=>$id));
 
 			//Début message txt
-			$messageTXT="Bonjour !".$passage_ligne.$passage_ligne."Vous avez obtenu les évaluations suivantes :".$passage_ligne;
+			$messageTXT="Bonjour ".ucfirst($donnee["prenom"])." ".strtoupper($donnee["nom"])." !".$passage_ligne.$passage_ligne."Vous avez récemment obtenu les évaluations suivantes :".$passage_ligne;
 			//Début Message HTML
-			$messageHTML = "<html><head></head><body>";
-			$messageHTML.="<h1>Bonjour,</h1>
-	<p>Vous avez obtenu les évaluations suivantes :</p>";
+			$messageHTML = "<html><head>
+<style type=\"text/css\">
+
+	h2
+	{
+		background-color:#CCCCFF;
+		border-radius:5px;
+		padding:5px;
+		padding-left:20px;
+	}
+
+	.case_critere
+	{
+		display:inline-block;
+		width:20px;
+		height:20px;
+		text-align:center;
+		border-radius:4px;
+		font-size:small;
+		margin:2px;
+	}
+	.case_critere span
+	{
+		vertical-align:middle;
+	}
+	td
+	{
+		padding-left:40px;
+	}
+	.nomCritere::before
+	{ 
+	  content: \"⊕ \";
+  	color: blue;
+	}
+	#signature
+	{
+		font-style:italic;
+		color:gray;
+		border-top:solid gray;
+		padding-top:20px;
+		margin-top:20px;
+	}
+</style>
+</head><body>";
+			$messageHTML.="<h1>Bonjour ".ucfirst($donnee["prenom"])." ".strtoupper($donnee["nom"]).",</h1>
+
+	<p>Vous avez récemment obtenu les évaluations suivantes :</p>".$passage_ligne.$passage_ligne;
 			//Liste des criteres
 			$domaine=-1;
 			$competence=-1;
 			$indicateur=-1;
 
 
-			while($data2=$req2->fetch())
+			while($data2=$req2->fetch())	//Pour chaque compétence
 			{
+				if($domaine!=intval($data2["idGr"]) && $domaine!=-1 || $competence!=intval($data2["idComp"]) && $competence!=-1) //Si on finit une section...
+					$messageHTML.="</table>".$passage_ligne;//On finit un tableau
 				if($domaine!=intval($data2["idGr"]))//Si on change de domaine
 				{
 					$domaine=intval($data2["idGr"]);
 					$messageHTML.="<h2>".$data2["nomGr"]."</h2>".$passage_ligne;
-					$messageTXT.="=============================".$passage_ligne.$data2["nomGr"].$passage_ligne."=============================".$passage_ligne;
+					$messageTXT.=$passage_ligne."=============================".$passage_ligne.$data2["nomGr"].$passage_ligne."=============================".$passage_ligne;
 				}
-				if($competence!=intval($data2["idComp"]))//Si on change de domaine
+				if($competence!=intval($data2["idComp"]))//Si on change de competences
 				{
 					$competence=intval($data2["idComp"]);
-					$messageHTML.="<h3>".$data2["nomComp"]."</h3>".$passage_ligne;
-					$messageTXT.="*** ".$data2["nomComp"]." ***".$passage_ligne;
+					$messageHTML.=$passage_ligne.$passage_ligne."<h3>".$data2["nomComp"]."</h3>".$passage_ligne;
+					$messageHTML.="<table>".$passage_ligne;
+					$messageTXT.=$passage_ligne."*** ".$data2["nomComp"]." ***".$passage_ligne;
 				}
-				$messageHTML.="<div>".$data2["nomInd"]." --> ".$data2["note"]."</div>";
-				$messageTXT.="  - ".$data2["nomInd"]." --> ".$data2["note"].$passage_ligne;
+
+				$messageHTML.="<tr>".$passage_ligne."	<td class=\"nomCritere\">".$data2["nomInd"]."</td>".$passage_ligne."	<td>".afficheNiveauDansMailHTML($data2["note"],$data2["niveaux"])."</td>".$passage_ligne."</tr>".$passage_ligne;
+
+				$messageTXT.="  - ".(sizeof($data2["nomInd"])<40?substr($data2["nomInd"]."                                                                                             ",0,40):$data2["nomInd"])."   ".afficheNiveauDansMailTXT($data2["note"],$data2["niveaux"]).$passage_ligne;
+
 			}
-			$messageHTML.="<br/>SkillCenter";
-			$messageHTML.="</body></html>";
-			$messageTXT.="-- ".$passage_ligne."SkillCenter";
+			$messageHTML.="</table>".$passage_ligne;
+			$messageHTML.="<div id=\"signature\">".$passage_ligne."	<strong>Robot de SkillCenter<strong>".$passage_ligne."	<br/><span style=\"font-size:small;\">Ce message a été envoyé automatiquement.<br/>Merci de ne pas y répondre.</br>Si vous ne souhaitez plus recevoir ce genre de mail,<br/>contactez votre enseignant, administrateur ou responsable de l'évaluation.</span>".$passage_ligne."</div>".$passage_ligne;
+			$messageHTML.="</body></html>".$passage_ligne;
+			$messageTXT.="-- ".$passage_ligne."SkillCenter".$passage_ligne.$passage_ligne."Ce message a été envoyé automatiquement.".$passage_ligne."Merci de ne pas y répondre.".$passage_ligne."Si vous ne souhaitez plus recevoir ce genre de mail,".$passage_ligne."contactez votre enseignant, administrateur ou responsable de l'évaluation.";
 		
 			//Message complet
 			$message = $passage_ligne."--".$boundary.$passage_ligne;
@@ -123,6 +174,41 @@ function envoieBilan($id)
 	return 0;
 }
 
+//Fonction qui affiche les petites cases de niveau
+function afficheNiveauDansMailHTML($val,$max)
+{
+	global $INTITULES_NIVEAUX_CRITERES,$passage_ligne;
+	$val=intval($val);$max=intval($max);
+	if($max>sizeof($INTITULES_NIVEAUX_CRITERES)) $max=sizeof($INTITULES_NIVEAUX_CRITERES);
+	if($val>$max) $val=$max;
+	$contenu="";
+	for($i=0;$i<=$max;$i++)
+	{
+		$contenu.="<div class=\"case_critere\" style=\"background-color:".($i<=$val?setArcEnCiel($val,$max).";":"#DDDDDD;")."\"><span>";
+		if($i!=$val)	$contenu.="&nbsp;";
+		else	$contenu.=substr($INTITULES_NIVEAUX_CRITERES[$max-1][$val]." ",0,2);
+		$contenu.="</span></div>".$passage_ligne;
+	}
+	return $contenu;
+}
+function afficheNiveauDansMailTXT($val,$max)
+{
+	global $INTITULES_NIVEAUX_CRITERES;
+	$val=intval($val);$max=intval($max);
+	if($max>sizeof($INTITULES_NIVEAUX_CRITERES)) $max=sizeof($INTITULES_NIVEAUX_CRITERES);
+	if($val>$max) $val=$max;
+
+	$contenu="";
+	for($i=0;$i<=$max;$i++)
+	{
+		$contenu.="[";
+		if($i>$val)	$contenu.="  ";
+		elseif($i<$val)	$contenu.="**";
+		else	$contenu.=substr($INTITULES_NIVEAUX_CRITERES[$max-1][$val]." ",0,2);
+		$contenu.="]";
+	}
+	return $contenu;
+}
 
 // ==============================================
 // BILAN
@@ -519,12 +605,9 @@ function supprimeDomaine($idDomaine,$supprComp=true,$supprInd=true)
 	$req->execute(array('idDomaine' => $idDomaine));
 }
 
-
-
-// =================================
-// A SUPPRIMER ?????
 //Renvoie une couleur de l'arc en ciel entre rouge et vert (pour les compétences)
-/*function setArcEnCiel($val,$maxi)
+//Utile pour les mails
+function setArcEnCiel($val,$maxi)
 {
 	if($val<0)
 		return "#FF0000";
@@ -535,8 +618,7 @@ function supprimeDomaine($idDomaine,$supprComp=true,$supprInd=true)
 		return "#FF".substr("00".dechex(2*$n*255),-2,2)."00";
 	else
 		return "#".substr("00".dechex((2-2*$n)*255),-2,2)."FF00";
-}*/
-
+}
 
 
 // =================================
