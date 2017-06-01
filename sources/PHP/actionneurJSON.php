@@ -318,10 +318,10 @@ if($action=="envoieBilan")
 		if(isset($_POST['id'])) $id=intval($_POST['id']);
 		if($id)
 		{
-			$reponseJSON["debug"]=envoieBilan($id);//Envoi du bilan
-				$reponseJSON["messageRetour"]=":)Le bilan a bien été envoyé.";	
-//			else
-//				$reponseJSON["messageRetour"]=":(Le bilan n'a pas été envoyé.";	
+			if(envoieBilan($id))//Envoi du bilan
+				$reponseJSON["messageRetour"]=":)Le bilan a bien été envoyé.";
+			else
+				$reponseJSON["messageRetour"]=":(Il y a eu un problème d'envoie de mail.";
 		}
 		else //Si pas d'id
 			$reponseJSON["messageRetour"]=":(Aucune utilisateur à qui envoyer un bilan.";

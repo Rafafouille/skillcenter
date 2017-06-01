@@ -13,23 +13,24 @@
 							<strong>Tout Étendre</strong>
 						</div>
 						
-						<?php
-						//Affichage du menu de sélection des classes et des élèves
-						if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur")
-						{?>
+
 						<form id="notationFormulaireListesClasseEtEleves" style="float:right;">
 							<select id="BILAN_listeContextes" name="BILAN_listeContextes" onchange="getNotationEleve($('#notationListeEleves').val(),$(this).val());">
 								<option value="ALL_CONTEXTE">Choix du contexte</option>
 							</select>
+							<?php
+								//Affichage du menu de sélection des classes et des élèves
+								if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur")
+								{?>
 							<select name="notationListeClasses" id="notationListeClasses" onchange="NotationGetListeEleves($(this).val());">
 							</select>
 							<select name="notationListeEleves" id="notationListeEleves" onchange="getNotationEleve($(this).val(),$('#BILAN_listeContextes').val());">
 							</select>
 							<span id="bilanBoutonEleveSuivant" class="selectboxit test selectboxit-enabled selectboxit-btn" onclick="bilanBoutonEleveSuivant();" title="Élève suivant"><span>&#8626;</span></span>
+							<?php
+								}
+							?>
 						</form>
-						<?php
-						}
-						?>
 
 						<h2>Évaluations <span id="BILAN_pourcentage"></span></h2>
 					</div>

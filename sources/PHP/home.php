@@ -20,6 +20,9 @@ else //Si connecté
 	if($AUTORISE_GRAPHIQUES && $_SESSION['statut']!="admin" && $_SESSION['statut']!="evaluateur" )	//Si on autorise d'afficher les graphiques
 	{
 		$listeBilanDomaines=getBilanDomaines();//Récupérer la liste des domaines (tableau avec l'id de chaque domaine dans lequel il y a un sous-tableau avec toutes les infos)
+		
+
+
 ?>
 
 	<!-- Graphiques ------- -->
