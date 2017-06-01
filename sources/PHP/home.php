@@ -21,8 +21,6 @@ else //Si connecté
 	{
 		$listeBilanDomaines=getBilanDomaines();//Récupérer la liste des domaines (tableau avec l'id de chaque domaine dans lequel il y a un sous-tableau avec toutes les infos)
 		
-
-
 ?>
 
 	<!-- Graphiques ------- -->
@@ -52,11 +50,15 @@ else //Si connecté
 
 var donneesDomaines=[<?php
 $first=true;
-foreach($listeBilanDomaines as &$dom)//Construction des valeurs (ne pourcentage)
+foreach($listeBilanDomaines as &$dom)//Construction des valeurs (en pourcentage)
 {
 	if($first)	$first=false;
 	else	echo ",";
-	echo intval($dom['sommeEleve']/$dom['sommeNiveaux']*100);
+
+	$note=$dom['sommeEleve'];
+	$total=$dom['sommeNiveaux'];
+	if(!$total) $total=1;//Pour éviter qu'un zéro face 100% lorsqu'il n'y a aucune note
+	echo intval($note/$total*100);
 }
 ?>];
 

@@ -318,7 +318,7 @@ function getBilanDomaines()
 	JOIN ".$BDD_PREFIXE."liensClassesIndicateurs AS lie ON lie.indicateur=ind.id
 	JOIN ".$BDD_PREFIXE."competences AS comp ON ind.competence=comp.id
 	JOIN ".$BDD_PREFIXE."groupes_competences AS dom ON comp.groupe=dom.id
-	WHERE lie.classe='".$_SESSION['classe']."'
+	WHERE lie.classe='".$_SESSION['classe']."' AND notes.eleve='".$_SESSION['id']."'
 	GROUP BY ind.id
 	) AS maxs
 	GROUP BY idDomaine";
