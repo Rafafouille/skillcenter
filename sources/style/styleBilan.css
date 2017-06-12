@@ -34,6 +34,9 @@ table-layout: fixed;
 {
 	display:inline-block;
 	width:100%;
+	
+	white-space: normal;
+	word-wrap: break-word;
 	/*display:none;*/
 }
 
