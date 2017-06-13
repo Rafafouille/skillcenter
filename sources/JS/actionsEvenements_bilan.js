@@ -163,6 +163,9 @@ valideCommentaireEval=function(idInd)
 	var commentaire=$("#NOTATION_indicateur_"+idInd).find(".commentaireIndicateur").find(".commentaireIndicateur-commentaire").val();
 
 	
+	//On enregistre le contexte dans un coin, en vue de le reproposer automatiquement après
+	DERNIER_CONTEXT=contexte;
+	
 	//Mise a jour de la liste d'autocompletion des contextes
 	ajouteListeContextSiAbsent(contexte);
 

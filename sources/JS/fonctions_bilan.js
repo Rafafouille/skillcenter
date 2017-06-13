@@ -212,6 +212,7 @@ bilanOuvreCommentaire=function(idInd,idEval)
 	{
 		//Update idEval
 		$("#NOTATION_indicateur_"+idInd+" .commentaireIndicateur form").attr("data-ideval",idEval);
+		$("#NOTATION_indicateur_"+idInd+" .commentaireIndicateur form .commentaireIndicateur-contexte").val(DERNIER_CONTEXT);
 		//Propose le dernier contexte utilise
 	/*	var lastContext=parseInt($("#listeContexteAutocompletion").attr("data-lastused"));
 		if(lastContext>=0)
