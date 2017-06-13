@@ -328,7 +328,10 @@ INDICATEURS
 	overflow:hidden;
 	white-space: nowrap;
 }
-
+.intituleIndicateur .ADMIN_PARAMETRES_titre_critere
+{
+	white-space: normal;
+}
 
 .boutonsIndicateur
 {
