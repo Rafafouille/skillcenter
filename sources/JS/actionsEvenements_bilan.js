@@ -129,9 +129,10 @@ valideNouvelleNote=function(reponse)
 	{
 		var idIndicateur=reponse.note.idIndicateur;
 		var idEval=reponse.notation.id;
-		$(".commentaireIndicateur:visible").each(function(index,element)//Fermeture des bilan deja ouverts
+		/*$(".commentaireIndicateur:visible").each(function(index,element)//Fermeture des bilan deja ouverts
 					{var i=parseInt($(this).parent().parent().attr("data-id"));
-					bilanFermeCommentaire(i)})
+					bilanFermeCommentaire(i)})*/
+		valideAllCommentaireEval();//Valide et ferme tous les commentaires encore ouverts
 		bilanOuvreCommentaire(idIndicateur,idEval);//Ouverture
 	}
 
@@ -181,6 +182,16 @@ valideCommentaireEval=function(idInd)
 		valideCommentaireEval_callback,	//Fonction callback
 		"json"	//Type de réponse
 	);
+}
+
+//Fonction qui valide tous les commentaires actuellement ouverts
+valideAllCommentaireEval=function()
+{
+	var listeCommentaires=$(".intituleIndicateur .commentaireIndicateur").filter(function(){return $(this).css("display") === 'block';})
+	listeCommentaires.each(function(){	//Pour chaque commentaire encore ouvert,
+				idCommentaire=parseInt($(this).parent().parent().attr("data-id"));//On récupere le num id du critere
+				valideCommentaireEval(idCommentaire);//on valide le commentaire
+			})
 }
 
 valideCommentaireEval_callback=function(reponse)

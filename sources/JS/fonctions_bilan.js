@@ -213,10 +213,7 @@ bilanOuvreCommentaire=function(idInd,idEval)
 		//Update idEval
 		$("#NOTATION_indicateur_"+idInd+" .commentaireIndicateur form").attr("data-ideval",idEval);
 		$("#NOTATION_indicateur_"+idInd+" .commentaireIndicateur form .commentaireIndicateur-contexte").val(DERNIER_CONTEXT);
-		//Propose le dernier contexte utilise
-	/*	var lastContext=parseInt($("#listeContexteAutocompletion").attr("data-lastused"));
-		if(lastContext>=0)
-			$("#NOTATION_indicateur_"+idInd+" .commentaireIndicateur-contexte").val(lastContext);*/
+
 		//Animation
 		$("#NOTATION_indicateur_"+idInd+" .titreIndicateur").hide("slide",{direction: "left" }, 500);
 		setTimeout(function(){$("#NOTATION_indicateur_"+idInd+" .commentaireIndicateur").show("slide", { direction: "right" }, 500);},510);
