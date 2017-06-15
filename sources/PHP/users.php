@@ -28,9 +28,6 @@
 					</div>
 
 					<div id="tableau_utilisateurs">
-						
-					
-					
 						<?php if($_SESSION['statut']!="admin")
 						{echo "<p>Interdit</p>";}
 							?>

@@ -46,7 +46,7 @@ getUserHTMLfromJSON=function(user)
 	}
 
 	retour= ""
-+"										<div class=\"user "+sousClasse+"\" id=\"user_"+user.id+"\"  data-id=\""+user.id+"\" data-mail=\""+user.mail+"\" data-notifiemail=\""+user.notifieMail+"\" onmouseenter =\"$(this).find('.boutons_user').css('visibility','visible');\" onmouseleave=\"$(this).find('.boutons_user').css('visibility','hidden');\">"
++"										<div class=\"user "+sousClasse+"\" id=\"user_"+user.id+"\"  data-id=\""+user.id+"\" data-mail=\""+user.mail+"\" data-notifiemail=\""+user.notifieMail+"\" onmouseenter =\"$(this).find('.boutons_user').css('visibility','visible');\" onmouseleave=\"$(this).find('.boutons_user').css('visibility','hidden');\" data-login=\""+user.login+"\">"
 +"											<span class=\"iconeUser\"></span>"
 +"											<span class=\"nom-user\" onclick=\"ouvreBoiteModifieUser("+user.id+")\">"+user.nom+"</span>"
 +"											<span class=\"prenom-user\" onclick=\"ouvreBoiteModifieUser("+user.id+")\">"+user.prenom+"</span>"
@@ -112,7 +112,7 @@ ouvreBoiteModifieUser=function(i)
 	var nom=$( "#newUser_nom").val($("#user_"+i+" .nom-user").text());
 	var prenom=$( "#newUser_prenom").val($("#user_"+i+" .prenom-user").text());
 	var classe=$( "#newUser_classe").val($("#user_"+i+" .classe-user").text());
-	var login=$( "#newUser_login").val($("#user_"+i+" .login-user").text());
+	var login=$( "#newUser_login").val($("#user_"+i).attr("data-login"));
 	var mdp=$( "#newUser_psw").val("");
 	var id=$( "#newUser_id").val(i);
 	var mail=$("#newUser_mail").val($("#user_"+i).attr("data-mail"));
