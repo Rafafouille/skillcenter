@@ -35,15 +35,20 @@ if($action=="login")
 	
 	//On récupère les variables envoyées
 	$login="";
-	if(isset($_POST['login'])) $login=strtolower($_POST['login']);
+	$loginLower="";
+	if(isset($_POST['login']))
+			{
+				$loginLower=strtolower($_POST['login']);
+				$login=$_POST['login'];
+			}
 	$mdp="";
 	if(isset($_POST['mdp'])) $mdp=$_POST['mdp'];
 	
 	if($login!="" && $mdp!="")	//Si les paramètres ne sont pas vides
 	{
 		usleep(300000);//Pause pour ne pas tester 500000 mot de passe par seconde (3/seconde, max)
-		$req = $bdd->prepare('SELECT * FROM '.$BDD_PREFIXE.'utilisateurs WHERE login=:login AND (mdp = :mdp OR mdp=:mdpCrypt)');
-		$req->execute(array('login' => $login, 'mdp' => $mdp, 'mdpCrypt' => crypt($mdp,$SALT)));
+		$req = $bdd->prepare('SELECT * FROM '.$BDD_PREFIXE.'utilisateurs WHERE (login=:login OR login=:loginlower) AND (mdp = :mdp OR mdp=:mdpCrypt)');
+		$req->execute(array('login' => $login, 'loginlower' => $loginLower, 'mdp' => $mdp, 'mdpCrypt' => crypt($mdp,$SALT)));
 		if($donnees = $req->fetch())	//Si l'utilisateur est dans la BDD, avec le bon mot de passe
 		{
 			$_SESSION['nom']=$donnees['nom'];
