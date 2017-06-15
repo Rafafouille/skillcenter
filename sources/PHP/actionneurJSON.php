@@ -35,7 +35,7 @@ if($action=="login")
 	
 	//On récupère les variables envoyées
 	$login="";
-	if(isset($_POST['login'])) $login=$_POST['login'];
+	if(isset($_POST['login'])) $login=strtolower($_POST['login']);
 	$mdp="";
 	if(isset($_POST['mdp'])) $mdp=$_POST['mdp'];
 	
