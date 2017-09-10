@@ -407,7 +407,7 @@ if($action=="getNotationEleves")
 			$req_ind="(SELECT * FROM ".$BDD_PREFIXE."indicateurs AS i JOIN ".$BDD_PREFIXE."liensClassesIndicateurs AS l ON i.id=l.indicateur WHERE classe='".$classe."')";
 			$req_comp_gr="(SELECT comp.id AS idComp, comp.nom AS nomComp, gr.id AS idGroup, gr.nom AS nomGroup FROM ".$BDD_PREFIXE."competences AS comp JOIN ".$BDD_PREFIXE."groupes_competences AS gr ON  comp.groupe=gr.id)";
 
-			$requete="SELECT  E1.idComp,  E1.nomComp, E1.idGroup, E1.nomGroup, ind.id AS idInd, ind.nom AS nomInd, ind.details AS detailsInd, ind.niveaux AS niveauxInd, ind.lien AS lienInd FROM ".$req_ind." as ind JOIN ".$req_comp_gr." AS E1 ON ind.competence = E1.idComp";
+			$requete="SELECT  E1.idComp,  E1.nomComp, E1.idGroup, E1.nomGroup, ind.id AS idInd, ind.nom AS nomInd, ind.details AS detailsInd, ind.niveaux AS niveauxInd, ind.lien AS lienInd, ind.position AS positionInd FROM ".$req_ind." as ind JOIN ".$req_comp_gr." AS E1 ON ind.competence = E1.idComp";
 			$req = $bdd->query($requete);
 
 			while($reponse=$req->fetch())
@@ -423,6 +423,7 @@ if($action=="getNotationEleves")
 				$detailsInd=$reponse['detailsInd'];
 				$niveauxInd=intval($reponse['niveauxInd']);
 				$lienInd=$reponse['lienInd'];
+				$positionInd=intval($reponse['positionInd']);
 
 				//Si le groupe n'existe pas, on le crée
 				if(!isset($reponseJSON['listeGroupes'][$idGroup]))
@@ -451,6 +452,7 @@ if($action=="getNotationEleves")
 				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveLast"]=-1;//Par defaut
 				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["commentaires"]=false;//Dit si il y a des commentaires ou non
 				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["selected"]=true;
+				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["position"]=$positionInd;
 				
 				//Note max
 				$reqNote = $bdd->prepare("SELECT MAX(note) as max FROM ".$BDD_PREFIXE."notation WHERE eleve=:eleve AND indicateur=".$idInd.$conditionSurContexte);

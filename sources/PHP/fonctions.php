@@ -54,9 +54,9 @@ function envoieBilan($id)
 			if (!preg_match("#^[a-z0-9._-]+@(hotmail|live|msn).[a-z]{2,4}$#", $mail))
 				$passage_ligne = "\r\n";
 			$boundary = "-----=".md5(rand());
-			$header = "From: \"SkillCenter - Ne pas ".mb_encode_mimeheader(utf8_decode("répondre"))." -\" <noreply@allais.eu>".$passage_ligne;
-			$header .= "Reply-to: noreply@allais.eu".$passage_ligne;
-			$header .= "MIME-Version: 1.0".$passage_ligne;
+			/*$header = "From: \"SkillCenter - Ne pas ".mb_encode_mimeheader(utf8_decode("répondre"))." -\" <noreply@allais.eu>".$passage_ligne;*/
+			/*$header .= "Reply-to: noreply@allais.eu".$passage_ligne;*/
+			$header = "MIME-Version: 1.0".$passage_ligne;
 			$header .= "Content-Type: multipart/alternative;".$passage_ligne." boundary=\"$boundary\"".$passage_ligne;
 
 
