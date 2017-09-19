@@ -105,7 +105,7 @@ if($action=="getListeClasses")
 			array_push($reponseJSON["listeClasses"],$donnees["classe"]);
 	}
 	else
-		$reponseJSON["messageRetour"]=":)Vous n'avez pas le droit de récupérer la liste des classes.";
+		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de récupérer la liste des classes.";
 	
 }
 
@@ -228,7 +228,7 @@ if($action=="updateUser")
 						'id'	=>	$_POST['id']
 					));
 			}
-			$reponseJSON["messageRetour"]=":)L'utilisateur << ".$_POST["newUser_prenom"]." ".$_POST['newUser_nom']." >> a bien été mis à jour !";
+			$reponseJSON["messageRetour"]=":XL'utilisateur << ".$_POST["newUser_prenom"]." ".$_POST['newUser_nom']." >> a bien été mis à jour !";
 		}
 	}
 	else
@@ -266,7 +266,7 @@ if($action=="changeStatutUser")
 					"id"=>$id,
 					"statut"=>$tabl_rotations_statuts[$statut]
 					));
-				$reponseJSON["messageRetour"]=":)Le statut a bien été mis à jour";
+				$reponseJSON["messageRetour"]=":XLe statut a bien été mis à jour";
 				$reponseJSON["user"]["statut"]=$tabl_rotations_statuts[$statut];
 				$reponseJSON["user"]["id"]=$id;
 			}
@@ -299,7 +299,7 @@ if($action=="delUser")
 							'id' => $id
 						));
 				$reponseJSON["idSupprime"]=$id;
-				$reponseJSON["messageRetour"]=":)L'utilisateur n°".$id." a bien été supprimé.";
+				$reponseJSON["messageRetour"]=":XL'utilisateur n°".$id." a bien été supprimé.";
 			}
 			else
 				$reponseJSON["messageRetour"]=":(Vous ne pouvez pas vous supprimer vous même.";
@@ -324,7 +324,7 @@ if($action=="envoieBilan")
 		if($id)
 		{
 			if(envoieBilan($id))//Envoi du bilan
-				$reponseJSON["messageRetour"]=":)Le bilan a bien été envoyé.";
+				$reponseJSON["messageRetour"]=":XLe bilan a bien été envoyé.";
 			else
 				$reponseJSON["messageRetour"]=":(Il y a eu un problème d'envoie de mail.";
 		}
@@ -486,7 +486,7 @@ if($action=="getNotationEleves")
 				}
 			}	
 
-			$reponseJSON["messageRetour"]=":)Evaluation récupérées.";
+			$reponseJSON["messageRetour"]=":XEvaluation récupérées.";
 		}	//Fin 'si pas d'eleve'
 		else
 			$reponseJSON["messageRetour"]=":(Pas d'élève trouvé.";
@@ -527,7 +527,7 @@ if($action=="getComments")
 					$reponseJSON['commentaires'][$contexte][$idEval]["date"]=$date;
 				}
 				$reponseJSON['debug']=$idEleve;
-				$reponseJSON["messageRetour"]=":)Les commentaires ont bien été récupérés.";
+				$reponseJSON["messageRetour"]=":XLes commentaires ont bien été récupérés.";
 			}
 			else		
 				$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de voir ces commentaires.";
@@ -604,8 +604,9 @@ if($action=="newNote")
 	}
 }
 
-// Action qui ajoute un commentaire à une note **************************************
 
+
+// Action qui ajoute un commentaire à une note **************************************
 if($action=="addCommentaireEval")
 {
 	$idEval=0;
@@ -706,7 +707,7 @@ if($action=="modifieNotation")
 			$reponseJSON["evaluateur"]=$_SESSION['prenom']." ".$_SESSION['nom'];
 			$reponseJSON["contexte"]=$contexte;
 			$reponseJSON["commentaire"]=$commentaire;
-			$reponseJSON["messageRetour"]=":)L'évaluation a bien été mise à jour.";
+			$reponseJSON["messageRetour"]=":XL'évaluation a bien été mise à jour.";
 
 		}
 		else
@@ -834,7 +835,7 @@ if($action=="updateCompetencesSelonClasse")
 			$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["selected"]=true;
 			$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["selected"]=true;
 		}
-		$reponseJSON["messageRetour"]=":)Liste des compétences récupérées";
+		$reponseJSON["messageRetour"]=":XListe des compétences récupérées";
 	}
 	else
 		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit d'obtenir la liste des compétences !";
@@ -896,7 +897,7 @@ if($action=="modifDomaine")
 								"idDomaine"=>$idDomaine));
 
 			
-			$reponseJSON["messageRetour"]=":)Le domaine ".$nom." a bien été créé.";
+			$reponseJSON["messageRetour"]=":XLe domaine ".$nom." a bien été créé.";
 			$reponseJSON["domaine"]["nom"]=$nom;
 			$reponseJSON["domaine"]["id"]=$idDomaine;
 		}
@@ -925,7 +926,7 @@ if($action=="supprimeDomaine")
 		if($idDomaine!=0)
 		{
 			supprimeDomaine($idDomaine,$supprimeCompetences,$supprimeCriteres);
-			$reponseJSON["messageRetour"]=":)Le domaine a bien été supprimé.";
+			$reponseJSON["messageRetour"]=":XLe domaine a bien été supprimé.";
 			$reponseJSON["domaine"]["id"]=$idDomaine;
 		}
 		else
@@ -962,7 +963,7 @@ if($action=="addCompetence")
 
 			if($donnees=$req2->fetch())
 			{
-				$reponseJSON["messageRetour"]=":)La compétence ".$nom." a bien été créé.";
+				$reponseJSON["messageRetour"]=":XLa compétence ".$nom." a bien été créé.";
 				$reponseJSON["competence"]["nom"]=$nom;
 				$reponseJSON["competence"]["nomAbrege"]=$nomAbrege;
 				$reponseJSON["competence"]["id"]=intval($donnees['id']);
@@ -1004,7 +1005,7 @@ if($action=="modifCompetence")
 						'idCompetence' => $idCompetence
 					));
 
-			$reponseJSON["messageRetour"]=":)La compétence ".$nom." a bien été modifiée.";
+			$reponseJSON["messageRetour"]=":XLa compétence ".$nom." a bien été modifiée.";
 			$reponseJSON["competence"]["nom"]=$nom;
 			$reponseJSON["competence"]["nomAbrege"]=$nomAbrege;
 			$reponseJSON["competence"]["id"]=$idCompetence;
@@ -1035,7 +1036,7 @@ if($action=="supprimeCompetence")
 		if($idCompetence!=0)
 		{
 			supprimeCompetence($idCompetence,$supprimeIndicateur);
-			$reponseJSON["messageRetour"]=":)La compétence a bien été supprimée.";
+			$reponseJSON["messageRetour"]=":XLa compétence a bien été supprimée.";
 			$reponseJSON["competence"]["id"]=$idCompetence;
 		}
 		else
@@ -1099,7 +1100,7 @@ if($action=="addIndicateur")
 					$reponseJSON["indicateur"]["selected"]=true;
 				}
 				
-				$reponseJSON["messageRetour"]=":)L'indicateur ".$nom." a bien été créé.";
+				$reponseJSON["messageRetour"]=":XL'indicateur ".$nom." a bien été créé.";
 				
 			}
 			else
@@ -1113,7 +1114,7 @@ if($action=="addIndicateur")
 		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de créer un indicateur.";
 }
 
-//Modifier un indicateur
+//Modifier un indicateur ==================================
 if($action=="modifCritere")
 {
 	if($_SESSION['statut']=="admin")
@@ -1153,7 +1154,7 @@ if($action=="modifCritere")
 					$reponseJSON["indicateur"]["competence"]=$idCompetence;
 					$reponseJSON["indicateur"]["lien"]=$lien;
 
-					$reponseJSON["messageRetour"]=":)L'indicateur ".$nom." a bien été modifié.";
+					$reponseJSON["messageRetour"]=":XL'indicateur ".$nom." a bien été modifié.";
 					
 						
 			}
@@ -1181,7 +1182,7 @@ if($action=="supprimeIndicateur")
 		if($idIndicateur!=0)
 		{
 			supprimeIndicateur($idIndicateur);
-			$reponseJSON["messageRetour"]=":)L'indicateur a bien été supprimé.";
+			$reponseJSON["messageRetour"]=":XL'indicateur a bien été supprimé.";
 			$reponseJSON["indicateur"]["id"]=$idIndicateur;
 		}
 		else
@@ -1218,14 +1219,14 @@ if($action=="lierDelierIndicateurClasse")
 			{
 				$requete = $bdd->prepare('INSERT INTO '.$BDD_PREFIXE.'liensClassesIndicateurs(indicateur, classe) VALUES(:indicateur, :classe)');
 				$requete->execute(array('indicateur' => $indicateur, 'classe' => $classe));
-				$reponseJSON["messageRetour"]=":)Lier";
+				$reponseJSON["messageRetour"]=":XLier";
 				$reponseJSON["lier"]=true;
 			}
 			else	
 			{
 				$requete = $bdd->prepare('DELETE FROM '.$BDD_PREFIXE.'liensClassesIndicateurs WHERE indicateur=:indicateur AND classe=:classe');
 				$requete->execute(array('indicateur' => $indicateur, 'classe' => $classe));
-				$reponseJSON["messageRetour"]=":)Délier";
+				$reponseJSON["messageRetour"]=":XDélier";
 				$reponseJSON["lier"]=false;
 			}
 		}
