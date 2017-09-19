@@ -184,6 +184,7 @@ valideCommentaireEval=function(idInd)
 	);
 }
 
+
 //Fonction qui valide tous les commentaires actuellement ouverts
 valideAllCommentaireEval=function()
 {

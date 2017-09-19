@@ -47,7 +47,7 @@ afficheMessage=function(message)
 				$("#dialog-messageRetour").css("background","#FFAAAA");
 				break;
 		}
-		$("#dialog-messageRetour").text(message);
+		$("#dialog-messageRetour").html("<div>"+message+"</div>");
 
 		//Ouverture de la boite
 		var focus=$(":focus");//Magouille pour annuler l'autofocus à louverture de la boite

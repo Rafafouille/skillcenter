@@ -66,6 +66,7 @@ modifieNotation_CallBack=function(reponse)
 //Supprime une note
 supprimeNotation=function(id)
 {
+	fermeAllCommentaires();//On ferme les éventuels commentaires encore ouverts (pour annuler à la volée)
 	$.post(
 			'./sources/PHP/actionneurJSON.php',//Requete appelée
 			{	//Les données à passer par POST

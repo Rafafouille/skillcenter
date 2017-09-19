@@ -220,7 +220,7 @@ bilanOuvreCommentaire=function(idInd,idEval)
 	}
 }
 
-// Fonction qui ouvre la ligne de commentaire
+// Fonction qui ferme la ligne de commentaire
 bilanFermeCommentaire=function(idInd)
 {
 	//Update idEval
@@ -228,6 +228,17 @@ bilanFermeCommentaire=function(idInd)
 	//Animation
 	$("#NOTATION_indicateur_"+idInd+" .commentaireIndicateur").hide("slide", { direction: "left" }, 500);
 	setTimeout(function(){	$("#NOTATION_indicateur_"+idInd+" .titreIndicateur").show("slide", { direction: "right" }, 500 );},510);
+}
+
+
+///fonction qui ferme tous les commentaires
+fermeAllCommentaires=function()
+{
+		var listeCommentaires=$(".intituleIndicateur .commentaireIndicateur").filter(function(){return $(this).css("display") === 'block';})
+		listeCommentaires.each(function(){	//Pour chaque commentaire encore ouvert,
+				idCommentaire=parseInt($(this).parent().parent().attr("data-id"));//On récupere le num id du critere
+				bilanFermeCommentaire(idCommentaire);//on valide le commentaire
+								})
 }
 
 

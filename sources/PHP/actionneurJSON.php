@@ -591,7 +591,7 @@ if($action=="newNote")
 		$reponseJSON["notation"]["niveaux"]=$dataInd['niveaux'];
 		$reponseJSON["notation"]["nomIndicateur"]=$dataInd['nom'];
 				
-		$reponseJSON["messageRetour"]=":)La note a été ajoutée.";
+		$reponseJSON["messageRetour"]=":)La note a été ajoutée.<br/><div style=\"cursor:pointer;color:red;\" onclick=\"supprimeNotation(".$dataNote["id"].");\">ANNULER LA NOTE</div>";
 
 
 		//BADGES ---------------------------
@@ -657,7 +657,7 @@ if($action=="addCommentaireEval")
 					$reponseJSON["evaluation"]["id"]=$idEval;
 					$reponseJSON["evaluation"]["eval"]=$donnees['note'];
 					$reponseJSON["evaluation"]["indicateur"]=$donnees['indicateur'];
-					$reponseJSON["messageRetour"]=":)Commentaire ajouté.";
+					$reponseJSON["messageRetour"]=":XCommentaire ajouté.";
 				}
 				else
 					$reponseJSON["messageRetour"]=":(Aucune évaluation associée au commentaire.";
@@ -734,7 +734,7 @@ if($action=="supprimeNotation")
 			$req=$bdd->prepare("DELETE FROM ".$BDD_PREFIXE."notation WHERE id=:id");
 			$req->execute(array('id'=>$id));
 			$reponseJSON["idNotation"]=$id;
-			$reponseJSON["messageRetour"]=":)L'évaluation a bien été supprimée.";
+			$reponseJSON["messageRetour"]=":|L'évaluation a bien été supprimée.";
 		}
 		else
 			$reponseJSON["messageRetour"]=":(L'évaluation à supprimer n'a pas/a mal été transmise.";
