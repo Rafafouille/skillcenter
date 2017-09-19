@@ -44,7 +44,7 @@
 							?>
 							<div class="dropdown_menu_notation">
 									Type d'évaluation :<br/>
-									<select name="bilanTypeEvaluation" id="bilanTypeEvaluation" onchange="getNotationEleve($('#notationListeEleves').val(),$('#BILAN_listeContextes').val());">
+									<select name="bilanTypeEvaluation" id="bilanTypeEvaluation" onchange="getNotationEleve(<?php echo ($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur") ? "$('#notationListeEleves').val()" : "ID_COURANT";?>,$('#BILAN_listeContextes').val());">
 											<option value="last" selected>Dernière évaluation</option>
 											<option value="max">Évaluation maximum</option>
 											<option value="avg">Évaluation moyenne</option>

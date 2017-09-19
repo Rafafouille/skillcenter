@@ -149,7 +149,6 @@ function NOTATION_ajouteIndicateur(indicateur,conteneur)
 	//Renvoie la valeur de l'evaluation et le nombre de niveaux max
 	//return {niveau:parseInt((parseInt(indicateur.niveauEleveMax)+Math.abs(parseInt(indicateur.niveauEleveMax)))*0.5),niveauMax:parseInt(indicateur.niveauMax)};
 	//return {niveau:parseInt((parseInt(indicateur.niveauEleveMax)+Math.abs(parseInt(indicateur.niveauEleveMax)))*0.5),niveauMax:parseInt(indicateur.niveauMax)};
-	console.log(noteEleve);
 	return {niveau:noteEleve,niveauMax:parseInt(indicateur.niveauMax)};
 }
 
