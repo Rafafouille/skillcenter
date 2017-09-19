@@ -96,6 +96,12 @@ function NOTATION_ajouteIndicateur(indicateur,conteneur)
 	numeroIndicateur++;
 
 
+	//Selection du type de note (on va regarder dans le dropdown sur menu bilan)
+	var noteEleve=0;
+	if($("#bilanTypeEvaluation").val()=="last")	noteEleve=parseInt(indicateur.niveauEleveLast);
+	if($("#bilanTypeEvaluation").val()=="max")	noteEleve=parseInt(indicateur.niveauEleveMax);
+	if($("#bilanTypeEvaluation").val()=="avg")	noteEleve=parseInt(indicateur.niveauEleveMoy);
+
 	var rendu=""+
 "								<tr class=\"indicateur\" id=\"NOTATION_indicateur_"+indicateur.id+"\" data-id=\""+indicateur.id+"\">"+
 "									<td class=\"intituleIndicateur\">"+
@@ -125,7 +131,7 @@ function NOTATION_ajouteIndicateur(indicateur,conteneur)
 	rendu+=""+
 "									</td>"+
 "									<td class=\"niveauxIndicateur\">"+
-"									"+NOTATION_getNiveauxIndicateur(indicateur.niveauEleveMax,indicateur.niveauMax,indicateur.id,STATUT=="admin" || STATUT=="evaluateur" || STATUT=="autoeval",false)
+"									"+NOTATION_getNiveauxIndicateur(noteEleve,indicateur.niveauMax,indicateur.id,STATUT=="admin" || STATUT=="evaluateur" || STATUT=="autoeval",false)
 "									</td>"+
 "								</tr>";
 
@@ -141,7 +147,10 @@ function NOTATION_ajouteIndicateur(indicateur,conteneur)
 	console.log(((a+Math.abs(a))*0.5)+" - "+parseInt(indicateur.niveauMax));*/
 		
 	//Renvoie la valeur de l'evaluation et le nombre de niveaux max
-	return {niveau:parseInt((parseInt(indicateur.niveauEleveMax)+Math.abs(parseInt(indicateur.niveauEleveMax)))*0.5),niveauMax:parseInt(indicateur.niveauMax)};
+	//return {niveau:parseInt((parseInt(indicateur.niveauEleveMax)+Math.abs(parseInt(indicateur.niveauEleveMax)))*0.5),niveauMax:parseInt(indicateur.niveauMax)};
+	//return {niveau:parseInt((parseInt(indicateur.niveauEleveMax)+Math.abs(parseInt(indicateur.niveauEleveMax)))*0.5),niveauMax:parseInt(indicateur.niveauMax)};
+	console.log(noteEleve);
+	return {niveau:noteEleve,niveauMax:parseInt(indicateur.niveauMax)};
 }
 
 

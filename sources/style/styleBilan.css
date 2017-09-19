@@ -1,5 +1,22 @@
 
 /********************************
+MENU BILAN
+*******************************/
+#enteteTabNotation
+{
+	vertical-align:middle;
+	min-height:50px;
+}
+
+#enteteTabNotation .dropdown_menu_notation
+{
+	font-size:small;
+	text-align:center;
+	vertical-align:top;
+	display:inline-block;
+}
+
+/********************************
 Boutons
 *******************************/
 #bilanBoutonEleveSuivant

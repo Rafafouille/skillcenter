@@ -29,6 +29,8 @@ $(function()//Fonction lancée au chargement de la page
 	 $("#userAdminSelectClasse").selectBoxIt();
 	 $("#notationFormulaireListesClasseEtEleves select").selectBoxIt();
 	
+
+
 	//Enregistrement du dernier context ********
 	//Utile si on veut pas le retaper à chaque fois
 	DERNIER_CONTEXT="";

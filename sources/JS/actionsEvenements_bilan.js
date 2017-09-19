@@ -120,7 +120,14 @@ valideNouvelleNote=function(reponse)
 	afficheMessage(reponse.messageRetour);
 
 	//MAJ de l'arc en ciel
-	var html_barre_arc_en_ciel=NOTATION_getNiveauxIndicateur(reponse.note.max,reponse.note.niveauMax,reponse.note.idIndicateur,true);
+	
+			//Selection du type de note (on va regarder dans le dropdown sur menu bilan)
+			var noteEleve=0;
+			if($("#bilanTypeEvaluation").val()=="last")	noteEleve=parseInt(reponse.note.last);
+			if($("#bilanTypeEvaluation").val()=="max")	noteEleve=parseInt(reponse.note.max);
+			if($("#bilanTypeEvaluation").val()=="avg")	noteEleve=parseInt(reponse.note.moy);
+
+	var html_barre_arc_en_ciel=NOTATION_getNiveauxIndicateur(noteEleve,reponse.note.niveauMax,reponse.note.idIndicateur,true);
 	$("#NOTATION_indicateur_"+reponse.note.idIndicateur+" .niveauxIndicateur").html(html_barre_arc_en_ciel);
 
 
