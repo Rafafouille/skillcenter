@@ -7,7 +7,7 @@
 
 // MAINTENANCE
 // ****************************************************
-//UDAPTE COMPETENCES PAR CLASSE *********************************
+//NETTOYAGE DE LA BASE DE DONNEEs *********************************
 nettoyerLaBase=function()
 {
 		$.post(
@@ -26,14 +26,14 @@ nettoyerLaBase=function()
 			"json"	//Type de réponse
 	);
 }
-
+//********************************************
 nettoyerLaBase_Callback=function(reponse)
 {
 	afficheMessage(reponse.messageRetour);
 	
 	texte="<p>Aucune modification n'a été apporté à la base de données.</p>"
 	
-	if(reponse.bilan_nettoyage.notes_supprimees.plus_user+reponse.bilan_nettoyage.notes_supprimees.plus_indicateur+reponse.bilan_nettoyage.comp_supprimees+reponse.bilan_nettoyage.ind_supprimees)
+	if(reponse.bilan_nettoyage.modif_apportee)//reponse.bilan_nettoyage.notes_supprimees.plus_user+reponse.bilan_nettoyage.notes_supprimees.plus_indicateur+reponse.bilan_nettoyage.comp_supprimees+reponse.bilan_nettoyage.ind_supprimees)
 	{
 		var texte="<p>Lors du nettoyage de la base, les opérations suivantes ont été faites :</p>\n<ul>";
 		if((reponse.bilan_nettoyage.notes_supprimees.plus_user+reponse.bilan_nettoyage.notes_supprimees.plus_indicateur))
@@ -85,6 +85,13 @@ nettoyerLaBase_Callback=function(reponse)
 	}
 	$("#dialog-nettoyerLaBaseCallBack").html(texte);
 }
+
+
+
+
+
+
+
 
 
 // AFFICHAGE GROUPE / COMPETENCES / INDICATEURS

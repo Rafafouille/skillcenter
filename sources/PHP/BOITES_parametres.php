@@ -269,7 +269,7 @@
 				<label for="nettoyer_supprimer_notes_sans_critere">Supprimer les évaluations dont le critère a été supprimé.</label>
 				<br/>
 
-				<input type="checkbox" id="nettoyer_depasse_critere_max" name="nettoyer_depasse_critere_max" value="nettoyer_depasse_critere_max" checked  onchange="$('#depasse_critere_max_option').toggle(200)">
+				<input type="checkbox" id="nettoyer_depasse_critere_max" name="nettoyer_depasse_critere_max" value="nettoyer_depasse_critere_max" checked  onchange="$('#nettoyer_depasse_critere_max_option').toggle(200)">
 				<label for="nettoyer_depasse_critere_max">Gérer les évaluations qui dépassent les critères maxi.</label>
 				<br/>
 					<select name="nettoyer_depasse_critere_max_option" id="nettoyer_depasse_critere_max_option" style="margin-left:50px;">
@@ -278,12 +278,12 @@
 					</select>
 				<br/>
 
-				<input type="checkbox" id="nettoyer_supprimer_comp_orphelins" name="nettoyer_supprimer_comp_orphelins" value="nettoyer_supprimer_comp_orphelins" onchange="$('#nettoyer_supprimer_comp_orphelins_et_ses_criteres').toggle(200)">
+				<input type="checkbox" id="nettoyer_supprimer_comp_orphelins" name="nettoyer_supprimer_comp_orphelins" value="nettoyer_supprimer_comp_orphelins" onchange="$('#nettoyer_supprimer_comp_orphelins_et_ses_criteres').toggle(200);$('#nettoyer_supprimer_comp_orphelins_et_ses_criteres_label').toggle(200)">
 				<label for="nettoyer_supprimer_comp_orphelins">Supprimer les compétences qui ne font plus partie d'un domaine de compétence.</label>
 				<br/>
 
 					<input type="checkbox" id="nettoyer_supprimer_comp_orphelins_et_ses_criteres" name="nettoyer_supprimer_comp_orphelins_et_ses_criteres" value="nettoyer_supprimer_comp_orphelins_et_ses_criteres" style="margin-left:50px;display:none;">
-					<label for="nettoyer_supprimer_comp_orphelins_et_ses_criteres">Supprimer également les critères associés à cette compétence.</label>
+					<label for="nettoyer_supprimer_comp_orphelins_et_ses_criteres" id="nettoyer_supprimer_comp_orphelins_et_ses_criteres_label"  style="margin-left:50px;display:none;">Supprimer aussi les critères associés à cette compétence.</label>
 				<br/>
 
 				<input type="checkbox" id="nettoyer_supprimer_criteres_orphelins" name="nettoyer_supprimer_criteres_orphelins" value="nettoyer_supprimer_criteres_orphelins">
