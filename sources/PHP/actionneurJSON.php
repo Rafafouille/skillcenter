@@ -752,6 +752,120 @@ if($action=="supprimeNotation")
 // =====================================================
 
 
+
+//Nettoyer la base de données
+if($action=="nettoyerLaBase")
+{
+	if($_SESSION['statut']=="admin")
+	{
+		connectToBDD();
+		//Recupere les variables
+			$nettoyer_supprimer_notes_fantomes=isset($_POST['nettoyer_supprimer_notes_fantomes'])?$_POST['nettoyer_supprimer_notes_fantomes']=="true":false;
+			$nettoyer_supprimer_notes_sans_critere=isset($_POST['nettoyer_supprimer_notes_sans_critere'])?$_POST['nettoyer_supprimer_notes_sans_critere']=="true":false;
+			$nettoyer_depasse_critere_max=isset($_POST['nettoyer_depasse_critere_max'])?$_POST['nettoyer_depasse_critere_max']=="true":false;
+			$nettoyer_depasse_critere_max_option=isset($_POST['nettoyer_depasse_critere_max_option'])?$_POST['nettoyer_depasse_critere_max_option']:"";
+			$nettoyer_supprimer_comp_orphelins=isset($_POST['nettoyer_supprimer_comp_orphelins'])?$_POST['nettoyer_supprimer_comp_orphelins']=="true":false;
+			$nettoyer_supprimer_comp_orphelins_et_ses_criteres=isset($_POST['nettoyer_supprimer_comp_orphelins_et_ses_criteres'])?$_POST['nettoyer_supprimer_comp_orphelins_et_ses_criteres']=="true":false;
+			$nettoyer_supprimer_notes_criteres_orphelins=isset($_POST['nettoyer_supprimer_notes_criteres_orphelins'])?$_POST['nettoyer_supprimer_notes_criteres_orphelins']=="true":false;
+
+			$nb_suppr_fantom=0;
+			$nb_suppr_plus_dindicateur=0;
+			$nb_critere_depasse_sup=0;
+			$nb_critere_depasse_inf=0;
+			$nb_comp_orpheline=0;
+			$nb_ind_supprime=0;
+
+			//Supprimer les notes des phantomes
+			if($nettoyer_supprimer_notes_fantomes)
+			{
+				$req=$bdd->query("SELECT COUNT(id) as nb FROM `test_notation` WHERE eleve NOT IN (select id from test_utilisateurs)");
+				$data=$req->fetch();
+				$nb_suppr_fantom=intval($data['nb']);
+				$bdd->query("DELETE FROM `test_notation` WHERE eleve NOT IN (select id from test_utilisateurs)");
+			}
+
+			//Supprimer les notes qui n'ont pas de critère
+			if($nettoyer_supprimer_notes_sans_critere)
+			{
+				$req=$bdd->query("SELECT COUNT(id) as nb FROM `test_notation` WHERE indicateur NOT IN (select id from test_indicateurs)");
+				$data=$req->fetch();
+				$nb_suppr_plus_dindicateur=intval($data['nb']);
+				$bdd->query("DELETE FROM `test_notation` WHERE indicateur NOT IN (select id from test_indicateurs)");
+			}
+
+			//Gerer les notes qui dépassent les maximum ET le minimum 0
+			if($nettoyer_depasse_critere_max)
+			{
+				$req=$bdd->query("SELECT count(*) as nb FROM test_notation as n join test_indicateurs as i ON n.indicateur = i.id WHERE n.note > i.niveaux");
+				$data=$req->fetch();
+				$nb_critere_depasse_sup=intval($data['nb']);
+
+				$req=$bdd->query("SELECT count(*) as nb FROM test_notation where note < 0");
+				$data=$req->fetch();
+				$nb_critere_depasse_inf=intval($data['nb']);
+
+				if($nettoyer_depasse_critere_max_option=="depasse_critere_max_tronque")
+				{
+					$req=$bdd->query("SELECT n.id as id_note, niveaux FROM test_notation as n join test_indicateurs as i ON n.indicateur = i.id WHERE n.note > i.niveaux");
+					while($data=$req->fetch())
+					{
+						$bdd->query("UPDATE test_notation SET note=".$data["niveaux"]." WHERE id=".$data['id_note']);
+					}
+					$bdd->query("UPDATE test_notation SET note=0 WHERE note<0");
+				}
+				elseif($nettoyer_depasse_critere_max_option=="depasse_critere_max_suppr")
+				{
+					$bdd->query("DELETE FROM test_notation WHERE id IN (SELECT n.id FROM (SELECT * FROM test_notation) as n join test_indicateurs as i ON n.indicateur = i.id WHERE n.note > i.niveaux)");
+					$bdd->query("DELETE FROM test_notation WHERE note < 0");	
+				}
+
+
+			}
+
+
+			//Supprimer les competences orphelines
+			if($nettoyer_supprimer_comp_orphelins	)
+			{
+				$req=$bdd->query("SELECT COUNT(id) as nb FROM `test_competences` WHERE groupe NOT IN (select id from test_groupes_competences)");
+				$data=$req->fetch();
+				$nb_comp_orpheline=intval($data['nb']);
+				if($nettoyer_supprimer_comp_orphelins_et_ses_criteres)
+				{
+					$req=$bdd->query("SELECT COUNT(*) as nb FROM test_indicateurs WHERE competence IN (SELECT id FROM test_competences WHERE groupe NOT IN (select id from test_groupes_competences))");
+					$data=$req->fetch();
+					$nb_ind_supprime+=intval($data['nb']);	
+					$req=$bdd->query("DELETE FROM test_indicateurs WHERE competence IN (SELECT id FROM test_competences WHERE groupe NOT IN (select id from test_groupes_competences))");
+				}
+
+				$bdd->query("DELETE FROM `test_competences` WHERE groupe NOT IN (select id from test_groupes_competences)");
+			}
+
+
+			//Supprimer les indicateurs fantomes
+			if($nettoyer_supprimer_notes_criteres_orphelins)
+			{
+				$req=$bdd->query("SELECT COUNT(id) as nb FROM `test_indicateurs` WHERE competence NOT IN (select id from test_competences)");
+				$data=$req->fetch();
+				$nb_ind_supprime+=intval($data['nb']);
+				$bdd->query("DELETE FROM test_indicateurs WHERE competence NOT IN (select id from test_competences)");
+			}
+
+
+			$reponseJSON['bilan_nettoyage']=array();
+			$reponseJSON['bilan_nettoyage']["notes_supprimees"]['plus_user']=$nb_suppr_fantom;
+			$reponseJSON['bilan_nettoyage']["notes_supprimees"]['plus_indicateur']=$nb_suppr_plus_dindicateur;
+			$reponseJSON['bilan_nettoyage']["criteres_depasse"]['sup']=$nb_critere_depasse_sup;
+			$reponseJSON['bilan_nettoyage']["criteres_depasse"]['inf']=$nb_critere_depasse_inf;
+			$reponseJSON['bilan_nettoyage']["comp_supprimees"]=$nb_comp_orpheline;
+			$reponseJSON['bilan_nettoyage']["ind_supprimees"]=$nb_ind_supprime;
+
+
+	}
+	else
+		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de nettoyer la BDD !";
+}
+
+
 //Update liste des compétences
 if($action=="updateCompetencesSelonClasse")
 {

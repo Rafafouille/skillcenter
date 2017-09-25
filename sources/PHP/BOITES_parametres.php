@@ -255,3 +255,75 @@
 			});
 		</script>
 	
+		
+		<!-- BOITE POUR NETTOYER LA BASE------------------- -->
+		<div id="dialog-nettoyerLaBase" title="Nettoyer la base de données">
+			<p><strong>Du fait de mises à jour ou autres manipulations non-prévues, la base de données peut contenir des incohérences.
+			Cliquer sur les actions à effectuer :</strong></p>
+			<form>
+				<input type="checkbox" id="nettoyer_supprimer_notes_fantomes" name="nettoyer_supprimer_notes_fantomes" value="nettoyer_supprimer_notes_fantomes" checked>
+				<label for="nettoyer_supprimer_notes_fantomes">Supprimer les évaluations des utilisateurs supprimés.</label>
+				<br/>
+
+				<input type="checkbox" id="nettoyer_supprimer_notes_sans_critere" name="nettoyer_supprimer_notes_sans_critere" value="nettoyer_supprimer_notes_sans_critere" checked>
+				<label for="nettoyer_supprimer_notes_sans_critere">Supprimer les évaluations dont le critère a été supprimé.</label>
+				<br/>
+
+				<input type="checkbox" id="nettoyer_depasse_critere_max" name="nettoyer_depasse_critere_max" value="nettoyer_depasse_critere_max" checked  onchange="$('#depasse_critere_max_option').toggle(200)">
+				<label for="nettoyer_depasse_critere_max">Gérer les évaluations qui dépassent les critères maxi.</label>
+				<br/>
+					<select name="nettoyer_depasse_critere_max_option" id="nettoyer_depasse_critere_max_option" style="margin-left:50px;">
+						<option value="depasse_critere_max_tronque" id="depasse_critere_max_tronque">Tronquer les valeurs</option>
+						<option value="depasse_critere_max_suppr" id="depasse_critere_max_suppr">Supprimer les évaluations concernées</option>
+					</select>
+				<br/>
+
+				<input type="checkbox" id="nettoyer_supprimer_comp_orphelins" name="nettoyer_supprimer_comp_orphelins" value="nettoyer_supprimer_comp_orphelins" onchange="$('#nettoyer_supprimer_comp_orphelins_et_ses_criteres').toggle(200)">
+				<label for="nettoyer_supprimer_comp_orphelins">Supprimer les compétences qui ne font plus partie d'un domaine de compétence.</label>
+				<br/>
+
+					<input type="checkbox" id="nettoyer_supprimer_comp_orphelins_et_ses_criteres" name="nettoyer_supprimer_comp_orphelins_et_ses_criteres" value="nettoyer_supprimer_comp_orphelins_et_ses_criteres" style="margin-left:50px;display:none;">
+					<label for="nettoyer_supprimer_comp_orphelins_et_ses_criteres">Supprimer également les critères associés à cette compétence.</label>
+				<br/>
+
+				<input type="checkbox" id="nettoyer_supprimer_criteres_orphelins" name="nettoyer_supprimer_criteres_orphelins" value="nettoyer_supprimer_criteres_orphelins">
+				<label for="nettoyer_supprimer_criteres_orphelins">Supprimer les évaluations qui ne font plus partie d'une compétence.</label>
+				<br/>
+			</form>
+		</div>
+		<script>
+			$( "#dialog-nettoyerLaBase").dialog({
+				autoOpen: false,
+				modal: true,
+				buttons: {
+							"Nettoyer": function() {
+														nettoyerLaBase();
+														$("#dialog-nettoyerLaBase").dialog( "close" );
+														$("#dialog-nettoyerLaBaseCallBack").text("Nettoyage de la base...");
+														$("#dialog-nettoyerLaBaseCallBack").dialog("open");
+													},
+							"Annuler": function() {
+														$("#dialog-nettoyerLaBase").dialog( "close" );
+													}
+						},
+				width:600
+			});
+		</script>
+		
+		
+		
+		
+		<!-- BOITE POUR NETTOYER (CALLBACK)------------------- -->
+		<div id="dialog-nettoyerLaBaseCallBack" title="Nettoyer la base de données - Bilan">
+			
+		</div>
+		<script>
+			$( "#dialog-nettoyerLaBaseCallBack").dialog({
+				autoOpen: false,
+				modal: true,
+				buttons: {
+							"Fermer": function() {$("#dialog-nettoyerLaBaseCallBack").dialog( "close" );}
+						},
+				width:600
+			});
+		</script>

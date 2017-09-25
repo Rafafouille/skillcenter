@@ -5,6 +5,87 @@
 
 
 
+// MAINTENANCE
+// ****************************************************
+//UDAPTE COMPETENCES PAR CLASSE *********************************
+nettoyerLaBase=function()
+{
+		$.post(
+			'./sources/PHP/actionneurJSON.php',//Requete appelée
+			{	//Les données à passer par POST
+				action:"nettoyerLaBase",
+				nettoyer_supprimer_notes_fantomes:$("#nettoyer_supprimer_notes_fantomes").prop("checked"),
+				nettoyer_supprimer_notes_sans_critere:$("#nettoyer_supprimer_notes_sans_critere").prop("checked"),
+				nettoyer_depasse_critere_max:$("#nettoyer_depasse_critere_max").prop("checked"),
+				nettoyer_depasse_critere_max_option:$("#nettoyer_depasse_critere_max_option").val(),
+				nettoyer_supprimer_comp_orphelins:$("#nettoyer_supprimer_comp_orphelins").prop("checked"),
+				nettoyer_supprimer_comp_orphelins_et_ses_criteres:$("#nettoyer_supprimer_comp_orphelins_et_ses_criteres").prop("checked"),
+				nettoyer_supprimer_notes_criteres_orphelins:$("#nettoyer_supprimer_criteres_orphelins").prop("checked")
+			},
+			nettoyerLaBase_Callback,	//Fonction callback
+			"json"	//Type de réponse
+	);
+}
+
+nettoyerLaBase_Callback=function(reponse)
+{
+	afficheMessage(reponse.messageRetour);
+	
+	texte="<p>Aucune modification n'a été apporté à la base de données.</p>"
+	
+	if(reponse.bilan_nettoyage.notes_supprimees.plus_user+reponse.bilan_nettoyage.notes_supprimees.plus_indicateur+reponse.bilan_nettoyage.comp_supprimees+reponse.bilan_nettoyage.ind_supprimees)
+	{
+		var texte="<p>Lors du nettoyage de la base, les opérations suivantes ont été faites :</p>\n<ul>";
+		if((reponse.bilan_nettoyage.notes_supprimees.plus_user+reponse.bilan_nettoyage.notes_supprimees.plus_indicateur))
+		{
+			texte+="<li><strong style='color:red;'>"+(reponse.bilan_nettoyage.notes_supprimees.plus_user+reponse.bilan_nettoyage.notes_supprimees.plus_indicateur)+"</strong> évaluation(s) ont été supprimées (";
+			if(reponse.bilan_nettoyage.notes_supprimees.plus_user)
+				{texte+=reponse.bilan_nettoyage.notes_supprimees.plus_user+" suppression(s) car l'utilisateur associé a été supprimé";
+				if(reponse.bilan_nettoyage.notes_supprimees.plus_indicateur)
+					texte+=" ; ";
+				else
+					texte+=".";
+				}
+			if(reponse.bilan_nettoyage.notes_supprimees.plus_indicateur)
+				texte+=reponse.bilan_nettoyage.notes_supprimees.plus_indicateur+" suppression(s) car le critère associé n'existe plus.";;
+			texte+=")</li>"
+			
+		}
+		
+		if((reponse.bilan_nettoyage.criteres_depasse.sup+reponse.bilan_nettoyage.criteres_depasse.inf))
+		{
+			texte+="<li><strong style='color:red;'>"+(reponse.bilan_nettoyage.criteres_depasse.sup+reponse.bilan_nettoyage.criteres_depasse.inf)+"</strong> indicateur(s) étaient en dehors des bornes d'évaluation (";
+			if(reponse.bilan_nettoyage.criteres_depasse.sup)
+			{
+				texte+=reponse.bilan_nettoyage.criteres_depasse.sup+" au dessus de la limite";
+				if(reponse.bilan_nettoyage.criteres_depasse.inf)
+					texte+=" ; ";
+				else
+					texte+=".";
+			}
+			if(reponse.bilan_nettoyage.criteres_depasse.inf)
+			{
+				texte+=reponse.bilan_nettoyage.criteres_depasse.inf+" en dessous de zéro.";
+			}
+			texte+="). ";
+			if($("#nettoyer_depasse_critere_max_option").val()=="depasse_critere_max_tronque")
+				texte+="Elles ont été tronquées."
+			else
+				texte+="Elles ont été supprimées."
+			texte+="</li>";
+		}
+		
+		if(reponse.bilan_nettoyage.comp_supprimees)
+			texte+="<li><strong style='color:red;'>"+reponse.bilan_nettoyage.comp_supprimees+"</strong> compétence(s) 'orphelines' (n'appartenant à aucun groupe) ont été supprimées.</li>";
+		
+		if(reponse.bilan_nettoyage.ind_supprimees)
+			texte+="<li><strong style='color:red;'>"+reponse.bilan_nettoyage.ind_supprimees+"</strong> indicateurs orphelins (n'appartenant à aucune compétence) ont été supprimés.</li>";
+		
+		texte+="</ul>";
+	}
+	$("#dialog-nettoyerLaBaseCallBack").html(texte);
+}
+
 
 // AFFICHAGE GROUPE / COMPETENCES / INDICATEURS
 // ****************************************************
