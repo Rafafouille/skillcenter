@@ -20,7 +20,8 @@ nettoyerLaBase=function()
 				nettoyer_depasse_critere_max_option:$("#nettoyer_depasse_critere_max_option").val(),
 				nettoyer_supprimer_comp_orphelins:$("#nettoyer_supprimer_comp_orphelins").prop("checked"),
 				nettoyer_supprimer_comp_orphelins_et_ses_criteres:$("#nettoyer_supprimer_comp_orphelins_et_ses_criteres").prop("checked"),
-				nettoyer_supprimer_notes_criteres_orphelins:$("#nettoyer_supprimer_criteres_orphelins").prop("checked")
+				nettoyer_supprimer_notes_criteres_orphelins:$("#nettoyer_supprimer_criteres_orphelins").prop("checked"),
+				nettoyer_reordonner:$("#nettoyer_reordonner").prop("checked")
 			},
 			nettoyerLaBase_Callback,	//Fonction callback
 			"json"	//Type de réponse
@@ -81,6 +82,9 @@ nettoyerLaBase_Callback=function(reponse)
 		if(reponse.bilan_nettoyage.ind_supprimees)
 			texte+="<li><strong style='color:red;'>"+reponse.bilan_nettoyage.ind_supprimees+"</strong> indicateurs orphelins (n'appartenant à aucune compétence) ont été supprimés.</li>";
 		
+		if($("#nettoyer_reordonner").prop("checked"))
+			texte+="<li>Les numérotations des indicateurs, compétences et domaines ont été refaites (en interne dans la BDD).</li>";
+
 		texte+="</ul>";
 	}
 	$("#dialog-nettoyerLaBaseCallBack").html(texte);

@@ -278,16 +278,20 @@
 					</select>
 				<br/>
 
-				<input type="checkbox" id="nettoyer_supprimer_comp_orphelins" name="nettoyer_supprimer_comp_orphelins" value="nettoyer_supprimer_comp_orphelins" onchange="$('#nettoyer_supprimer_comp_orphelins_et_ses_criteres').toggle(200);$('#nettoyer_supprimer_comp_orphelins_et_ses_criteres_label').toggle(200)">
+				<input type="checkbox" id="nettoyer_supprimer_comp_orphelins" name="nettoyer_supprimer_comp_orphelins" value="nettoyer_supprimer_comp_orphelins" onchange="$('#nettoyer_supprimer_comp_orphelins_et_ses_criteres').toggle(200);$('#nettoyer_supprimer_comp_orphelins_et_ses_criteres_label').toggle(200)" checked>
 				<label for="nettoyer_supprimer_comp_orphelins">Supprimer les compétences qui ne font plus partie d'un domaine de compétence.</label>
 				<br/>
 
-					<input type="checkbox" id="nettoyer_supprimer_comp_orphelins_et_ses_criteres" name="nettoyer_supprimer_comp_orphelins_et_ses_criteres" value="nettoyer_supprimer_comp_orphelins_et_ses_criteres" style="margin-left:50px;display:none;">
-					<label for="nettoyer_supprimer_comp_orphelins_et_ses_criteres" id="nettoyer_supprimer_comp_orphelins_et_ses_criteres_label"  style="margin-left:50px;display:none;">Supprimer aussi les critères associés à cette compétence.</label>
+					<input type="checkbox" id="nettoyer_supprimer_comp_orphelins_et_ses_criteres" name="nettoyer_supprimer_comp_orphelins_et_ses_criteres" value="nettoyer_supprimer_comp_orphelins_et_ses_criteres" style="margin-left:50px;"  checked>
+					<label for="nettoyer_supprimer_comp_orphelins_et_ses_criteres" id="nettoyer_supprimer_comp_orphelins_et_ses_criteres_label"  style="margin-left:50px;">Supprimer aussi les critères associés à cette compétence.</label>
 				<br/>
 
-				<input type="checkbox" id="nettoyer_supprimer_criteres_orphelins" name="nettoyer_supprimer_criteres_orphelins" value="nettoyer_supprimer_criteres_orphelins">
+				<input type="checkbox" id="nettoyer_supprimer_criteres_orphelins" name="nettoyer_supprimer_criteres_orphelins" value="nettoyer_supprimer_criteres_orphelins"  checked>
 				<label for="nettoyer_supprimer_criteres_orphelins">Supprimer les évaluations qui ne font plus partie d'une compétence.</label>
+				<br/>
+
+				<input type="checkbox" id="nettoyer_reordonner" name="nettoyer_reordonner" value="nettoyer_reordonner"  checked>
+				<label for="nettoyer_reordonner">Nettoyer l'ordre des criteres/competences/domaines.</label>
 				<br/>
 			</form>
 		</div>

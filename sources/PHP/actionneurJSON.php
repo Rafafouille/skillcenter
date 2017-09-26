@@ -768,6 +768,7 @@ if($action=="nettoyerLaBase")
 			$nettoyer_supprimer_comp_orphelins=isset($_POST['nettoyer_supprimer_comp_orphelins'])?$_POST['nettoyer_supprimer_comp_orphelins']=="true":false;
 			$nettoyer_supprimer_comp_orphelins_et_ses_criteres=isset($_POST['nettoyer_supprimer_comp_orphelins_et_ses_criteres'])?$_POST['nettoyer_supprimer_comp_orphelins_et_ses_criteres']=="true":false;
 			$nettoyer_supprimer_notes_criteres_orphelins=isset($_POST['nettoyer_supprimer_notes_criteres_orphelins'])?$_POST['nettoyer_supprimer_notes_criteres_orphelins']=="true":false;
+			$nettoyer_reordonner=isset($_POST['nettoyer_reordonner'])?$_POST['nettoyer_reordonner']=="true":false;
 
 			$nb_suppr_fantom=0;
 			$nb_suppr_plus_dindicateur=0;
@@ -850,13 +851,43 @@ if($action=="nettoyerLaBase")
 			//Supprimer les indicateurs fantomes
 			if($nettoyer_supprimer_notes_criteres_orphelins)
 			{
-				$req=$bdd->query("SELECT COUNT(id) as nb FROM ".$BDD_PREFIXE."indicateurs` WHERE competence NOT IN (select id from ".$BDD_PREFIXE."competences)");
+				$req=$bdd->query("SELECT COUNT(id) as nb FROM ".$BDD_PREFIXE."indicateurs WHERE competence NOT IN (select id from ".$BDD_PREFIXE."competences)");
 				$data=$req->fetch();
 				$nb_ind_supprime+=intval($data['nb']);
 				if(intval($data['nb'])) $modif_apportee=true;//Si modif...
 				$bdd->query("DELETE FROM ".$BDD_PREFIXE."indicateurs WHERE competence NOT IN (select id from ".$BDD_PREFIXE."competences)");
 			}
 
+
+			//Remettre à plat la numérotation des critere/competences/domaines
+			if($nettoyer_reordonner)
+			{
+				$modif_apportee=true;
+				$req=$bdd->query("SELECT id FROM ".$BDD_PREFIXE."indicateurs ORDER BY position");
+				$cpt=1;
+			1+1;
+				while($data=$req->fetch())
+				{
+					$bdd->query("UPDATE ".$BDD_PREFIXE."indicateurs SET position=".strval($cpt)." WHERE id=".strval($data['id']));
+					$cpt+=1;
+				}
+
+				$req=$bdd->query("SELECT id FROM ".$BDD_PREFIXE."competences ORDER BY position");
+				$cpt=1;
+				while($data=$req->fetch())
+				{
+					$bdd->query("UPDATE ".$BDD_PREFIXE."competences SET position=".strval($cpt)." WHERE id=".strval($data['id']));
+					$cpt+=1;
+				}
+
+				$req=$bdd->query("SELECT id FROM ".$BDD_PREFIXE."groupes_competences ORDER BY position");
+				$cpt=1;
+				while($data=$req->fetch())
+				{
+					$bdd->query("UPDATE ".$BDD_PREFIXE."groupes_competences SET position=".strval($cpt)." WHERE id=".strval($data['id']));
+					$cpt+=1;
+				}
+			}
 
 			$reponseJSON['bilan_nettoyage']=array();
 			$reponseJSON['bilan_nettoyage']["notes_supprimees"]['plus_user']=$nb_suppr_fantom;
@@ -866,6 +897,7 @@ if($action=="nettoyerLaBase")
 			$reponseJSON['bilan_nettoyage']["comp_supprimees"]=$nb_comp_orpheline;
 			$reponseJSON['bilan_nettoyage']["ind_supprimees"]=$nb_ind_supprime;
 			$reponseJSON['bilan_nettoyage']['modif_apportee']=$modif_apportee;
+			$reponseJSON['messageRetour']=":XNettoyage de la BDD effectuée.";
 
 
 	}
@@ -874,7 +906,12 @@ if($action=="nettoyerLaBase")
 }
 
 
-//Update liste des compétences
+
+
+
+
+
+//Update liste des compétences ***************************************
 if($action=="updateCompetencesSelonClasse")
 {
 	if($_SESSION['statut']=="admin")
