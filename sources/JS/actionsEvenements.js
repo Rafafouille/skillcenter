@@ -73,7 +73,27 @@ logout=function()
 }
 
 
-
+//Fonction qui teste si l'utilisateur est encore connecté ou non
+testeConnecte=function()
+{
+	$.post(
+			'./sources/PHP/actionneurJSON.php',//Requete appelée
+			{	//Les données à passer par POST
+				action:"testeConnecte"
+			},
+			testeConnecte_callback,	//Fonction callback
+			"json"	//Type de réponse
+	);
+}
+testeConnecte_callback=function(reponse)
+{
+	afficheMessage(reponse.messageRetour);
+	if(reponse.connecte!=CONNECTE)//Si on n'est plus connecte sur le serveur, mais qu'on l'est encore sur le client (ou l'inverse)...
+	{
+		logout();
+//		window.location.reload();	//...on recharge.
+	}
+}
 
 
 /**********************************************

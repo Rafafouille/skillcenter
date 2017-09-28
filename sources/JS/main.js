@@ -38,7 +38,14 @@ $(function()//Fonction lancée au chargement de la page
 
 	//Affichage de la page, une fois chargée ***********
 	$('body').css("display","block")
+
+
+
+	//Test si on est toujours connecté (toutes les minutes)
+	INTERVALLE_RELANCE=setInterval(testeConnecte,TIMEOUT_RELANCE*60*1000)
+
 });
+
 
 
 

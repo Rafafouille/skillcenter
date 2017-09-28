@@ -92,6 +92,7 @@ include("./sources/PHP/actions.php");
 			ADMIN_COMPETENCES_LOADED=false;	//Variable globale qui dit si la page "cometences (admin)" a deja été au moins une fois chargée
 			NOTATION_LOADED=false;	//Variable globale qui dit si la page "cometences (admin)" a deja été au moins une fois chargée
 			NOTATION_REDESSINE_DE_ZERO=true;
+			TIMEOUT_RELANCE=10;//TEMPS ESTIME AVANT QUE LE PROGRAMME SE DECONNECTE TOUT SEUL (en min)
 
 			NOMS_NIVEAUX=[<?php for($i=1;$i<=$NB_NIVEAUX_MAX;$i++)
 						{

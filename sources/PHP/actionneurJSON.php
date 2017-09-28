@@ -89,6 +89,19 @@ if($action=="logout")
 }
 
 
+// TESTE LA CONNECTION ==============================
+// Action qui teste régulièrement si on est connecte ou pas.
+if($action=="testeConnecte")
+{
+	if($_SESSION['id'])
+		$reponseJSON["messageRetour"]=":X";
+	else
+		$reponseJSON["messageRetour"]=":|Vous êtes déconnectés du serveur";
+
+	$reponseJSON["connecte"]=$_SESSION['id']!=0;
+}
+
+
 // =====================================================
 // FONCTIONS GENERALES
 // =====================================================
