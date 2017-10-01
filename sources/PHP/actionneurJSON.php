@@ -556,32 +556,31 @@ if($action=="getComments")
 // Action qui ajoute une nouvelle note **************************************
 if($action=="newNote")
 {
-	$eleve=0;
-		if(isset($_POST['eleve'])) $eleve=intval($_POST['eleve']);
+	$eleve=isset($_POST['eleve'])?intval($_POST['eleve']):0;
 
 	if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur" || $_SESSION['statut']=="autoeval" && $_SESSION['id']==$eleve)
 	{
 		//RECUPERE LES DONNEES ------------
-		$indicateur=0;
-			if(isset($_POST['indicateur'])) $indicateur=intval($_POST['indicateur']);
-		$note=0;
-			if(isset($_POST['note'])) $note=intval($_POST['note']);
+		$indicateur=isset($_POST['indicateur'])?intval($_POST['indicateur']):0;
+		$note=isset($_POST['note'])?intval($_POST['note']):0;
 		
 		//ECRITURE DE LA NOTE ------------
 		connectToBDD();
-		$req = $bdd->prepare('INSERT INTO '.$BDD_PREFIXE.'notation (note,date,eleve,indicateur,examinateur) VALUES(:note,NOW(),:eleve,:indicateur,'.$_SESSION['id'].')');
+		$nextId=getNextFreeIdOfTable($bdd,$BDD_PREFIXE.'notation');
+		$req = $bdd->prepare('INSERT INTO '.$BDD_PREFIXE.'notation (id,note,date,eleve,indicateur,examinateur,contexte,commentaire) VALUES(:id,:note,NOW(),:eleve,:indicateur,'.$_SESSION['id'].',"","")');
 		$req->execute(array(
+				'id' => $nextId,
 				'note' => $note,
 				'eleve' => $eleve,
 				'indicateur' => $indicateur
 				));
-			
+		
 
 		
 		//RETOUR ------------
 		$reponseJSON["note"]=getNotationPourJSON($eleve,$indicateur);
 
-		$repNote=$bdd->query("SELECT * FROM ".$BDD_PREFIXE."notation WHERE id=".$bdd->lastInsertId());
+		$repNote=$bdd->query("SELECT * FROM ".$BDD_PREFIXE."notation WHERE id=".strval($nextId));
 		$dataNote=$repNote->fetch();
 
 		$repEleve=$bdd->query("SELECT nom,prenom FROM ".$BDD_PREFIXE."utilisateurs WHERE id=".$dataNote["eleve"]);
@@ -593,6 +592,7 @@ if($action=="newNote")
 		$repInd=$bdd->query("SELECT nom,niveaux FROM ".$BDD_PREFIXE."indicateurs WHERE id=".$dataNote["indicateur"]);
 		$dataInd=$repInd->fetch();
 
+		$reponseJSON["notation"]["debug"]="SELECT nom,prenom FROM ".$BDD_PREFIXE."utilisateurs WHERE id=".$dataNote["eleve"];
 
 		$reponseJSON["notation"]["id"]=$dataNote["id"];
 		$reponseJSON["notation"]["prenomEleve"]=$dataEleve["prenom"];

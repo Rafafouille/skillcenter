@@ -31,6 +31,15 @@ function connectToBDD()
 	}
 }
 
+//Récupere le prochain id de libre pour la table "table"
+//On suppose que la BDD est déjà ouverte
+function getNextFreeIdOfTable($DB,$table)
+{
+	$req=$DB->query("SELECT IFNULL(MAX(id),0) AS m FROM ".$table);
+	$data=$req->fetch();
+	return intval($data['m'])+1;
+}
+
 
 // ==============================================
 // UTILISATEUR
