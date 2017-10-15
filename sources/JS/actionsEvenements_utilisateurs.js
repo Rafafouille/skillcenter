@@ -133,13 +133,14 @@ ouvreBoiteSupprimeUser=function(i,nom)
 }
 
 //Supprime l'utilisateur 'i'
-supprimeUser=function(i)
+supprimeUser=function(i,suppEval=true)
 {
 	$.post(
 			'./sources/PHP/actionneurJSON.php',//Requete appelée
 			{	//Les données à passer par POST
 				action:"delUser",
-				id:i
+				id:i,
+				suppEval:suppEval
 			},
 			callBack_supprimeUser,	//Fonction callback
 			"json"	//Type de réponse

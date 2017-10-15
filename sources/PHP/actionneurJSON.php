@@ -301,8 +301,12 @@ if($action=="delUser")
 	if($_SESSION['statut']=="admin")
 	{
 		connectToBDD();
-		$id=0;
-		if(isset($_POST['id'])) $id=$_POST['id'];
+		$id=isset($_POST['id'])?$_POST['id']:0;
+		$suppEval=isset($_POST['suppEval'])?$_POST['suppEval']=="true":false;
+
+		
+		$reponseJSON["debug"]=$suppEval;
+
 		if($id)
 		{
 			if($id!=$_SESSION['id'])
@@ -311,6 +315,17 @@ if($action=="delUser")
 				$req->execute(array(
 							'id' => $id
 						));
+
+				if($suppEval)//Si on supprime AUSSI les evaluations
+				{
+						$req = $bdd->prepare('SELECT COUNT(*) AS nb FROM '.$BDD_PREFIXE.'notation WHERE eleve = :id');
+						$req->execute(array('id' => $id));
+						$data=$req->fetch();
+						$reponseJSON["nbEvalSupprime"]=intval($data['nb']);
+						$req = $bdd->prepare('DELETE FROM '.$BDD_PREFIXE.'notation WHERE eleve = :id');
+						$req->execute(array('id' => $id));
+				}
+
 				$reponseJSON["idSupprime"]=$id;
 				$reponseJSON["messageRetour"]=":XL'utilisateur n°".$id." a bien été supprimé.";
 			}

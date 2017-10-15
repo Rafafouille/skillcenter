@@ -82,13 +82,17 @@
 		<!-- BOITE POUR SUPPRIMER UN UTILISATEUR ------------------- -->
 		<div id="dialog-deleteUser" title="Supprimer l'utilisateur">
 			Voulez-vous vraiment supprimer l'utilisateur n°<span id="dialog-deleteUser-id">0</span> (<span id="dialog-deleteUser-nom">inconnu</span>) ?
+			<br/>
+			<form>
+					<input type="checkbox" name="UTILISATEUR_supprimer_aussi_les_notes" id="UTILISATEUR_supprimer_aussi_les_notes" checked /><label for="UTILISATEUR_supprimer_aussi_les_notes">Supprimer également les évaluations associées. </label>
+			</form>
 		</div>
 		<script>
 			$( "#dialog-deleteUser").dialog({
 				autoOpen: false,
 				modal: true,
 				buttons: {
-							"Oui": function() {$("#dialog-deleteUser").dialog( "close" );supprimeUser(parseInt($("#dialog-deleteUser-id").text()));},
+							"Oui": function() {$("#dialog-deleteUser").dialog( "close" );supprimeUser(parseInt($("#dialog-deleteUser-id").text()),$("#UTILISATEUR_supprimer_aussi_les_notes").prop("checked"));},
 							"Non": function() {$("#dialog-deleteUser").dialog( "close" );}
 						}
 			});
