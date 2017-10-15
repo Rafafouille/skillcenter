@@ -149,7 +149,9 @@ function NOTATION_ajouteIndicateur(indicateur,conteneur)
 	//Renvoie la valeur de l'evaluation et le nombre de niveaux max
 	//return {niveau:parseInt((parseInt(indicateur.niveauEleveMax)+Math.abs(parseInt(indicateur.niveauEleveMax)))*0.5),niveauMax:parseInt(indicateur.niveauMax)};
 	//return {niveau:parseInt((parseInt(indicateur.niveauEleveMax)+Math.abs(parseInt(indicateur.niveauEleveMax)))*0.5),niveauMax:parseInt(indicateur.niveauMax)};
-	return {niveau:noteEleve,niveauMax:parseInt(indicateur.niveauMax)};
+
+	//On tronque les notes négatives
+	return {niveau:noteEleve<0?0:noteEleve,niveauMax:parseInt(indicateur.niveauMax)};
 }
 
 
@@ -186,7 +188,7 @@ function NOTATION_getNiveauxIndicateur(val,maxi,indicateur, clickable,degrade)
 		var alpha=0.1+(i==val)*0.9;//Transparence des lettres
 		
 		
-		if(i<=val)
+		if(i<=val)//Attention ! cela inclut le zero (d'ou le -1 par defaut s'il n'y a pas de note)
 		{
 			var cl="indicateurAllume";
 			if(clickable)

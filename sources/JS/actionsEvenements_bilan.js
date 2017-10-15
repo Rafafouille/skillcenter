@@ -87,7 +87,7 @@ updateNotationEleve=function(reponse)
 	//Mise à jour de l'affichage du pourcentage
 	if(STATUT=="admin" || STATUT=="evaluateur")
 		$("#BILAN_pourcentage").text("(Total : "+parseInt(sommeNiveaux/sommeNiveauxMax*100)+"%)");
-	
+
 	
 	
 	NOTATION_REDESSINE_DE_ZERO=false;//Si on change d'élève, on ne redessine pas tout
