@@ -1,2 +1,4 @@
 #Ignore le fichier "options.php"
 options.php
+#ignorer les fichiers test.php
+test.php
