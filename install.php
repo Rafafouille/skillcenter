@@ -1,5 +1,7 @@
 <?php 	session_start();
 
+
+
 $dOptions='./sources/PHP/';//Chemin du fichier d'option
 
 $etape="debut";
@@ -41,6 +43,22 @@ if(isset($_POST['AUTORISE_COMMENTAIRES']))	$_SESSION['AUTORISE_COMMENTAIRES']=$_
 
 if(isset($_POST['AUTORISE_BADGES']))	$_SESSION['AUTORISE_BADGES']=$_POST['AUTORISE_BADGES']=="oui";
 if(isset($_POST['AUTORISE_GRAPHIQUES']))	$_SESSION['AUTORISE_GRAPHIQUES']=$_POST['AUTORISE_GRAPHIQUES']=="oui";
+
+if(isset($_POST['formAutoriseMail']))		$_SESSION['AUTORISE_MAILS']=$_POST['formAutoriseMail']=="autoriseMail";
+if(isset($_POST['formMailDefautOuSMTP']))	$_SESSION['MAIL_SMTP']=$_POST['formMailDefautOuSMTP']=="formMailSMTP";
+if(isset($_POST['MAIL_SMTP_SECURE']))		{$_SESSION['MAIL_SMTP_SECURE']=$_POST['MAIL_SMTP_SECURE'];	if($_SESSION['MAIL_SMTP_SECURE']=="aucun") $_SESSION['MAIL_SMTP_SECURE']="";}
+if(isset($_POST['MAIL_SMTP_HOTE']))		$_SESSION['MAIL_SMTP_HOTE']=$_POST['MAIL_SMTP_HOTE'];
+if(isset($_POST['MAIL_SMTP_PORT']))		$_SESSION['MAIL_SMTP_PORT']=intval($_POST['MAIL_SMTP_PORT']);
+if(isset($_POST['MAIL_SMTP_LOGIN']))		$_SESSION['MAIL_SMTP_LOGIN']=$_POST['MAIL_SMTP_LOGIN'];
+if(isset($_POST['MAIL_SMTP_MDP']))		{if($_POST['MAIL_SMTP_MDP']!="" && $_POST['MAIL_SMTP_MDP']!="NE PAS MODIFIER") {$_SESSION['MAIL_SMTP_MDP']=$_POST['MAIL_SMTP_MDP'];}}
+if(isset($_POST['MAIL_MAIL_EXPEDITEUR']))	$_SESSION['MAIL_MAIL_EXPEDITEUR']=$_POST['MAIL_MAIL_EXPEDITEUR'];
+if(isset($_POST['MAIL_NOM_EXPEDITEUR']))	$_SESSION['MAIL_NOM_EXPEDITEUR']=$_POST['MAIL_NOM_EXPEDITEUR'];
+if(isset($_POST['MAIL_MAIL_REPONDRE_A']))	$_SESSION['MAIL_MAIL_REPONDRE_A']=$_POST['MAIL_MAIL_REPONDRE_A'];
+
+
+
+
+
 
 ?>
 <!DOCTYPE html>
@@ -215,6 +233,17 @@ if($etape=="sauvOptions")
 	$AUTORISE_CONTEXT=true;			//Autorise de mettre un context aux évaluations
 	$AUTORISE_COMMENTAIRES=true;		//Autorise de mettre des commentaires aux évaluations
 
+	$AUTORISE_MAILS=false;	//Autorise l'envoi de mails
+	$MAIL_SMTP=false;	//Dit si on utilise un STMP ou juste la fonction mail de base
+	$MAIL_SMTP_SECURE="";	//Mode de sécurisation du SMTP
+	$MAIL_SMTP_HOTE="";	//Hote SMTP
+	$MAIL_SMTP_PORT=0;	//Port pour le SMTP
+	$MAIL_SMTP_LOGIN="";	//nom d'utilisateur
+	$MAIL_SMTP_MDP="";	//Mot de passe
+	$MAIL_MAIL_EXPEDITEUR="";		//Mail d'envoie associé au compte SMTP
+	$MAIL_NOM_EXPEDITEUR="Skillcenter";	//Nom qui sera affiché comme expéditeur
+	$MAIL_MAIL_REPONDRE_A="";		//Mail répondre à
+
 	$AUTORISE_BADGES=true;	//Utilise les badges ou non
 	$AUTORISE_GRAPHIQUES=true;	//Utilise les graphiques dans home ou non
 
@@ -268,6 +297,17 @@ if($etape=="sauvOptions")
 	$_SESSION['NOMS_NIVEAUX']=$INTITULES_NIVEAUX_CRITERES;	//Nom des niveaux
 	$_SESSION['AUTORISE_CONTEXT']=$AUTORISE_CONTEXT;		//Permet de mettre un context
 	$_SESSION['AUTORISE_COMMENTAIRES']=$AUTORISE_COMMENTAIRES;	//Permet de mettre des commentaires
+
+	$_SESSION['AUTORISE_MAILS']=$AUTORISE_MAILS;	//Autorise l'envoi de mails
+	$_SESSION['MAIL_SMTP']=$MAIL_SMTP;		//Dit si on utilise un STMP ou juste la fonction mail de base
+	$_SESSION['MAIL_SMTP_SECURE']=$MAIL_SMTP_SECURE;		//Mode de sécurisation du SMTP
+	$_SESSION['MAIL_SMTP_HOTE']=$MAIL_SMTP_HOTE;	//Hote SMTP
+	$_SESSION['MAIL_SMTP_PORT']=$MAIL_SMTP_PORT;				//Port pour le SMTP
+	$_SESSION['MAIL_SMTP_LOGIN']=$MAIL_SMTP_LOGIN;	//nom d'utilisateur
+	$_SESSION['MAIL_SMTP_MDP']=$MAIL_SMTP_MDP;		//Mot de passe
+	$_SESSION['MAIL_MAIL_EXPEDITEUR']=$MAIL_MAIL_EXPEDITEUR;	//Mail d'envoie associé au compte SMTP
+	$_SESSION['MAIL_NOM_EXPEDITEUR']=$MAIL_NOM_EXPEDITEUR;		//Nom qui sera affiché comme expéditeur
+	$_SESSION['MAIL_MAIL_REPONDRE_A']=$MAIL_MAIL_REPONDRE_A;	//Mail répondre à
 
 	$_SESSION['AUTORISE_BADGES']=$AUTORISE_BADGES;
 	$_SESSION['AUTORISE_GRAPHIQUES']=$AUTORISE_GRAPHIQUES;
@@ -678,7 +718,7 @@ if($etape=="rentreNotation")
 						</td>
 					</tr>
 				</table>
-				<input type="hidden" name="etape" value="ecritFichier"/>
+				<input type="hidden" name="etape" value="configureMail"/>
 			</form>
 			
 		</p>
@@ -691,7 +731,7 @@ if($etape=="rentreNotation")
 					</form>
 				</td>
 				<td>
-						<div class="bouton" onclick="$('#formRentreNotation').submit();"/>Créer le fichier 'options.php' --></div>
+					<div class="bouton" onclick="$('#formRentreNotation').submit();"/>Suivant --></div>
 				</td>
 			</tr>
 		</table>
@@ -701,7 +741,95 @@ if($etape=="rentreNotation")
 
 
 
-// etape 5 : ecritFichier ===========================================
+
+
+
+
+
+// etape 5 : mails ===================================================
+if($etape=="configureMail")
+{
+?>
+	<div class="boite">
+		<h2>Envoi d'emails</h2>
+		<p>Skillcenter peut envoyer des comptes-rendu des évaluations aux personnes à évaluer.</p>
+		<p>
+			<form method="POST" action="" id="formRentreEmails">
+				<input name="formAutoriseMail" id="formInterditMail" type="radio" value="interditMail" <?php echo (!$_SESSION['AUTORISE_MAILS']?"checked=\"checked\"":""); ?> onchange="if($(this).is(':checked')){$('#suiteFormAutoriseMail').hide(200);}"/><label for="formInterditMail">Ne pas autoriser Skillcenter à envoyer des mails.</label>
+				<br/>
+				<input name="formAutoriseMail" id="formAutoriseMail" type="radio" value="autoriseMail" <?php echo ($_SESSION['AUTORISE_MAILS']?"checked=\"checked\"":"");?> onchange="if($(this).is(':checked')){$('#suiteFormAutoriseMail').show(200);}"/><label for="formAutoriseMail">Autoriser Skillcenter à envoyer des mails.</label>
+				<br/>
+				<div id="suiteFormAutoriseMail" style="margin:20px;border-radius:5px;box-shadow: 2px 2px 6px #555;padding:10px;<?php echo ($_SESSION['AUTORISE_MAILS']?"":"display:none;");?>">
+					<input name="formMailDefautOuSMTP" id="formMailAuto" type="radio" value="formMailDefaut"  <?php echo (!$_SESSION['MAIL_SMTP']?"checked=\"checked\"":""); ?> onchange="if($(this).is(':checked')){$('#suiteSuiteAutoriseMail').hide(200);}"/><label for="formMailAuto">Utiliser les confirgurations mail par défaut de votre serveur (fonction "mail()" de PHP)</label>
+					<br/>
+					<input name="formMailDefautOuSMTP" id="formMailSMTP" type="radio" value="formMailSMTP" <?php echo ($_SESSION['MAIL_SMTP']?"checked=\"checked\"":""); ?> onchange="if($(this).is(':checked')){$('#suiteSuiteAutoriseMail').show(200);}"/><label for="formMailSMTP">Utiliser un compte mail externe (SMTP)</label>
+					<div id="suiteSuiteAutoriseMail" style="margin:20px;border-radius:5px;box-shadow: 2px 2px 6px #555;padding:10px;<?php echo ($_SESSION['MAIL_SMTP']?"":"display:none;");?>">
+						<table>
+							<tr>
+								<td>Adresse de l'hôte SMTP :</td>
+								<td><input type="text" name="MAIL_SMTP_HOTE" value="<?php echo $_SESSION['MAIL_SMTP_HOTE'];?>" place_holder="smtp.hote.fr"/></td>
+							</tr>
+							<tr>
+								<td>Méthode de sécurité :</td>
+								<td><select name="MAIL_SMTP_SECURE">
+									<option value="aucun" <?php echo ($_SESSION['MAIL_SMTP_SECURE']==""?"selected":"");?>>(Aucune)</option>
+									<option value="ssl" <?php echo ($_SESSION['MAIL_SMTP_SECURE']=="ssl"?"selected":"");?>>SSL/TSL</option>
+									<option value="starttls"  <?php echo ($_SESSION['MAIL_SMTP_SECURE']=="starttls"?"selected":"");?>>STARTTLS</option>
+									<option value="md5"  <?php echo ($_SESSION['MAIL_SMTP_SECURE']=="md5"?"selected":"");?>>MD5</option>
+								</select></td>
+							</tr>
+							<tr>
+								<td>Numéro de port :</td>
+								<td><input type="number" name="MAIL_SMTP_PORT" value="<?php echo $_SESSION['MAIL_SMTP_PORT'];?>" place_holder="465"/></td>
+							</tr>
+							<tr>
+								<td>Nom d'utilisateur :</td>
+								<td><input type="text" name="MAIL_SMTP_LOGIN" value="<?php echo $_SESSION['MAIL_SMTP_LOGIN'];?>"/></td>
+							</tr>
+							<tr>
+								<td>Mot de passe (seulement si vous le modifiez) :</td>
+								<td><input type="password" name="MAIL_SMTP_MDP" value="NE PAS MODIFIER"/></td>
+							</tr>
+							<tr>
+								<td>Email du compte :</td>
+								<td><input type="email" name="MAIL_MAIL_EXPEDITEUR" value="<?php echo $_SESSION['MAIL_MAIL_EXPEDITEUR'];?>" place_holder="votremail@serveur.com"/></td>
+							</tr>
+							<tr>
+								<td>Nom d'expéditeur :</td>
+								<td><input type="text" name="MAIL_NOM_EXPEDITEUR" value="<?php echo $_SESSION['MAIL_NOM_EXPEDITEUR'];?>" place_holder="Skillcenter"/></td>
+							</tr>
+							<tr>
+								<td>Mail "répondre à" :</td>
+								<td><input type="email" name="MAIL_MAIL_REPONDRE_A" value="<?php echo $_SESSION['MAIL_MAIL_REPONDRE_A'];?>"/></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<input type="hidden" name="etape" value="ecritFichier"/>
+			</form>
+		</p>
+	<table class="boutons">
+			<tr>
+				<td>
+					<form action="" method="POST" style="display:inline;">
+						<input type="hidden" name="etape" value="rentreNotation"/>
+						<input type="submit" class="bouton" value="<-- Précédent"/>
+					</form>
+				</td>
+				<td>
+					<div class="bouton" onclick="$('#formRentreEmails').submit();"/>Créer le fichier 'options.php' --></div>
+				</td>
+			</tr>
+		</table>
+	</div><?php
+
+}
+
+
+
+
+
+// etape 6 : ecritFichier ===========================================
 if($etape=="ecritFichier")
 {
 
@@ -744,6 +872,21 @@ $contenu.=");\n";
 $contenu.="\$AUTORISE_CONTEXT=".($_SESSION['AUTORISE_CONTEXT']?"true":"false").";		//Autorise (ou non) de mettre des contextes sur chaque évaluations (TD, TP, etc.)
 \$AUTORISE_COMMENTAIRES=".($_SESSION['AUTORISE_COMMENTAIRES']?"true":"false").";	//Autorise (ou non) de mettre des commentaires sur chaque évaluations.
 
+//Mails ****************************************
+\$AUTORISE_MAILS=".($_SESSION['AUTORISE_MAILS']?"true":"false").";	//Autorise l'envoi de mails
+\$MAIL_SMTP=".($_SESSION['MAIL_SMTP']?"true":"false").";		//Dit si on utilise un STMP ou juste la fonction mail de base
+\$MAIL_SMTP_SECURE=\"".$_SESSION['MAIL_SMTP_SECURE']."\";		//Mode de sécurisation du SMTP
+\$MAIL_SMTP_HOTE=\"".$_SESSION['MAIL_SMTP_HOTE']."\";	//Hote SMTP
+\$MAIL_SMTP_PORT=".strval($_SESSION['MAIL_SMTP_PORT']).";				//Port pour le SMTP
+\$MAIL_SMTP_LOGIN=\"".$_SESSION['MAIL_SMTP_LOGIN']."\";	//nom d'utilisateur
+\$MAIL_SMTP_MDP=\"".$_SESSION['MAIL_SMTP_MDP']."\";		//Mot de passe
+\$MAIL_MAIL_EXPEDITEUR=\"".$_SESSION['MAIL_MAIL_EXPEDITEUR']."\";	//Mail d'envoie associé au compte SMTP
+\$MAIL_NOM_EXPEDITEUR=\"".$_SESSION['MAIL_NOM_EXPEDITEUR']."\";		//Nom qui sera affiché comme expéditeur
+\$MAIL_MAIL_REPONDRE_A=\"".$_SESSION['MAIL_MAIL_REPONDRE_A']."\";	//Mail répondre à
+
+
+
+
 //Autres ************************************
 \$AUTORISE_BADGES=".($_SESSION['AUTORISE_BADGES']?"true":"false").";		//Autorise (ou non) les étudiants à recevoir des badges de validation
 \$AUTORISE_GRAPHIQUES=".($_SESSION['AUTORISE_GRAPHIQUES']?"true":"false").";		//Autorise (ou non) à afficher les graphiques sur la page d'accueil
@@ -777,7 +920,7 @@ $contenu.="\$AUTORISE_CONTEXT=".($_SESSION['AUTORISE_CONTEXT']?"true":"false")."
 			<tr>
 				<td>
 					<form action="" method="POST" style="display:inline;">
-						<input type="hidden" name="etape" value="rentreNotation"/>
+						<input type="hidden" name="etape" value="configureMail"/>
 						<input type="submit" class="bouton" value="<-- Précédent"/>
 					</form>
 				</td>
@@ -810,7 +953,7 @@ $contenu.="\$AUTORISE_CONTEXT=".($_SESSION['AUTORISE_CONTEXT']?"true":"false")."
 			<table><tr>
 				<td>
 					<form action="" method="POST" style="display:inline;">
-						<input type="hidden" name="etape" value="rentreNotation"/>
+						<input type="hidden" name="etape" value="configureMail"/>
 						<input type="submit" class="bouton" value="<-- Précédent"/>
 					</form>
 				</td>
@@ -850,7 +993,7 @@ $contenu.="\$AUTORISE_CONTEXT=".($_SESSION['AUTORISE_CONTEXT']?"true":"false")."
 			<tr>
 				<td>
 					<form action="" method="POST" style="display:inline;">
-						<input type="hidden" name="etape" value="rentreNotation"/>
+						<input type="hidden" name="etape" value="configureMail"/>
 						<input type="submit" class="bouton" value="<-- Précédent"/>
 					</form>
 				</td>

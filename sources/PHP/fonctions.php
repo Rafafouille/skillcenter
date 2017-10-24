@@ -41,42 +41,79 @@ function getNextFreeIdOfTable($DB,$table)
 }
 
 
-// ==============================================
-// UTILISATEUR
-// ================================================
 
-//Envoie un bilan à l'utilisateur. Renvoie 1 si ca a marché et false sinon.
-function envoieBilan($id)
+
+//Fonction qui permet d'envoyer un mail
+// La bibliotheque PHPMailerAutoload.php doit être chargée
+function envoieMail($adresse,$sujet,$contenuHTML,$contenuTXT)
 {
-	global $bdd,$BDD_PREFIXE;
-	$req=$bdd->prepare("SELECT nom, prenom, mail, date_dernier_envoi_bilan, notifieMail FROM ".$BDD_PREFIXE."utilisateurs WHERE id=:id AND mail<>''");
-	$req->execute(array('id'=>$id));
-	if($donnee=$req->fetch())
+	global $AUTORISE_MAILS,$MAIL_SMTP,$MAIL_SMTP_SECURE,$MAIL_SMTP_HOTE,$MAIL_SMTP_PORT,$MAIL_SMTP_LOGIN,$MAIL_SMTP_MDP,$MAIL_MAIL_EXPEDITEUR,$MAIL_NOM_EXPEDITEUR,$MAIL_MAIL_REPONDRE_A;
+	if($AUTORISE_MAILS)
 	{
-		if(intval($donnee["notifieMail"]))
-		{
-			$sujet="[SkillCenter] Bilan des compétences";
-			$mail=$donnee["mail"];
+		$mail = new PHPMailer();	//Nouveau mail
+		if($MAIL_SMTP)
+			$mail->IsSMTP();	//Indique qu'on passe par du SMTP
+		$mail->SMTPDebug = 0;	//Permet de degguer (0= non, 1=tout, 2=juste message)
+		$mail->CharSet="UTF-8";
+		$mail->SMTPSecure = $MAIL_SMTP_SECURE;	//Type de cryptage
+		$mail->Host = $MAIL_SMTP_HOTE;	//Hote SMTP
+		$mail->Port = $MAIL_SMTP_PORT;	//Port
+		$mail->Username = $MAIL_SMTP_LOGIN;	//Login
+		$mail->Password = $MAIL_SMTP_MDP;
+		$mail->SMTPAuth = true;	//Active l'autentification SMTP
+		$mail->AddAddress($adresse);
+		$mail->From = $MAIL_MAIL_EXPEDITEUR;
+		$mail->FromName = $MAIL_NOM_EXPEDITEUR;
+		$mail->AddReplyTo($MAIL_MAIL_REPONDRE_A, 'Skillcenter');
 
-			//Header du mail
-			$passage_ligne = "\n";//Choix du retour à la ligne selon serveur
-			if (!preg_match("#^[a-z0-9._-]+@(hotmail|live|msn).[a-z]{2,4}$#", $mail))
-				$passage_ligne = "\r\n";
-			$boundary = "-----=".md5(rand());
-			/*$header = "From: \"SkillCenter - Ne pas ".mb_encode_mimeheader(utf8_decode("répondre"))." -\" <noreply@allais.eu>".$passage_ligne;*/
-			/*$header .= "Reply-to: noreply@allais.eu".$passage_ligne;*/
-			$header = "MIME-Version: 1.0".$passage_ligne;
-			$header .= "Content-Type: multipart/alternative;".$passage_ligne." boundary=\"$boundary\"".$passage_ligne;
+		$mail->IsHTML(true);
+		$mail->Subject    = $sujet;
+		$mail->AltBody    = $contenuTXT;
+		$mail->Body    = $contenuHTML;
+
+		if(!$mail->Send())
+			return  ":(Erreur d'envoi de mail : ". $mail->ErrorInfo;
+		else
+			return ":)Mail envoyé";
+	}
+	else //Si pas autorise mail
+		return ":(L'envoi de mail est desactivé";
+}
+
+
+//Fonction qui renvoie la version "francaise" de la date
+function getDateEnFrancaisFromDateSQL($date)
+{
+	if($date=="0000-00-00 00:00:00")
+		return "début";
+
+	$timestamp=strtotime($date);
+
+	setlocale(LC_TIME, "fr_FR");
+	return strftime("%A %e %B %Y - %k:%M",$timestamp);//date("l d F Y - H:i",$timestamp);
+}
 
 
 
-			$req2=$bdd->prepare("SELECT MAX(n.note) AS note,i.nom AS nomInd, i.id AS idInd, i.niveaux AS niveaux, c.nom AS nomComp, c.id AS idComp, g.nom AS nomGr, g.id AS idGr FROM ".$BDD_PREFIXE."notation AS n JOIN ".$BDD_PREFIXE."indicateurs AS i ON n.indicateur=i.id JOIN ".$BDD_PREFIXE."competences AS c ON i.competence=c.id JOIN ".$BDD_PREFIXE."groupes_competences AS g ON c.groupe=g.id WHERE n.date>'".$donnee['date_dernier_envoi_bilan']."' AND n.eleve=:id GROUP BY n.indicateur ORDER BY g.id,c.id,i.id");
-			$req2->execute(array('id'=>$id));
 
-			//Début message txt
-			$messageTXT="Bonjour ".ucfirst($donnee["prenom"])." ".strtoupper($donnee["nom"])." !".$passage_ligne.$passage_ligne."Vous avez récemment obtenu les évaluations suivantes :".$passage_ligne;
-			//Début Message HTML
-			$messageHTML = "<html><head>
+
+// ============================================================================================================
+// UTILISATEUR
+// ============================================================================================================
+
+
+//Entete du mail TXT *********************************************************
+function debutMailBilanTXT($prenom,$nom,$date_derniere_evaluation)
+{
+	global $TITRE_PAGE;
+	return "Bonjour ".ucfirst($prenom)." ".strtoupper($nom)." !\n\nVous avez récemment obtenu les évaluations suivantes sur le site \"".$TITRE_PAGE."\" :\n(Depuis le ".getDateEnFrancaisFromDateSQL($date_derniere_evaluation).")\n\n";
+}
+
+//Entete du mail HTML ********************************************************
+function debutMailBilanHTML($prenom,$nom,$date_derniere_evaluation)
+{
+	global $TITRE_PAGE;
+	$texte="<html><head>
 <style type=\"text/css\">
 
 	h2
@@ -119,73 +156,140 @@ function envoieBilan($id)
 		margin-top:20px;
 	}
 </style>
-</head><body>";
-			$messageHTML.="<h1>Bonjour ".ucfirst($donnee["prenom"])." ".strtoupper($donnee["nom"]).",</h1>
+</head><body>\n";
+			$texte.="<h1>Bonjour ".ucfirst($prenom)." ".strtoupper($nom).",</h1>
 
-	<p>Vous avez récemment obtenu les évaluations suivantes :</p>".$passage_ligne.$passage_ligne;
-			//Liste des criteres
+	<p>Vous avez récemment obtenu les évaluations suivantes sur le site \"".$TITRE_PAGE."\":</p>\n
+	<p style=\"font-size:small;\">(Depuis le ".getDateEnFrancaisFromDateSQL($date_derniere_evaluation).")</p>\n\n";
+
+	return $texte;
+}
+
+//Renvoi le tableau bilan de l'utilisateur n°id, sous forme de tableau [$messageTXT,$messageHTML] *********************************************
+function milieuMailBilan($id,$date_dernier_envoi_bilan)
+{
+	global $bdd,$BDD_PREFIXE;
+
+	$messageTXT="";
+	$messageHTML="";
+
+	//On recupere les valeurs sur la BDD
+	$req2=$bdd->prepare("SELECT MAX(n.note) AS note,i.nom AS nomInd, i.id AS idInd, i.niveaux AS niveaux, c.nom AS nomComp, c.id AS idComp, g.nom AS nomGr, g.id AS idGr FROM ".$BDD_PREFIXE."notation AS n JOIN ".$BDD_PREFIXE."indicateurs AS i ON n.indicateur=i.id JOIN ".$BDD_PREFIXE."competences AS c ON i.competence=c.id JOIN ".$BDD_PREFIXE."groupes_competences AS g ON c.groupe=g.id WHERE n.date>'".$date_dernier_envoi_bilan."' AND n.eleve=:id GROUP BY n.indicateur ORDER BY g.id,c.id,i.id");
+	$req2->execute(array('id'=>$id));
+
+	//Liste des criteres
 			$domaine=-1;
 			$competence=-1;
 			$indicateur=-1;
-
-
 			while($data2=$req2->fetch())	//Pour chaque compétence
 			{
 				if($domaine!=intval($data2["idGr"]) && $domaine!=-1 || $competence!=intval($data2["idComp"]) && $competence!=-1) //Si on finit une section...
-					$messageHTML.="</table>".$passage_ligne;//On finit un tableau
+					$messageHTML.="</table>\n";//On finit un tableau
 				if($domaine!=intval($data2["idGr"]))//Si on change de domaine
 				{
 					$domaine=intval($data2["idGr"]);
-					$messageHTML.="<h2>".$data2["nomGr"]."</h2>".$passage_ligne;
-					$messageTXT.=$passage_ligne."=============================".$passage_ligne.$data2["nomGr"].$passage_ligne."=============================".$passage_ligne;
+					$messageHTML.="<h2>".$data2["nomGr"]."</h2>\n";
+					$messageTXT.="\n=============================\n".$data2["nomGr"]."\n=============================\n";
 				}
 				if($competence!=intval($data2["idComp"]))//Si on change de competences
 				{
 					$competence=intval($data2["idComp"]);
-					$messageHTML.=$passage_ligne.$passage_ligne."<h3>".$data2["nomComp"]."</h3>".$passage_ligne;
-					$messageHTML.="<table>".$passage_ligne;
-					$messageTXT.=$passage_ligne."*** ".$data2["nomComp"]." ***".$passage_ligne;
+					$messageHTML.="\n\n<h3>".$data2["nomComp"]."</h3>\n";
+					$messageHTML.="<table>\n";
+					$messageTXT.="\n*** ".$data2["nomComp"]." ***\n";
 				}
 
-				$messageHTML.="<tr>".$passage_ligne."	<td class=\"nomCritere\">".$data2["nomInd"]."</td>".$passage_ligne."	<td>".afficheNiveauDansMailHTML($data2["note"],$data2["niveaux"])."</td>".$passage_ligne."</tr>".$passage_ligne;
+				$messageHTML.="<tr>\n <td class=\"nomCritere\">".$data2["nomInd"]."</td>\n <td>".afficheNiveauDansMailHTML($data2["note"],$data2["niveaux"])."</td>\n</tr>\n";
 
-				$messageTXT.="  - ".(sizeof($data2["nomInd"])<40?substr($data2["nomInd"]."                                                                                             ",0,40):$data2["nomInd"])."   ".afficheNiveauDansMailTXT($data2["note"],$data2["niveaux"]).$passage_ligne;
+				$messageTXT.="  - ".(sizeof($data2["nomInd"])<40?substr($data2["nomInd"]."                                                                                             ",0,40):$data2["nomInd"])."   ".afficheNiveauDansMailTXT($data2["note"],$data2["niveaux"])."\n";
 
 			}
-			$messageHTML.="</table>".$passage_ligne;
-			$messageHTML.="<div id=\"signature\">".$passage_ligne."	<strong>Robot de SkillCenter<strong>".$passage_ligne."	<br/><span style=\"font-size:small;\">Ce message a été envoyé automatiquement.<br/>Merci de ne pas y répondre.</br>Si vous ne souhaitez plus recevoir ce genre de mail,<br/>contactez votre enseignant, administrateur ou responsable de l'évaluation.</span>".$passage_ligne."</div>".$passage_ligne;
-			$messageHTML.="</body></html>".$passage_ligne;
-			$messageTXT.="-- ".$passage_ligne."SkillCenter".$passage_ligne.$passage_ligne."Ce message a été envoyé automatiquement.".$passage_ligne."Merci de ne pas y répondre.".$passage_ligne."Si vous ne souhaitez plus recevoir ce genre de mail,".$passage_ligne."contactez votre enseignant, administrateur ou responsable de l'évaluation.";
-		
-			//Message complet
-			$message = $passage_ligne."--".$boundary.$passage_ligne;
-			//Message au format TXT
-			$message.="Content-Type: text/plain; charset=\"UTF-8\"".$passage_ligne;
-			$message.="Content-Transfer-Encoding: 8bit".$passage_ligne;
-			$message.=$passage_ligne.$messageTXT.$passage_ligne;
-			//Fin du message TXT
-			$message .= $passage_ligne."--".$boundary.$passage_ligne;
-			//Ajout du message HTML
-			$message.= "Content-Type: text/html; charset=\"UTF-8\"".$passage_ligne;
-			$message.= "Content-Transfer-Encoding: 8bit".$passage_ligne;
-			$message.= $passage_ligne.$messageHTML.$passage_ligne;
-			//==========
-			$message.= $passage_ligne."--".$boundary."--".$passage_ligne;
-			$message.= $passage_ligne."--".$boundary."--".$passage_ligne;
-			//==========
-			//Envoi
+			$messageHTML.="</table>\n";
+			$messageTXT.="\n=============================\n";
+
+	return array($messageTXT,$messageHTML);	
+}
+
+//Signature à mettre en fin de mail TXT *************************************************************************
+function signatureMailBilanTXT()
+{
+	return "\n-- \nSkillCenter\nCe message a été envoyé automatiquement.\nMerci de ne pas y répondre.\nSi vous ne souhaitez plus recevoir ce genre de mail,\ncontactez votre enseignant, administrateur ou responsable de l'évaluation.";
+}
+
+//Signature a mettre en fin de mail HTML *************************************************************************
+function signatureMailBilanHTML()
+{
+	$texte="<div id=\"signature\">\n	<strong>Robot de SkillCenter<strong>\n	<br/><span style=\"font-size:small;\">Ce message a été envoyé automatiquement.<br/>Merci de ne pas y répondre.</br>Si vous ne souhaitez plus recevoir ce genre de mail,<br/>contactez votre enseignant, administrateur ou responsable de l'évaluation.</span>\n</div>\n";
+	$texte.="</body></html>\n";
+	return $texte;
+}
 
 
-			return mail($mail,mb_encode_mimeheader(utf8_decode($sujet),"UTF-8"),$message);//,$header);
+//Fonction qui dit si, oui ou non, il y a eu des évaluations depuis la dernière évaluation pour l'user n°id*****************************
+function aEuDesEvaluationDepuisLaDerniereDate($id,$date_dernier_envoi)
+{
+	global $bdd,$BDD_PREFIXE;
+	$req=$bdd->prepare("SELECT * FROM ".$BDD_PREFIXE."notation WHERE eleve=:id AND date>:dateDernierEnvoi LIMIT 1");
+	$req->execute(array('id'=>$id,'dateDernierEnvoi'=>$date_dernier_envoi));
+	return $data=$req->fetch();
+}
+
+
+//Envoie un bilan à l'utilisateur. Renvoie 1 si ca a marché et false sinon. *******************************************
+function envoieBilan($id)
+{
+	global $bdd,$BDD_PREFIXE;
+	$req=$bdd->prepare("SELECT nom, prenom, mail, date_dernier_envoi_bilan, notifieMail FROM ".$BDD_PREFIXE."utilisateurs WHERE id=:id AND mail<>''");
+	$req->execute(array('id'=>$id));
+	if($donnee=$req->fetch())
+	{
+		if(intval($donnee["notifieMail"]))//Si on peut envoyer le mail (l'utilisateur accepte et le mail existe)
+		{
+			if($donnee['mail']!="")
+			{
+				if(aEuDesEvaluationDepuisLaDerniereDate($id,$donnee['date_dernier_envoi_bilan']))
+				{
+					$sujet="[SkillCenter] Bilan des compétences";
+					$adresse=$donnee["mail"];
+
+					//Début message
+					$messageTXT=debutMailBilanTXT($donnee["prenom"],$donnee["nom"],$donnee['date_dernier_envoi_bilan']);
+					$messageHTML = debutMailBilanHTML($donnee["prenom"],$donnee["nom"],$donnee['date_dernier_envoi_bilan']);
+
+					//Bilan (milieu message)
+					list($mTXT,$mHTML)=milieuMailBilan($id,$donnee['date_dernier_envoi_bilan']);
+					$messageHTML.=$mHTML;
+					$messageTXT.=$mTXT;
+
+					//Signature
+					$messageHTML.=signatureMailBilanHTML();
+					$messageTXT.=signatureMailBilanTXT();
+
+
+					//Update de la derniere date
+					$req3=$bdd->prepare("UPDATE ".$BDD_PREFIXE."utilisateurs SET date_dernier_envoi_bilan=NOW() WHERE id=:id");
+					$req3->execute(array('id'=>$id));
+
+					//Envoi
+					//return mail($mail,mb_encode_mimeheader(utf8_decode($sujet),"UTF-8"),$message);//,$header);
+					return envoieMail($adresse,$sujet,$messageHTML,$messageTXT);
+				}
+				else
+					return ":|Il n'y a pas de nouvelle évaluation depuis la dernière fois.";
+			}
+			else
+				return ":(L'utilisateur n'a pas de mail.";
 		}//Fin du "si on peut notifier"
+		else
+			return ":(L'utilisateur ne souhaite pas recevoir de mails.";
 	}
 	return 0;
 }
 
-//Fonction qui affiche les petites cases de niveau
+//Fonction qui affiche les petites cases de niveau *************
 function afficheNiveauDansMailHTML($val,$max)
 {
-	global $INTITULES_NIVEAUX_CRITERES,$passage_ligne;
+	global $INTITULES_NIVEAUX_CRITERES;
 	$val=intval($val);$max=intval($max);
 	if($max>sizeof($INTITULES_NIVEAUX_CRITERES)) $max=sizeof($INTITULES_NIVEAUX_CRITERES);
 	if($val>$max) $val=$max;
@@ -195,10 +299,12 @@ function afficheNiveauDansMailHTML($val,$max)
 		$contenu.="<div class=\"case_critere\" style=\"background-color:".($i<=$val?setArcEnCiel($val,$max).";":"#DDDDDD;")."\"><span>";
 		if($i!=$val)	$contenu.="&nbsp;";
 		else	$contenu.=substr($INTITULES_NIVEAUX_CRITERES[$max-1][$val]." ",0,2);
-		$contenu.="</span></div>".$passage_ligne;
+		$contenu.="</span></div>\n";
 	}
 	return $contenu;
 }
+
+//***************************************************
 function afficheNiveauDansMailTXT($val,$max)
 {
 	global $INTITULES_NIVEAUX_CRITERES;

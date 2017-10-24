@@ -2,7 +2,7 @@
 header('Content-type: application/json');
 include_once('options.php');
 include_once('fonctions.php');
-
+require_once './biblio_php/PHPMailer-5.2.18/PHPMailerAutoload.php';	//Bibliotheque d'envoi de mail
 initSession();
 
 $SALT="$232#;E";//Grain de sel pour le hachage du mot de passe
@@ -350,12 +350,7 @@ if($action=="envoieBilan")
 		$id=0;
 		if(isset($_POST['id'])) $id=intval($_POST['id']);
 		if($id)
-		{
-			if(envoieBilan($id))//Envoi du bilan
-				$reponseJSON["messageRetour"]=":XLe bilan a bien été envoyé.";
-			else
-				$reponseJSON["messageRetour"]=":(Il y a eu un problème d'envoie de mail.";
-		}
+			$reponseJSON["messageRetour"]=envoieBilan($id);//Envoi du bilan
 		else //Si pas d'id
 			$reponseJSON["messageRetour"]=":(Aucune utilisateur à qui envoyer un bilan.";
 	}
