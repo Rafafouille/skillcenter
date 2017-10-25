@@ -760,14 +760,34 @@ if($etape=="configureMail")
 				<input name="formAutoriseMail" id="formAutoriseMail" type="radio" value="autoriseMail" <?php echo ($_SESSION['AUTORISE_MAILS']?"checked=\"checked\"":"");?> onchange="if($(this).is(':checked')){$('#suiteFormAutoriseMail').show(200);}"/><label for="formAutoriseMail">Autoriser Skillcenter à envoyer des mails.</label>
 				<br/>
 				<div id="suiteFormAutoriseMail" style="margin:20px;border-radius:5px;box-shadow: 2px 2px 6px #555;padding:10px;<?php echo ($_SESSION['AUTORISE_MAILS']?"":"display:none;");?>">
+					<h3>Informations générales d'envoi</h3>
+					<table>
+							<tr>
+								<td>Email d'envoi :</td>
+								<td><input type="email" name="MAIL_MAIL_EXPEDITEUR" value="<?php echo $_SESSION['MAIL_MAIL_EXPEDITEUR'];?>" placeholder="votremail@serveur.com"/>
+									<span title="Il est préférable d'inscrire le vrai mail associé à votre serveur d'envoi (celui du serveur, ou celui du SMTP), pour éviter d'être considéré comme spam."><img src="./sources/images/icone-info.png" alt="[i]"/></span></td>
+							</tr>
+							<tr>
+								<td>Nom d'expéditeur :</td>
+								<td><input type="text" name="MAIL_NOM_EXPEDITEUR" value="<?php echo $_SESSION['MAIL_NOM_EXPEDITEUR'];?>" placeholder="Skillcenter"/>
+									<span title="Ce nom sera affiché dans les boites mails, à la réception."><img src="./sources/images/icone-info.png" alt="[i]"/></span></td>
+							</tr>
+							<tr>
+								<td>Mail "répondre à" :</td>
+								<td><input type="email" name="MAIL_MAIL_REPONDRE_A" value="<?php echo $_SESSION['MAIL_MAIL_REPONDRE_A'];?>" placeholder="votremail@serveur.com"/>
+									<span title="Il est préférable de mettre un 'répondre à' (et si possible le même que le mail d'expédition) car cela passe mieux à travers les filtres anti-spams."><img src="./sources/images/icone-info.png" alt="[i]"/></span></td>
+							</tr>
+					</table>
+					<h3>Par quelle méthode envoyer les mails ?</h3>
 					<input name="formMailDefautOuSMTP" id="formMailAuto" type="radio" value="formMailDefaut"  <?php echo (!$_SESSION['MAIL_SMTP']?"checked=\"checked\"":""); ?> onchange="if($(this).is(':checked')){$('#suiteSuiteAutoriseMail').hide(200);}"/><label for="formMailAuto">Utiliser les confirgurations mail par défaut de votre serveur (fonction "mail()" de PHP)</label>
 					<br/>
 					<input name="formMailDefautOuSMTP" id="formMailSMTP" type="radio" value="formMailSMTP" <?php echo ($_SESSION['MAIL_SMTP']?"checked=\"checked\"":""); ?> onchange="if($(this).is(':checked')){$('#suiteSuiteAutoriseMail').show(200);}"/><label for="formMailSMTP">Utiliser un compte mail externe (SMTP)</label>
 					<div id="suiteSuiteAutoriseMail" style="margin:20px;border-radius:5px;box-shadow: 2px 2px 6px #555;padding:10px;<?php echo ($_SESSION['MAIL_SMTP']?"":"display:none;");?>">
+						<h3>Configuration SMTP :</h3>
 						<table>
 							<tr>
 								<td>Adresse de l'hôte SMTP :</td>
-								<td><input type="text" name="MAIL_SMTP_HOTE" value="<?php echo $_SESSION['MAIL_SMTP_HOTE'];?>" place_holder="smtp.hote.fr"/></td>
+								<td><input type="text" name="MAIL_SMTP_HOTE" value="<?php echo $_SESSION['MAIL_SMTP_HOTE'];?>" placeholder="smtp.hote.fr"/></td>
 							</tr>
 							<tr>
 								<td>Méthode de sécurité :</td>
@@ -780,27 +800,16 @@ if($etape=="configureMail")
 							</tr>
 							<tr>
 								<td>Numéro de port :</td>
-								<td><input type="number" name="MAIL_SMTP_PORT" value="<?php echo $_SESSION['MAIL_SMTP_PORT'];?>" place_holder="465"/></td>
+								<td><input type="number" name="MAIL_SMTP_PORT" value="<?php echo $_SESSION['MAIL_SMTP_PORT'];?>" placeholder="465"/></td>
 							</tr>
 							<tr>
 								<td>Nom d'utilisateur :</td>
-								<td><input type="text" name="MAIL_SMTP_LOGIN" value="<?php echo $_SESSION['MAIL_SMTP_LOGIN'];?>"/></td>
+								<td><input type="text" name="MAIL_SMTP_LOGIN" value="<?php echo $_SESSION['MAIL_SMTP_LOGIN'];?>" placeholder="mon_compte.mail.fr"/></td>
 							</tr>
 							<tr>
 								<td>Mot de passe (seulement si vous le modifiez) :</td>
-								<td><input type="password" name="MAIL_SMTP_MDP" value="NE PAS MODIFIER"/></td>
-							</tr>
-							<tr>
-								<td>Email du compte :</td>
-								<td><input type="email" name="MAIL_MAIL_EXPEDITEUR" value="<?php echo $_SESSION['MAIL_MAIL_EXPEDITEUR'];?>" place_holder="votremail@serveur.com"/></td>
-							</tr>
-							<tr>
-								<td>Nom d'expéditeur :</td>
-								<td><input type="text" name="MAIL_NOM_EXPEDITEUR" value="<?php echo $_SESSION['MAIL_NOM_EXPEDITEUR'];?>" place_holder="Skillcenter"/></td>
-							</tr>
-							<tr>
-								<td>Mail "répondre à" :</td>
-								<td><input type="email" name="MAIL_MAIL_REPONDRE_A" value="<?php echo $_SESSION['MAIL_MAIL_REPONDRE_A'];?>"/></td>
+								<td><input type="password" name="MAIL_SMTP_MDP" value="NE PAS MODIFIER"/>
+									<span title="Attention, ce mot de passe sera enregistré en clair dans le fichier de configuration !"><img src="./sources/images/icone-info.png" alt="[i]"/></span></td>
 							</tr>
 						</table>
 					</div>
@@ -1036,7 +1045,7 @@ if($etape=="creerBDD_Info")
 			<tr>
 				<td>
 					<form action="" method="POST" style="display:inline;">
-						<input type="hidden" name="etape" value="rentreNotation"/>
+						<input type="hidden" name="etape" value="configureMail"/>
 						<input type="submit" class="bouton" value="<-- Précédent"/>
 					</form>
 				</td>
