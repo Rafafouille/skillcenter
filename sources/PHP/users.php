@@ -5,10 +5,13 @@
 						<img src="./sources/images/icone-plus.png" alt="[+]"/>
 						<strong>Ajouter un utilisateur</strong>
 					</div>
+					<?php if($AUTORISE_MAILS){ ?>
 					<div class="bouton_ajoute" onclick="$('#dialog-sendAllMails-classe').text($('#userAdminSelectClasse').find(':selected').text());$('#dialog-sendAllMails').dialog('open');">
 						<img style="height:20px;vertical-align:middle;" src="./sources/images/icone-envoieBilan.png" alt="[v]"/>
 						<strong>Envoyer bilans</strong>
 					</div>
+					<?php } ?>
+				
 
 					<h2>Liste des utilisateurs</h2>
 					
