@@ -341,7 +341,6 @@ if($action=="delUser")
 
 
 // Envoie un bilan à UN utilisateur ************************
-
 if($action=="envoieBilan")
 {
 	if($_SESSION['statut']=="admin")
@@ -359,8 +358,45 @@ if($action=="envoieBilan")
 }
 
 
+// Envoie un bilan à PLUSIEURSD utilisateurs ************************
+if($action=="envoiePlusieursBilans")
+{
+	if($_SESSION['statut']=="admin")
+	{
+		connectToBDD();
+		$classe=isset($_POST['classe'])?$_POST['classe']:"";
+		if($classe!="[ALL]")//S'il y a une classe spécifique...
+		{
+			$req=$bdd->prepare("SELECT id,nom,prenom  FROM ".$BDD_PREFIXE."utilisateurs WHERE classe=:classe");
+			$req->execute(array('classe'=>$classe));
+		}
+		else
+			$req=$bdd->query("SELECT id,nom,prenom FROM ".$BDD_PREFIXE."utilisateurs");
 
-
+		$reponseJSON["retoursDeChaqueEnvoi"]=array();
+		$compteurEnvois=0;
+		while($data=$req->fetch())//Pour chaque utilisateur...
+		{
+			$id=intval($data['id']);
+			$nom=$data['prenom']." ".$data['nom'];
+			$retour=envoieBilan($id);
+			if($retour)
+			{
+				array_push($reponseJSON["retoursDeChaqueEnvoi"],array("id"=>$id,"nom"=>$nom,"retour"=>$retour));
+				if(substr($retour,0,2)==":)")
+					$compteurEnvois+=1;
+			}
+		}
+		if($compteurEnvois>1)
+			$reponseJSON["messageRetour"]=":)".strval($compteurEnvois)." mails ont été envoyés";
+		elseif($compteurEnvois==1)
+			$reponseJSON["messageRetour"]=":)1 mail a été envoyé";
+		else
+			$reponseJSON["messageRetour"]=":|Aucun mail n'a été envoyé";
+	}
+	else //Si pas admin
+		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit d'envoyer plusieurs bilans.";
+}
 
 
 

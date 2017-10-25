@@ -97,4 +97,24 @@
 						}
 			});
 		</script>
+
+
+
+		<!-- BOITE POUR ENVOYER TOUS LES MAILS ------------------- -->
+		<div id="dialog-sendAllMails" title="Envoyer les bilans">
+			Voulez-vous réellement envoyer les derniers bilans à tout le monde ?
+			<br/>
+			(Classe sélectionnée : <span id="dialog-sendAllMails-classe"></span>)
+		</div>
+		<script>
+			$( "#dialog-sendAllMails").dialog({
+				autoOpen: false,
+				modal: true,
+				minWidth: 500,
+				buttons: {
+							"Envoyer": function() {$("#dialog-sendAllMails").dialog( "close" );envoiePlusieursBilans($("#userAdminSelectClasse").val())},
+							"Annuler": function() {$("#dialog-sendAllMails").dialog( "close" );}
+						}
+			});
+		</script>
 	

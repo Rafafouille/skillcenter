@@ -176,7 +176,7 @@ callBack_changeStatut=function(reponse)
 	$("#user_"+user.id).attr('class', 'user '+user.statut);
 }
 
-//Fonction qui envoie un bilan à l'utilisateur
+//Fonction qui envoie un bilan à l'utilisateur *************************************
 envoieBilan=function(idEleve)
 {
 	$.post(
@@ -194,5 +194,27 @@ callBack_envoieBilan=function(reponse)
 {
 	afficheMessage(reponse.messageRetour);
 }
+
+
+
+//Fonction qui envoie un bilan à plusieurs utilisateurs *************************************
+envoiePlusieursBilans=function(classe)
+{
+	$.post(
+		'./sources/PHP/actionneurJSON.php',//Requete appelée
+		{	//Les données à passer par POST
+			action:"envoiePlusieursBilans",
+			classe:classe
+		},
+		callBack_envoiePlusieursBilans,	//Fonction callback
+		"json"	//Type de réponse
+	);
+}
+
+callBack_envoiePlusieursBilans=function(reponse)
+{
+	afficheMessage(reponse.messageRetour);
+}
+
 
 
