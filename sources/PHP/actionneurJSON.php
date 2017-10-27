@@ -5,6 +5,7 @@ include_once('fonctions.php');
 require_once './biblio_php/PHPMailer-5.2.18/PHPMailerAutoload.php';	//Bibliotheque d'envoi de mail
 initSession();
 
+
 $SALT="$232#;E";//Grain de sel pour le hachage du mot de passe
 
 /* ******************************

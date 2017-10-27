@@ -102,9 +102,9 @@
 
 		<!-- BOITE POUR ENVOYER TOUS LES MAILS ------------------- -->
 		<div id="dialog-sendAllMails" title="Envoyer les bilans">
-			Voulez-vous réellement envoyer les derniers bilans à tout le monde ?
-			<br/>
-			(Classe sélectionnée : <span id="dialog-sendAllMails-classe"></span>)
+			<p>Voulez-vous réellement envoyer les derniers bilans à tout le monde ?</p>
+			<p>(Classe sélectionnée : <span id="dialog-sendAllMails-classe"></span>)</p>
+			<p>Cela peut prendre quelques secondes, selon le nombre d'envois...</p>
 		</div>
 		<script>
 			$( "#dialog-sendAllMails").dialog({

@@ -5,7 +5,7 @@
 
 
 
-//METTRE A JOUR LISTE ELEVES (notation)
+//METTRE A JOUR LISTE ELEVES (notation) ****************************
 //Recupere la liste (ajax)
 NotationGetListeEleves=function(classe)
 {
@@ -18,11 +18,13 @@ NotationGetListeEleves=function(classe)
 			updateListeEleves,	//Fonction callback
 			"json"	//Type de réponse
 	);
+	afficheBarreChargement();
 }
 
 //Callback
 updateListeEleves=function(reponse)
 {
+	cacheBarreChargement();
 	$("#notationListeEleves").empty();
 	var listeEleves=reponse.listeEleves;
 	a=reponse;
@@ -58,12 +60,13 @@ getNotationEleve=function(eleve,contexte="ALL_CONTEXTE")
 			updateNotationEleve,	//Fonction callback
 			"json"	//Type de réponse
 	);
+	afficheBarreChargement();
 }
 
 //Met à jour l'affichge des notes d'un élève (recu par ajax)
 updateNotationEleve=function(reponse)
 {
-
+	cacheBarreChargement();
 	afficheMessage(reponse.messageRetour);
 	//VARIABLES GLOABLES !!
 	numeroCompetence=0;
@@ -111,16 +114,17 @@ donneNote=function(note,eleve,indicateur)
 			valideNouvelleNote,	//Fonction callback
 			"json"	//Type de réponse
 	);
+	afficheBarreChargement();
 }
 
 
 //Met à jour l'affichge des notes d'un élève (recu par ajax) **********************
 valideNouvelleNote=function(reponse)
 {
+	cacheBarreChargement();
 	afficheMessage(reponse.messageRetour);
 
 	//MAJ de l'arc en ciel
-	
 			//Selection du type de note (on va regarder dans le dropdown sur menu bilan)
 			var noteEleve=0;
 			if($("#bilanTypeEvaluation").val()=="last")	noteEleve=parseInt(reponse.note.last);
@@ -189,6 +193,7 @@ valideCommentaireEval=function(idInd)
 		valideCommentaireEval_callback,	//Fonction callback
 		"json"	//Type de réponse
 	);
+	afficheBarreChargement();
 }
 
 
@@ -204,6 +209,7 @@ valideAllCommentaireEval=function()
 
 valideCommentaireEval_callback=function(reponse)
 {
+	cacheBarreChargement();
 	afficheMessage(reponse.messageRetour);
 	var idIndicateur=reponse.evaluation.indicateur;//Recupere le numero de l'indicateur
 	if(reponse.commentaire.commentaire!="")
@@ -238,11 +244,13 @@ ouvreBoiteCommentairesBilan=function(idInd)
 		updateBoiteCommentBilan_callback,	//Fonction callback
 		"json"	//Type de réponse
 	);
+	afficheBarreChargement();
 }
 
 //Fonction callback qui affiche les commentaires dans la boite de commentaire.==============
 updateBoiteCommentBilan_callback=function(reponse)
 {
+	cacheBarreChargement();
 	var commentaires=reponse['commentaires'];
 	for(var context in commentaires)
 	{

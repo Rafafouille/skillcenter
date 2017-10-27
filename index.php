@@ -116,8 +116,6 @@ include("./sources/PHP/actions.php");
     </head>
 
 	<body style="display:none;">
-	
-	
 		<?php include("./sources/PHP/entete.php");?>
 		
 		
@@ -168,5 +166,7 @@ include("./sources/PHP/actions.php");
 		<footer>
 			<!-- Placez ici le contenu du pied de page -->
 		</footer>
+
+		<?php include("./sources/PHP/barre_notification.php");?>
 	</body>
 </html>

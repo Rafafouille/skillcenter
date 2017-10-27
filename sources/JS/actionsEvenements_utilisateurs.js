@@ -15,11 +15,13 @@ getListeUsersAdmin=function(classe)
 			updateListeUsersAdmin,	//Fonction callback
 			"json"	//Type de réponse
 	);
+	afficheBarreChargement();
 }
 
 //Callback de getListeUsersAdmin pour mettre à jour l'affichage
 updateListeUsersAdmin=function(reponse)
 {
+	cacheBarreChargement();
 	afficheMessage(reponse.messageRetour);
 	$("#tableau_utilisateurs").empty();//On vide la liste des utilisateurs
 	for(i=0;i<reponse.listeUsers.length;i++)
@@ -97,11 +99,13 @@ ajouteUpdateUser=function()
 			valideNewUpdateUser,	//Fonction callback
 			"json"	//Type de réponse
 	);
+	afficheBarreChargement();
 }
 
 //Fonction (Callback de ajouteUpdateUser) qui met à jour la liste des utilisateur
 valideNewUpdateUser=function(reponse)
 {
+	cacheBarreChargement();
 	afficheMessage(reponse.messageRetour);
 	getListeUsersAdmin($("#userAdminSelectClasse").val());
 }
@@ -145,11 +149,13 @@ supprimeUser=function(i,suppEval=true)
 			callBack_supprimeUser,	//Fonction callback
 			"json"	//Type de réponse
 	);
+	afficheBarreChargement();
 }
 
 //Callback de supprimeUser ----------
 callBack_supprimeUser=function(reponse)
 {
+	cacheBarreChargement();
 	afficheMessage(reponse.messageRetour);
 	$("#user_"+reponse.idSupprime).remove();
 }
@@ -166,10 +172,12 @@ ADMIN_USER_change_statut=function(id,statut)
 			callBack_changeStatut,	//Fonction callback
 			"json"	//Type de réponse
 	);
+	afficheBarreChargement();
 }
 
 callBack_changeStatut=function(reponse)
 {
+	cacheBarreChargement();
 	afficheMessage(reponse.messageRetour);
 	var user=reponse.user;
 	//$("#boutonModifieStatut_"+user.id).replaceWith(getBoutonUpAndDowngradeUserFromJSON(user));
@@ -188,10 +196,12 @@ envoieBilan=function(idEleve)
 		callBack_envoieBilan,	//Fonction callback
 		"json"	//Type de réponse
 	);
+	afficheBarreChargement();
 }
 
 callBack_envoieBilan=function(reponse)
 {
+	cacheBarreChargement();
 	afficheMessage(reponse.messageRetour);
 }
 
@@ -209,10 +219,12 @@ envoiePlusieursBilans=function(classe)
 		callBack_envoiePlusieursBilans,	//Fonction callback
 		"json"	//Type de réponse
 	);
+	afficheBarreChargement();
 }
 
 callBack_envoiePlusieursBilans=function(reponse)
 {
+	cacheBarreChargement();
 	afficheMessage(reponse.messageRetour);
 }
 

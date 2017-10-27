@@ -13,6 +13,22 @@ body
 	padding:0px;
 }
 
+/*******************
+Barre notifications
+******************/
+
+#barre_notification
+{
+	position:fixed;
+	right:0px;
+	bottom:0px;
+	display:none;
+
+	background-color:white;
+	border:solid 1px black;
+	border-radius:10px;
+}
+
 
 /*******************
 Entete

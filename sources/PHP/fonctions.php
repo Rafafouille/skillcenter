@@ -43,7 +43,7 @@ function getNextFreeIdOfTable($DB,$table)
 
 
 
-//Fonction qui permet d'envoyer un mail
+//Fonction qui permet d'envoyer un mail *************************************
 // La bibliotheque PHPMailerAutoload.php doit être chargée
 function envoieMail($adresse,$sujet,$contenuHTML,$contenuTXT)
 {
@@ -81,7 +81,7 @@ function envoieMail($adresse,$sujet,$contenuHTML,$contenuTXT)
 }
 
 
-//Fonction qui renvoie la version "francaise" de la date
+//Fonction qui renvoie la version "francaise" de la date *******************
 function getDateEnFrancaisFromDateSQL($date)
 {
 	if($date=="0000-00-00 00:00:00")

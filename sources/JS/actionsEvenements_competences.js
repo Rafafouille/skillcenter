@@ -26,10 +26,12 @@ nettoyerLaBase=function()
 			nettoyerLaBase_Callback,	//Fonction callback
 			"json"	//Type de réponse
 	);
+	afficheBarreChargement();
 }
 //********************************************
 nettoyerLaBase_Callback=function(reponse)
 {
+	cacheBarreChargement();
 	afficheMessage(reponse.messageRetour);
 	
 	texte="<p>Aucune modification n'a été apporté à la base de données.</p>"
@@ -115,11 +117,13 @@ updateCompetencesSelonClasse=function(classe)
 			updateCompetencesSelonClasse_Callback,	//Fonction callback
 			"json"	//Type de réponse
 	);
+	afficheBarreChargement();
 }
 
 //UDAPTE COMPETENCES PAR CLASSE (CALLBACK) --------------------
 updateCompetencesSelonClasse_Callback=function(reponse)
 {
+	cacheBarreChargement();
 	afficheMessage(reponse.messageRetour);
 	//VARIABLES GLOABLES !!
 	numeroCompetence=0;
@@ -149,10 +153,12 @@ addGroupeCompetences=function(nom)
 			addGroupeCompetences_callback,	//Fonction callback
 			"json"	//Type de réponse
 	);
+	afficheBarreChargement();
 }
 //Callback qui ajoute le groupe dans la page ---------------
 addGroupeCompetences_callback=function(reponse)
 {
+	cacheBarreChargement();
 	var groupe=reponse.groupe;
 	afficheMessage(reponse.messageRetour);
 	var rendu=ADMIN_COMPETENCES_rendu_HTML_groupe(groupe.nom,groupe.id,"groupe_competences_unselected");
@@ -185,10 +191,12 @@ modifDomaine=function(nom,idDomaine)
 			modifDomaine_callback,	//Fonction callback
 			"json"	//Type de réponse
 	);
+	afficheBarreChargement();
 }
 //Callback qui ajoute le groupe dans la page ---------------
 modifDomaine_callback=function(reponse)
 {
+	cacheBarreChargement();
 	var domaine=reponse.domaine;
 	afficheMessage(reponse.messageRetour);
 	
@@ -219,11 +227,13 @@ supprimeDomaine=function(idDomaine,supprimeCompetencesInternes,supprimeIndicateu
 			supprimeDomaine_callback,	//Fonction callback
 			"json"	//Type de réponse
 	);
+	afficheBarreChargement();
 }
 
 //Callback qui supprime le domaine dans la page -----
 supprimeDomaine_callback=function(reponse)
 {
+	cacheBarreChargement();
 	afficheMessage(reponse.messageRetour);
 	var id=reponse.domaine.id;
 	
@@ -254,11 +264,13 @@ addCompetence=function(nom,nomAbrege,idGroupe)
 			addCompetence_callback,	//Fonction callback
 			"json"	//Type de réponse
 	);
+	afficheBarreChargement();
 }
 
 //Callback qui ajoute la compétence dans la page -----
 addCompetence_callback=function(reponse)
 {
+	cacheBarreChargement();
 	var comp=reponse.competence;
 	afficheMessage(reponse.messageRetour);
 	var rendu=ADMIN_COMPETENCES_rendu_HTML_competence(comp.nom,comp.nomAbrege,comp.id,0,"competence_unselected");
@@ -303,10 +315,12 @@ modifCompetence=function(nom,nomAbrege,idDomaine,idCompetence)
 			modifCompetence_callback,	//Fonction callback
 			"json"	//Type de réponse
 	);
+	afficheBarreChargement();
 }
 //Callback qui ajoute la compétence dans la page -----
 modifCompetence_callback=function(reponse)
 {
+	cacheBarreChargement();
 	var comp=reponse.competence;
 	afficheMessage(reponse.messageRetour);
 	//Recharge la page de parametrage
@@ -339,10 +353,12 @@ supprimeCompetence=function(idCompetence,supprimeIndicateursInternes)
 			supprimeCompetence_callback,	//Fonction callback
 			"json"	//Type de réponse
 	);
+	afficheBarreChargement();
 }
 //Callback qui supprime la competence dans la page -----
 supprimeCompetence_callback=function(reponse)
 {
+	cacheBarreChargement();
 	afficheMessage(reponse.messageRetour);
 	var id=reponse.competence.id;
 	
@@ -381,10 +397,12 @@ addIndicateur=function(nom,details,niveaux,idCompetence,classe,lien)
 			addIndicateur_callback,	//Fonction callback
 			"json"	//Type de réponse
 	);
+	afficheBarreChargement();
 }
 //Callback qui ajoute l'indicateur dans la page -----
 addIndicateur_callback=function(reponse)
 {
+	cacheBarreChargement();
 	afficheMessage(reponse.messageRetour);
 	var indicateur=reponse.indicateur;
 	var rendu=ADMIN_COMPETENCES_rendu_HTML_indicateur(indicateur,0,0,"indicateur");
@@ -433,10 +451,12 @@ modifCritere=function(nom,details,niveaux,idCompetence,idCritere,lien)
 			modifCritere_callback,	//Fonction callback
 			"json"	//Type de réponse
 	);
+	afficheBarreChargement();
 }
 //Callback qui ajoute l'indicateur dans la page -----
 modifCritere_callback=function(reponse)
 {
+	cacheBarreChargement();
 	afficheMessage(reponse.messageRetour);	
 	//Recharge la page de parametrage
 	var classe=$("#selectClasseCompetences").val();
@@ -466,10 +486,12 @@ supprimeIndicateur=function(idIndicateur)
 			supprimeIndicateur_callback,	//Fonction callback
 			"json"	//Type de réponse
 	);
+	afficheBarreChargement();
 }
 //Callback qui supprime l'indicateur dans la page -----
 supprimeIndicateur_callback=function(reponse)
 {
+	cacheBarreChargement();
 	afficheMessage(reponse.messageRetour);
 	var id=reponse.indicateur.id;
 	
@@ -499,11 +521,13 @@ function lierDelierIndicateurClasse(ind,classe,lier)
 			lierDelierIndicateurClasse_callback,	//Fonction callback
 			"json"	//Type de réponse
 	);
+	afficheBarreChargement();
 	PARAMETRES_update_selected_unselected_domaines_competences();//Met à jour le style des éléments sélectionné (ou pas)
 }
 
 function lierDelierIndicateurClasse_callback(reponse)
 {
+	cacheBarreChargement();
 	var styleClass="indicateur";
 	if(!reponse.lier)
 		styleClass+="_unselected";

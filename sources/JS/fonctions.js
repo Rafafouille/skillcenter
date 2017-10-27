@@ -130,3 +130,8 @@ return ch
 }
 
 
+//Fonction affiche ou cache la barre de chargement *************************
+function afficheBarreChargement()
+	{$("#barre_notification").show(200);}
+function cacheBarreChargement()
+	{$("#barre_notification").hide(200);}

@@ -38,6 +38,7 @@ modifieNotation=function(id,note,contexte,commentaire)
 			modifieNotation_CallBack,	//Fonction callback
 			"json"	//Type de réponse
 	);
+	afficheBarreChargement();
 	
 	//Mise a jour de la liste d'autocompletion des contextes
 	ajouteListeContextSiAbsent(contexte);
@@ -47,6 +48,7 @@ modifieNotation=function(id,note,contexte,commentaire)
 
 modifieNotation_CallBack=function(reponse)
 {
+	cacheBarreChargement();
 	afficheMessage(reponse.messageRetour);
 	var id=reponse.idNotation;
 	$("#historique_"+id+" .note_historique strong span").text(reponse.note);//MAJ note
@@ -76,10 +78,12 @@ supprimeNotation=function(id)
 			supprimeNotation_CallBack,	//Fonction callback
 			"json"	//Type de réponse
 	);
+	afficheBarreChargement();
 }
 
 supprimeNotation_CallBack=function(reponse)
 {
+	cacheBarreChargement();
 	afficheMessage(reponse.messageRetour);
 	var id=reponse.idNotation;
 	$("#historique_"+id).slideUp();

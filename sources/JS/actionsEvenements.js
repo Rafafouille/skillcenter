@@ -7,7 +7,7 @@
 // TABS (onglets)
 // ****************************************************
 
-// Fonction appelée quand on change de Tab
+// Fonction appelée quand on change de Tab***********
 onChangeTab=function(event,ui)
 {
 
@@ -84,10 +84,12 @@ testeConnecte=function()
 			testeConnecte_callback,	//Fonction callback
 			"json"	//Type de réponse
 	);
+	afficheBarreChargement();
 }
 testeConnecte_callback=function(reponse)
 {
 	afficheMessage(reponse.messageRetour);
+	cacheBarreChargement();
 	if(reponse.connecte!=CONNECTE)//Si on n'est plus connecte sur le serveur, mais qu'on l'est encore sur le client (ou l'inverse)...
 	{
 		logout();
@@ -113,12 +115,13 @@ updateListesClasses=function()
 			updateListesClasses_CallBack,	//Fonction callback
 			"json"	//Type de réponse
 	);
+	afficheBarreChargement();
 }
 
 //Callback de la fonction
 updateListesClasses_CallBack=function(reponse)
 {
-
+	cacheBarreChargement();
 	//ATTENTION : Les pages à raffraichir ne sont peut être pas chargée (selon le statut de l'utilisateur)
 
 
