@@ -4,6 +4,21 @@
 
 
 
+// ****************************************************
+// BOITES
+// ****************************************************
+
+
+function ouvreFermeBilanGroupe(id)
+{
+	var groupe=$("#NOTATION_groupe_"+id);
+	groupe.find('.groupe_contenu').slideToggle('easings');
+	groupe.find('.listeIndicateurs').slideToggle('easings');
+}
+
+// ****************************************************
+// UPDATE NOTES
+// ****************************************************
 
 //METTRE A JOUR LISTE ELEVES (notation) ****************************
 //Recupere la liste (ajax)
@@ -48,8 +63,10 @@ bilanBoutonEleveSuivant=function()
 }
 
 //METTRE A JOUR LA NOTATION POUR UN ELEVE**********************
-getNotationEleve=function(eleve,contexte="ALL_CONTEXTE")
+getNotationEleve=function(eleve,contexte)
 {
+	contexte=(typeof contexte !== 'undefined') ? contexte : "ALL_CONTEXTE";
+
 	$.post(
 			'./sources/PHP/actionneurJSON.php',//Requete appelée
 			{	//Les données à passer par POST
@@ -97,7 +114,11 @@ updateNotationEleve=function(reponse)
 }
 
 
+
+// ****************************************************
+// NOTATION
 //********************************************************
+
 //Envoie une nouvelle note au serveur
 donneNote=function(note,eleve,indicateur)
 {
@@ -165,6 +186,9 @@ valideNouvelleNote=function(reponse)
 }
 
 
+/* *****************************
+COMMENTAIRES
+*********************************** */
 
 //Fonction qui envoie les commentaires d'une évaluation fraichement donnée ********************
 valideCommentaireEval=function(idInd)
@@ -220,9 +244,6 @@ valideCommentaireEval_callback=function(reponse)
 
 
 
-/* *****************************
-COMMENTAIRES
-*********************************** */
 
 //Ouvre la boite pour LIRE les commentaires =====================
 ouvreBoiteCommentairesBilan=function(idInd)
