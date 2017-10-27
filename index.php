@@ -167,6 +167,6 @@ include("./sources/PHP/actions.php");
 			<!-- Placez ici le contenu du pied de page -->
 		</footer>
 
-		<?php include("./sources/PHP/barre_notification.php");?>
+		<?php include("./sources/PHP/barre_notification.php");?> 
 	</body>
 </html>
