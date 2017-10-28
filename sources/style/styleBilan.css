@@ -124,3 +124,18 @@ COMMENTAIRES
 	margin-bottom:10px;
 	padding-left:20px;
 }
+
+
+/********************************
+Graphiques Bilan
+*******************************/
+
+#dialiog_graphique_camembert_domaines_conteneur
+{
+	text-align:center;
+}
+
+#dialiog_graphique_camembert_domaines
+{
+	margin:auto;
+}

@@ -12,6 +12,13 @@
 							<img src="./sources/images/icone-etendre.png" alt="[&#8609;]"/>
 							<strong>Tout Étendre</strong>
 						</div>
+
+						<?php if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur"){?>
+						<div class="bouton_top" onclick="$('#dialog_graphique').dialog('open');;">
+							<img src="./sources/images/icone-graphe.png" alt="[§]"/>
+							<strong>Graphiques</strong>
+						</div>
+						<?php };?>
 						
 
 						<form id="notationFormulaireListesClasseEtEleves" style="float:right;">

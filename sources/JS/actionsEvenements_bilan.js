@@ -81,6 +81,7 @@ getNotationEleve=function(eleve,contexte)
 }
 
 //Met à jour l'affichge des notes d'un élève (recu par ajax)
+//Y compris le graphique
 updateNotationEleve=function(reponse)
 {
 	cacheBarreChargement();
@@ -96,14 +97,26 @@ updateNotationEleve=function(reponse)
 
 	var listeGroupes=reponse.listeGroupes;
 
+	listeEvaluationsDomaines=Array();//Liste des evaluations (en pourcentage)
+	listeLabelsDomaines=Array();//Liste des evaluations (en pourcentage)
+	listeIdsDomaines=Array();//Liste des evaluations (en pourcentage)
+
+
 	for(idGr in listeGroupes)
 	{
 		var groupe=listeGroupes[idGr];
 		var evaluation=NOTATION_ajouteGroupeCompetences(groupe,"#RecapNotationEleve","RecapNote",NOTATION_REDESSINE_DE_ZERO);
 		sommeNiveaux+=evaluation.niveau;
 		sommeNiveauxMax+=evaluation.niveauMax;
+
+		listeEvaluationsDomaines.push(evaluation.niveau/evaluation.niveauMax*100);
+		listeLabelsDomaines.push(groupe.nom);
+		listeIdsDomaines.push(groupe.id);
 	}
 	
+	$("#dialiog_graphique_camembert_domaines").empty();//On enleve l'ancien graphique
+	traceGraphiqueRecap_Domaine("#dialiog_graphique_camembert_domaines",listeEvaluationsDomaines,listeLabelsDomaines,listeIdsDomaines);//On ajoute le nouveau
+
 	//Mise à jour de l'affichage du pourcentage
 	if(STATUT=="admin" || STATUT=="evaluateur")
 		$("#BILAN_pourcentage").text("(Total : "+parseInt(sommeNiveaux/sommeNiveauxMax*100)+"%)");
@@ -297,3 +310,8 @@ fermerFenetreCommenairesBilan=function()
 	$("#dialog-commentaireEvaluation .commentairesListeContextes").css("display","none");
 	$("#dialog-commentaireEvaluation p").css("display","block");
 }
+
+
+
+
+

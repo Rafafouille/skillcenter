@@ -29,6 +29,7 @@ function NOTATION_ajouteGroupeCompetences(groupe,conteneur,modeNotation,recreeDe
 		$(conteneur).append(rendu);
 	}
 
+
 	//Ajout des competences
 	for(idComp in groupe.listeCompetences)
 	{
@@ -278,3 +279,6 @@ updateListeContexteDansMenu=function()
 	});
 	$("#BILAN_listeContextes").data("selectBox-selectBoxIt").refresh();
 }
+
+
+

@@ -22,3 +22,23 @@ BOITES BILAN
 		</script>
 
 
+
+
+ 		<!-- BOITE Affiche graphique------------------- -->
+		<div id="dialog_graphique" title="Bilan en graphique">
+			<div id="dialiog_graphique_camembert_domaines_conteneur">
+				<canvas id="dialiog_graphique_camembert_domaines" width="400" height="400">
+				</canvas>
+			</div>
+		</div>
+		<script>
+			$( "#dialog_graphique").dialog({
+				autoOpen: false,
+				modal: true,
+				buttons: {
+						"Fermer": 	function(){$("#dialog_graphique").dialog("close");}
+					},
+				width:600
+			});
+		</script>
+

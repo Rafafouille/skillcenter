@@ -12,7 +12,7 @@
 				<input type="text" placeholder="Ex : TP, DM1, ..." id="modifNotation_contexte" list="listeContexteAutocompletion" name="modifNotation_contexte"/>
 				<br/>
 				<label for="modifNotation_commentaire">Commentaire de l'évaluation : </label>
-				<textarea  placeholder="A sur faire ceci, doit revoir cela..." id="modifNotation_commentaire" name="modifNotation_commentaire"></textarea>
+				<textarea  placeholder="A su faire ceci, doit revoir cela..." id="modifNotation_commentaire" name="modifNotation_commentaire"></textarea>
 			</form>
 		</div>
 		<script>
