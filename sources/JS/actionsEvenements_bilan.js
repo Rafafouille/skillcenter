@@ -103,6 +103,7 @@ updateNotationEleve=function(reponse)
 		var listeEvaluationsDomaines=Array();//Liste des evaluations (en pourcentage)
 		var listeLabelsDomaines=Array();//Liste des evaluations (en pourcentage)
 		var listeIdsDomaines=Array();//Liste des evaluations (en pourcentage)
+		$("#dialog_graphique_toile_competences_conteneur").empty();
 	}
 
 	var i=0;
