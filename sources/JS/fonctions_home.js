@@ -16,7 +16,8 @@ function traceGraphiqueRecap_Domaine(context_,donnees_,labels_,idDomaines_,legen
 						labels:labels_,
 						datasets:[{
 												data : donnees_,
-												backgroundColor:LISTE_COULEURS_ARC_EN_CIEL
+												backgroundColor:LISTE_COULEURS_ARC_EN_CIEL,
+												borderWidth: 0
 										}],
 						idDomaines:idDomaines_
 					}
