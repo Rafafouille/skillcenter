@@ -97,25 +97,46 @@ updateNotationEleve=function(reponse)
 
 	var listeGroupes=reponse.listeGroupes;
 
-	listeEvaluationsDomaines=Array();//Liste des evaluations (en pourcentage)
-	listeLabelsDomaines=Array();//Liste des evaluations (en pourcentage)
-	listeIdsDomaines=Array();//Liste des evaluations (en pourcentage)
+	//Preparation pour le graphique bilan
+	if(STATUT=="admin" || STATUT=="evaluateur")
+	{
+		var listeEvaluationsDomaines=Array();//Liste des evaluations (en pourcentage)
+		var listeLabelsDomaines=Array();//Liste des evaluations (en pourcentage)
+		var listeIdsDomaines=Array();//Liste des evaluations (en pourcentage)
+	}
 
+	var i=0;
 
 	for(idGr in listeGroupes)
 	{
 		var groupe=listeGroupes[idGr];
-		var evaluation=NOTATION_ajouteGroupeCompetences(groupe,"#RecapNotationEleve","RecapNote",NOTATION_REDESSINE_DE_ZERO);
+		var evaluation=NOTATION_ajouteGroupeCompetences(groupe,"#RecapNotationEleve","RecapNote",NOTATION_REDESSINE_DE_ZERO,getCouleurGraphique(i));
 		sommeNiveaux+=evaluation.niveau;
 		sommeNiveauxMax+=evaluation.niveauMax;
 
-		listeEvaluationsDomaines.push(evaluation.niveau/evaluation.niveauMax*100);
-		listeLabelsDomaines.push(groupe.nom);
-		listeIdsDomaines.push(groupe.id);
+		
+		if(STATUT=="admin" || STATUT=="evaluateur")
+		{
+			listeEvaluationsDomaines.push(evaluation.niveau/evaluation.niveauMax*100);	
+			listeLabelsDomaines.push(groupe.nom);
+			listeIdsDomaines.push(groupe.id);
+		}
+		i+=1;
 	}
 	
-	$("#dialiog_graphique_camembert_domaines").empty();//On enleve l'ancien graphique
-	traceGraphiqueRecap_Domaine("#dialiog_graphique_camembert_domaines",listeEvaluationsDomaines,listeLabelsDomaines,listeIdsDomaines);//On ajoute le nouveau
+
+	//Gestion des graphiques
+
+	if(STATUT=="admin" || STATUT=="evaluateur")
+	{
+		$("#dialiog_graphique_camembert_domaines_conteneur").empty();//On enleve l'ancien graphique
+		$("#dialiog_graphique_camembert_domaines_conteneur").append("<canvas id=\"dialiog_graphique_camembert_domaines\" width=\"400\" height=\"400\"></canvas>");
+		traceGraphiqueRecap_Domaine("#dialiog_graphique_camembert_domaines",listeEvaluationsDomaines,listeLabelsDomaines,listeIdsDomaines);//On ajoute le nouveau
+
+		$("#bouton_bilan_graphe_icone").empty();//On enleve l'ancien graphique
+		$("#bouton_bilan_graphe_icone").append("<canvas id=\"bouton_bilan_graphe_icone\" width=\"130\" height=\"130\"></canvas>");//On enleve l'ancien graphique	
+		traceGraphiqueRecap_Domaine("#bouton_bilan_graphe_icone canvas",listeEvaluationsDomaines,listeLabelsDomaines,listeIdsDomaines,false);//On le met aussi en icone
+	}
 
 	//Mise à jour de l'affichage du pourcentage
 	if(STATUT=="admin" || STATUT=="evaluateur")

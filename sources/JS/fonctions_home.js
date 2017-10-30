@@ -1,26 +1,33 @@
 
 //Fonction trace le graphique récapitulatif des domaines ******************************
-function traceGraphiqueRecap_Domaine(context_,donnees_,labels_,idDomaines_)
+//Context = un canvas
+// donnees = liste de valeurs
+// labels = liste de labels
+// id domaine = id pour savoir quand on clique dessus
+// legende = true si on affiche la legende (par defaut) et false sinon
+function traceGraphiqueRecap_Domaine(context_,donnees_,labels_,idDomaines_,legende_)
 {
 	var context=$(context_);//context jquery
+	var legende_=(typeof legende_=="undefined")?true:legende_;
 	var type="polarArea";
+	
+
 	var data={
 						labels:labels_,
 						datasets:[{
 												data : donnees_,
-												backgroundColor:['red','lime','blue','yellow','fuchsia','aqua','green','purple','silver','teal']
+												backgroundColor:LISTE_COULEURS_ARC_EN_CIEL
 										}],
 						idDomaines:idDomaines_
 					}
 	var options={
-							responsive: false,
-							scale:{
-											ticks:{max:100,display: false}
-										}
-					}
+			legend:{display:legende_},
+			responsive: false,
+			scale:{
+				ticks:{max:100,display: false}
+				}
+			}
 	var	chart=new Chart(context,{type,data,options});//Création du graphique
-
-
 
 	return chart;
 }
@@ -91,4 +98,14 @@ var options={
 
 
 	return new Chart(context,{type,data,options});
+}
+
+
+
+
+
+//Renvoie la couleur du graphique n°i (entier) ************************************
+function getCouleurGraphique(i)
+{
+	return LISTE_COULEURS_ARC_EN_CIEL[i%LISTE_COULEURS_ARC_EN_CIEL.length];//LISTE_COULEURS_ARC_EN_CIEL[i%(LISTE_COULEURS_ARC_EN_CIEL.length)];
 }

@@ -112,6 +112,8 @@ include("./sources/PHP/actions.php");
  ?>];
 			AUTORISE_CONTEXT=<?php if($AUTORISE_CONTEXT) echo "true"; else echo "false";?>;
 			AUTORISE_COMMENTAIRES=<?php if($AUTORISE_COMMENTAIRES) echo "true"; else echo "false";?>;
+
+			LISTE_COULEURS_ARC_EN_CIEL=['red','lime','blue','yellow','fuchsia','aqua','green','purple','silver','teal'];
 		</script>
     </head>
 

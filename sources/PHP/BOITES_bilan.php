@@ -27,18 +27,18 @@ BOITES BILAN
  		<!-- BOITE Affiche graphique------------------- -->
 		<div id="dialog_graphique" title="Bilan en graphique">
 			<div id="dialiog_graphique_camembert_domaines_conteneur">
-				<canvas id="dialiog_graphique_camembert_domaines" width="400" height="400">
-				</canvas>
+			</div>
+			<div id="dialog_graphique_toile_competences_conteneur">
 			</div>
 		</div>
 		<script>
 			$( "#dialog_graphique").dialog({
 				autoOpen: false,
-				modal: true,
+				modal: false,
 				buttons: {
 						"Fermer": 	function(){$("#dialog_graphique").dialog("close");}
 					},
-				width:600
+				width:1000
 			});
 		</script>
 

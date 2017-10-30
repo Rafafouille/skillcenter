@@ -38,6 +38,26 @@ Boutons
 	margin-bottom:-5px;
 }
 
+#bouton_bilan_graphe_icone canvas
+{
+	display:inline-block;
+}
+
+#bouton_bilan_graphe_icone
+{
+	display:inline-block;
+	width:50px;
+	height:28px;
+	margin-top:-65px;
+	margin-bottom:-15px;
+	margin-left:-40px;
+	margin-right:0px;
+	padding-top:9px;
+	padding-bottom:-50px;
+	overflow:hidden;
+}
+
+
 /*******************************
 Indicateurs
 ******************************/
@@ -139,3 +159,21 @@ Graphiques Bilan
 {
 	margin:auto;
 }
+
+#dialog_graphique_toile_competences_conteneur
+{
+	text-align:center;
+}
+.BILAN_graphe_comptence
+{
+	border:solid;
+	border-radius:5px;
+	margin:5px;
+	display:inline-block;
+	text-align:center;
+}
+.BILAN_graphe_comptence canvas
+{
+	display:inline-block;
+}
+

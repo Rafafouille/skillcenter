@@ -142,7 +142,7 @@ foreach($listeBilanDomaines as &$dom)//Pour chaque domaine...
 		}
 	?>];
 
-	traceGraphiqueRecap_Competence("#radarCompetences_Domaine_<?php echo $idDomaine?>",donneesRadarCompetences,labelRadarCompetences,<?php echo '"'.$dom['nom'].'"';?>,<?php echo '"'.$tableauCouleurs[$idCouleur].'"'?>);
+	traceGraphiqueRecap_Competence("#radarCompetences_Domaine_<?php echo $idDomaine?>",donneesRadarCompetences,labelRadarCompetences,<?php echo '"'.$dom['nom'].'"';?>,getCouleurGraphique(<?php echo$idCouleur?>));
 
 <?php
 }

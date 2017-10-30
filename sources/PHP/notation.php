@@ -15,7 +15,8 @@
 
 						<?php if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur"){?>
 						<div class="bouton_top" onclick="$('#dialog_graphique').dialog('open');;">
-							<img src="./sources/images/icone-graphe.png" alt="[§]"/>
+							<!--<img src="./sources/images/icone-graphe.png" alt="[§]"/>-->
+							<span id="bouton_bilan_graphe_icone"><canvas></canvas></span>
 							<strong>Graphiques</strong>
 						</div>
 						<?php };?>

@@ -5,12 +5,14 @@
 //groupe : Groupe a ajouter (objet JSON)
 //conteneur : conteneur (HTML) dans lequel ajouter le groupe
 //modeNotation : true si c'est un prof (qui note), false si c'est un élève (qui consulte)
-function NOTATION_ajouteGroupeCompetences(groupe,conteneur,modeNotation,recreeDeZero)
+//couleur = couleur pour les graphes
+function NOTATION_ajouteGroupeCompetences(groupe,conteneur,modeNotation,recreeDeZero,couleur)
 {
 	//Paramètres par défaut (ancien)
 	var recreeDeZero = typeof recreeDeZero !== 'undefined' ? recreeDeZero : false;
 	var sommeNiveaux=0;		//Somme des niveaux (~notes) de l'eleve pour chaque critere de ce domaine
 	var sommeNiveauxMax=0;	//Somme des niveaux maxi atteignables
+	couleur=(typeof couleur=="undefined"?"black":couleur);
 
 	//Si le groupe n'existe pas (ou si il faut recréer de zéro) --> on le crée
 	if(recreeDeZero || !$("#NOTATION_groupe_"+groupe.id).length)
@@ -29,6 +31,12 @@ function NOTATION_ajouteGroupeCompetences(groupe,conteneur,modeNotation,recreeDe
 		$(conteneur).append(rendu);
 	}
 
+	//Tableau pour les graphiques du bilan
+	if(STATUT=="admin" || STATUT=="evaluateur")
+	{
+		var listeEvaluationsCompetences=Array();//Liste des evaluations (en pourcentage)
+		var listeLabelsCompetences=Array();//Liste des evaluations (en pourcentage)
+	}
 
 	//Ajout des competences
 	for(idComp in groupe.listeCompetences)
@@ -38,8 +46,20 @@ function NOTATION_ajouteGroupeCompetences(groupe,conteneur,modeNotation,recreeDe
 		sommeNiveaux+=evaluation.niveau;
 		sommeNiveauxMax+=evaluation.niveauMax;
 		
+		if(STATUT=="admin" || STATUT=="evaluateur")
+		{
+			listeEvaluationsCompetences.push(evaluation.niveau/evaluation.niveauMax*100);
+			listeLabelsCompetences.push(competence.nom);
+		}
 	}
 	
+	//Graphe bilan
+	if(STATUT=="admin" || STATUT=="evaluateur")
+	{
+		$("#dialog_graphique_toile_competences_conteneur").append("<div id=\"BILAN_graphe_comptence_"+groupe.id+"\" class=\"BILAN_graphe_comptence\"><canvas width=\"300\" height=\"200\"></canvas></div>")
+		traceGraphiqueRecap_Competence("#BILAN_graphe_comptence_"+groupe.id+" canvas",listeEvaluationsCompetences,listeLabelsCompetences,groupe.nom,couleur);
+	}
+
 	//Renvoie la valeur de l'evaluation et le nombre de niveaux max
 	return {niveau:sommeNiveaux,niveauMax:sommeNiveauxMax};
 }
@@ -279,6 +299,7 @@ updateListeContexteDansMenu=function()
 	});
 	$("#BILAN_listeContextes").data("selectBox-selectBoxIt").refresh();
 }
+
 
 
 
