@@ -465,9 +465,9 @@ if($action=="getNotationEleves")
 			$classe=$donneesClasse['classe'];
 			
 			$req_ind="(SELECT * FROM ".$BDD_PREFIXE."indicateurs AS i JOIN ".$BDD_PREFIXE."liensClassesIndicateurs AS l ON i.id=l.indicateur WHERE classe='".$classe."')";
-			$req_comp_gr="(SELECT comp.id AS idComp, comp.nom AS nomComp, gr.id AS idGroup, gr.nom AS nomGroup FROM ".$BDD_PREFIXE."competences AS comp JOIN ".$BDD_PREFIXE."groupes_competences AS gr ON  comp.groupe=gr.id)";
+			$req_comp_gr="(SELECT comp.id AS idComp, comp.nom AS nomComp, comp.nomAbrege AS nomCompAbrege, gr.id AS idGroup, gr.nom AS nomGroup FROM ".$BDD_PREFIXE."competences AS comp JOIN ".$BDD_PREFIXE."groupes_competences AS gr ON  comp.groupe=gr.id)";
 
-			$requete="SELECT  E1.idComp,  E1.nomComp, E1.idGroup, E1.nomGroup, ind.id AS idInd, ind.nom AS nomInd, ind.details AS detailsInd, ind.niveaux AS niveauxInd, ind.lien AS lienInd, ind.position AS positionInd FROM ".$req_ind." as ind JOIN ".$req_comp_gr." AS E1 ON ind.competence = E1.idComp";
+			$requete="SELECT  E1.idComp,  E1.nomComp, E1.nomCompAbrege AS nomCompAbrege, E1.idGroup, E1.nomGroup, ind.id AS idInd, ind.nom AS nomInd, ind.details AS detailsInd, ind.niveaux AS niveauxInd, ind.lien AS lienInd, ind.position AS positionInd FROM ".$req_ind." as ind JOIN ".$req_comp_gr." AS E1 ON ind.competence = E1.idComp";
 			$req = $bdd->query($requete);
 
 			while($reponse=$req->fetch())
@@ -477,6 +477,7 @@ if($action=="getNotationEleves")
 
 				$idComp=intval($reponse['idComp']);
 				$nomComp=$reponse['nomComp'];
+				$nomCompAbrege=($reponse['nomCompAbrege']!="")?$reponse['nomCompAbrege']:substr($reponse['nomComp'],0,20);;
 
 				$idInd=intval($reponse['idInd']);
 				$nomInd=$reponse['nomInd'];
@@ -498,6 +499,7 @@ if($action=="getNotationEleves")
 				{
 					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["id"]=$idComp;
 					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["nom"]=$nomComp;
+					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["nomAbrege"]=$nomCompAbrege;
 					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["selected"]=true;
 					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"]=array();
 				}

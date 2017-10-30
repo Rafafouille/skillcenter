@@ -49,7 +49,7 @@ function NOTATION_ajouteGroupeCompetences(groupe,conteneur,modeNotation,recreeDe
 		if(STATUT=="admin" || STATUT=="evaluateur")
 		{
 			listeEvaluationsCompetences.push(evaluation.niveau/evaluation.niveauMax*100);
-			listeLabelsCompetences.push(competence.nom);
+			listeLabelsCompetences.push(competence.nomAbrege);
 		}
 	}
 	
