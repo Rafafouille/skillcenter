@@ -37,15 +37,15 @@
 	//Chargement des boites selon le statut.
 
 	if($_SESSION['statut']=="admin")
+	{
 		include_once("./sources/PHP/BOITES_utilisateurs.php");
-
-	if($_SESSION['statut']=="admin")
 		include_once("./sources/PHP/BOITES_parametres.php");
+		include_once("./sources/PHP/BOITES_contexte.php");
+	}
 	
 	if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur" || $_SESSION['statut']=="autoeval")
-	{
 		include_once("./sources/PHP/BOITES_historique.php");
-	}
+
 	if($_SESSION['id']>0)//Si connecté
 		include_once("./sources/PHP/BOITES_bilan.php");
 ?>	

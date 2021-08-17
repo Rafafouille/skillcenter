@@ -444,11 +444,9 @@ if($action=="getListeEleves")
 //OBTIENT LA NOTATION DES ELEVES=================
 if($action=="getNotationEleves")
 {
-	$eleve=0;
-	if(isset($_POST['eleve'])) $eleve=intval($_POST['eleve']);
+	$eleve = isset($_POST['eleve'])?intval($_POST['eleve']):0;
+	$contexte = isset($_POST['contexte'])?$_POST['contexte']:"ALL_CONTEXTE";
 	
-	$contexte="ALL_CONTEXTE";
-	if(isset($_POST['contexte'])) $contexte=$_POST['contexte'];
 	$conditionSurContexte="";
 	if($contexte!="ALL_CONTEXTE") $conditionSurContexte=" AND contexte='".$contexte."'";
 
@@ -464,13 +462,38 @@ if($action=="getNotationEleves")
 		{		
 			$classe=$donneesClasse['classe'];
 			
-			$req_ind="(SELECT * FROM ".$BDD_PREFIXE."indicateurs AS i JOIN ".$BDD_PREFIXE."liensClassesIndicateurs AS l ON i.id=l.indicateur WHERE classe='".$classe."')";
-			$req_comp_gr="(SELECT comp.id AS idComp, comp.nom AS nomComp, comp.nomAbrege AS nomCompAbrege, gr.id AS idGroup, gr.nom AS nomGroup FROM ".$BDD_PREFIXE."competences AS comp JOIN ".$BDD_PREFIXE."groupes_competences AS gr ON  comp.groupe=gr.id)";
+			//Cette requete permet de sélectionner les indiacteurs demandés
+			$requete_liste_indicateurs_dans_contexte ='SELECT
 
-			$requete="SELECT  E1.idComp,  E1.nomComp, E1.nomCompAbrege AS nomCompAbrege, E1.idGroup, E1.nomGroup, ind.id AS idInd, ind.nom AS nomInd, ind.details AS detailsInd, ind.niveaux AS niveauxInd, ind.lien AS lienInd, ind.position AS positionInd FROM ".$req_ind." as ind JOIN ".$req_comp_gr." AS E1 ON ind.competence = E1.idComp";
-			$req = $bdd->query($requete);
+gr.id AS idGroup, gr.nom AS nomGroup,
+comp.id AS idComp, comp.nom AS nomComp, comp.nomAbrege AS nomCompAbrege,
+ind.id AS idInd, ind.nom AS nomInd, ind.details AS detailsInd, ind.niveaux AS niveauxInd, ind.lien AS lienInd, ind.position AS positionInd
 
-			while($reponse=$req->fetch())
+FROM '.$BDD_PREFIXE.'indicateurs AS ind JOIN '.$BDD_PREFIXE.'competences AS comp JOIN '.$BDD_PREFIXE.'groupes_competences AS gr
+JOIN '.$BDD_PREFIXE.'liensClassesIndicateurs AS lci '.
+($contexte!="ALL_CONTEXTE"?'JOIN '.$BDD_PREFIXE.'liensIndicateursContextes AS lic JOIN '.$BDD_PREFIXE.'contextes AS cont':'').'
+
+ON ind.competence=comp.id AND comp.groupe=gr.id
+AND lci.indicateur=ind.id '.
+($contexte!="ALL_CONTEXTE"?'AND lic.indicateur=ind.id AND lic.contexte=cont.id':'').'
+
+WHERE lci.classe=:classe';
+
+			
+			//Si on fait une sélection du contexte...
+			if($contexte!="ALL_CONTEXTE")
+			{
+				$requete = $bdd->prepare($requete_liste_indicateurs_dans_contexte." AND cont.id=:contexte");
+				$requete->execute(array("classe"=>$classe,"contexte"=>intval($contexte)));
+			}
+			else
+			{
+				$requete = $bdd->prepare($requete_liste_indicateurs_dans_contexte);
+				$requete->execute(array("classe"=>$classe));
+			}
+			
+
+			while($reponse=$requete->fetch())
 			{
 				$idGroup=intval($reponse['idGroup']);
 				$nomGroup=$reponse['nomGroup'];
@@ -516,7 +539,39 @@ if($action=="getNotationEleves")
 				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["selected"]=true;
 				$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["position"]=$positionInd;
 				
-				//Note max
+				
+				
+				//Note max et moyenne
+				if($contexte == "ALL_CONTEXTE")
+				{
+					$reqNoteAgr = $bdd->prepare("SELECT MAX(note) AS max, AVG(note) AS moy FROM ".$BDD_PREFIXE."notation WHERE eleve=:eleve AND indicateur=".$idInd);
+					$reqNoteAgr->execute(array('eleve'=>$eleve));	
+					$reqNoteLast = $bdd->prepare("SELECT note as last FROM ".$BDD_PREFIXE."notation WHERE eleve=:eleve AND indicateur=".$idInd." ORDER BY date DESC LIMIT 1");
+					$reqNoteLast->execute(array('eleve'=>$eleve));
+				}
+				else
+				{
+					$reqNoteAgr = $bdd->prepare("SELECT MAX(note) AS max, AVG(note) AS moy FROM ".$BDD_PREFIXE."notation WHERE eleve=:eleve AND indicateur=".$idInd." AND contexte=:contexte");
+					$reqNoteAgr->execute(array('eleve'=>$eleve,'contexte'=>intval($contexte)));	
+					$reqNoteLast = $bdd->prepare("SELECT note as last FROM ".$BDD_PREFIXE."notation WHERE eleve=:eleve AND indicateur=".$idInd." AND contexte=:contexte ORDER BY date DESC LIMIT 1");
+					$reqNoteLast->execute(array('eleve'=>$eleve,'contexte'=>intval($contexte)));
+				}
+				
+				if($donneesNoteAgr = $reqNoteAgr->fetch())
+				{
+					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveMax"] = $donneesNoteAgr["max"];
+					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveMoy"] = $donneesNoteAgr["moy"];
+				}
+				
+				if($donneesNoteLast = $reqNoteLast->fetch())
+				{
+					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveLast"] = $donneesNoteLast["last"];
+				}
+				
+				
+				
+				/*
+				
 				$reqNote = $bdd->prepare("SELECT MAX(note) as max FROM ".$BDD_PREFIXE."notation WHERE eleve=:eleve AND indicateur=".$idInd.$conditionSurContexte);
 				$reqNote->execute(array('eleve'=>$eleve));
 				if($donneesNote=$reqNote->fetch())
@@ -546,6 +601,7 @@ if($action=="getNotationEleves")
 					if($donneesCom=$reqCom->fetch())
 						$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["commentaires"]=true;
 				}
+				*/
 			}	
 
 			$reponseJSON["messageRetour"]=":XEvaluation récupérées.";
@@ -560,7 +616,7 @@ if($action=="getNotationEleves")
 }
 
 
-//OBTIENT LA NOTATION DES ELEVES=================
+//OBTIENT LES  COMMENTAIRES DES ELEVES=================
 if($action=="getComments")
 {
 	if($AUTORISE_COMMENTAIRES)
@@ -671,12 +727,14 @@ if($action=="newNote")
 // Action qui ajoute un commentaire à une note **************************************
 if($action=="addCommentaireEval")
 {
-	$idEval=0;
-		if(isset($_POST['idEval'])) $idEval=intval($_POST['idEval']);
+	$idEval = isset($_POST['idEval']) ? intval($_POST['idEval']) : 0 ;
+	$idContexte = isset($_POST['idContexte']) ? intval($_POST['idContexte']) : 0 ;
+	$reponseJSON["debug"] = $idContexte; // A SUPPRIMER
+	$commentaire = isset($_POST['commentaire']) ? $_POST['commentaire'] : "" ;
 
 	if($idEval)//Si un numero d'evaluation a été envoyé
 	{
-		//Verifiction de l'éleve qui doit obtenir ce commnetaire (nécessaire de la vérifier s'il est en autoeval, ^par sécurité)
+		//Verifiction de l'éleve qui doit obtenir ce commentaire (nécessaire de la vérifier s'il est en autoeval, par sécurité)
 		connectToBDD();
 		$req = $bdd->prepare('SELECT eleve FROM '.$BDD_PREFIXE.'notation WHERE id=:idEval');
 		$req->execute(array(
@@ -689,25 +747,25 @@ if($action=="addCommentaireEval")
 		
 		if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur" || $_SESSION['statut']=="autoeval" && $_SESSION['id']==$idEleve)
 		{
-			$idEval=0;
-			if(isset($_POST['idEval'])) $idEval=intval($_POST['idEval']);
+			/*$idEval=0;
+			if(isset($_POST['idEval'])) $idEval=intval($_POST['idEval']);   SEMBLE OBSOLETE */
 
 
-				$contexte="";
+			/*	$contexte="";
 				if(isset($_POST['contexte'])) $contexte=$_POST['contexte'];
 				$commentaire="";
-				if(isset($_POST['commentaire'])) $commentaire=$_POST['commentaire'];
+				if(isset($_POST['commentaire'])) $commentaire=$_POST['commentaire']; OBSOLETE */
 
 				connectToBDD();
 				$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'notation SET contexte=:contexte, commentaire=:commentaire WHERE id=:idEval');
 				$req->execute(array(
 						'idEval' => $idEval,
-						'contexte' => $contexte,
+						'contexte' => $idContexte,
 						'commentaire' => $commentaire
 						));
 						
 				
-				$reponseJSON["commentaire"]["contexte"]=$contexte;
+				$reponseJSON["commentaire"]["contexte"]=$idContexte;
 				$reponseJSON["commentaire"]["commentaire"]=$commentaire;
 						
 
@@ -715,15 +773,11 @@ if($action=="addCommentaireEval")
 				$req->execute(array(
 						'idEval' => $idEval
 						));
-				if($donnees=$req->fetch())
-				{
-					$reponseJSON["evaluation"]["id"]=$idEval;
-					$reponseJSON["evaluation"]["eval"]=$donnees['note'];
-					$reponseJSON["evaluation"]["indicateur"]=$donnees['indicateur'];
-					$reponseJSON["messageRetour"]=":XCommentaire ajouté.";
-				}
-				else
-					$reponseJSON["messageRetour"]=":(Aucune évaluation associée au commentaire.";
+				$donnees=$req->fetch();
+				$reponseJSON["evaluation"]["id"] = $idEval;
+				$reponseJSON["evaluation"]["eval"] = $donnees['note'];
+				$reponseJSON["evaluation"]["indicateur"] = $donnees['indicateur'];
+				$reponseJSON["messageRetour"] = ":)Commentaire ajouté.";
 		}
 		else
 			$reponseJSON["messageRetour"]=":(Vous ne pouvez pas ajouter de commentaires à une évaluation.";
@@ -1462,6 +1516,174 @@ if($action=="lierDelierIndicateurClasse")
 }
 
 
+
+
+
+
+
+// =====================================================
+// CONTEXTE
+// =====================================================
+
+
+if($action=="newContexte")
+{
+	if($_SESSION['statut']=="admin")
+	{
+		connectToBDD();
+		$nom = isset($_POST['nom'])?$_POST['nom']:"";
+		if($nom != "")
+		{
+			$req = $bdd->prepare("INSERT INTO ".$BDD_PREFIXE."contextes(nom) VALUES(:nom)");
+			$req->execute(array('nom' => $nom));
+			$reponseJSON["messageRetour"]=":)Le contexte '".$nom."' a bien été ajouté.";
+
+			$reponseJSON["contexte"]=array();
+			$reponseJSON["contexte"]["id"] = $bdd->lastInsertId();
+			$reponseJSON["contexte"]["nom"] = $nom;
+		}
+		else
+			$reponseJSON["messageRetour"]=":(Vous ne pouvez pas utiliser un nom vide pour un contexte.";
+	}
+	else
+		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit d'ajouter un contexte !";
+	
+	
+}
+
+
+
+if($action=="modifContexte")
+{
+	if($_SESSION['statut']=="admin")
+	{
+		connectToBDD();
+		$nom = isset($_POST['nom'])?$_POST['nom']:"";
+		$id = isset($_POST['id'])?intval($_POST['id']):0;
+		if($nom != "")
+		{
+			if($id)
+			{
+				$req = $bdd->prepare("UPDATE ".$BDD_PREFIXE."contextes SET nom=:nom WHERE id=:id");
+				$req->execute(array('nom' => $nom,'id'=> $id));
+				$reponseJSON["messageRetour"]=":)Le contexte '".$nom."' a bien été modifié.";
+
+				$reponseJSON["contexte"]=array('id' => $id, 'nom' => $nom);
+			}
+			else
+				$reponseJSON["messageRetour"]=":(Aucun 'id' de contexte n'a été transmis.";
+		}
+		else
+			$reponseJSON["messageRetour"]=":(Vous ne pouvez pas utiliser un nom vide pour un contexte.";
+	}
+	else
+		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de modifier un contexte !";
+	
+	
+}
+
+
+
+if($action == "activeDesactiveLienContexteIndicateur")
+{
+	if($_SESSION['statut']=="admin")
+	{
+		$contexte = isset($_POST['contexte']) ? intval($_POST['contexte']) : 0 ;
+		$indicateur = isset($_POST['indicateur']) ? intval($_POST['indicateur']) : 0 ;
+		if($contexte != 0 and $indicateur != 0)
+		{
+			connectToBDD();
+			$req = $bdd->prepare("SELECT * FROM ".$BDD_PREFIXE."liensIndicateursContextes WHERE contexte=:contexte AND indicateur=:indicateur");
+			$req->execute(array(
+				'contexte' => $contexte,
+				'indicateur' => $indicateur
+			));
+			if($data = $req->fetch())	// Si y a deja un lien, on le désactive
+			{
+				$req = $bdd->prepare("DELETE FROM ".$BDD_PREFIXE."liensIndicateursContextes WHERE id=:id");
+				$req->execute(array(
+					'id' => $data["id"]
+				));
+				$reponseJSON["messageRetour"] = ":|Le contexte a bien été désactivé.";
+				$reponseJSON["lienIndicateurContexte"] = array();
+				$reponseJSON["lienIndicateurContexte"]["contexte"] = $contexte;
+				$reponseJSON["lienIndicateurContexte"]["indicateur"] = $indicateur;
+				$reponseJSON["lienIndicateurContexte"]["etat"] = "invalider";
+			}
+			else	//Sinon on l'active
+			{
+				$req = $bdd->prepare("INSERT INTO ".$BDD_PREFIXE."liensIndicateursContextes (contexte,indicateur) VALUES (:contexte, :indicateur)");
+				$req->execute(array(
+					'contexte' => $contexte,
+					'indicateur' => $indicateur
+					));
+				$reponseJSON["lienIndicateurContexte"] = array();
+				$reponseJSON["lienIndicateurContexte"]["contexte"] = $contexte;
+				$reponseJSON["lienIndicateurContexte"]["indicateur"] = $indicateur;
+				$reponseJSON["lienIndicateurContexte"]["etat"] = "valider";
+				$reponseJSON["messageRetour"]=":|Le contexte a bien été activé.";
+			}
+		}
+		else
+			$reponseJSON["messageRetour"]=":(Il manque un contexte ou un indicateur.";	
+	}
+	else
+		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de changer l'état d'un !";	
+}
+
+
+
+if($action == "getContextes")
+{
+	if($_SESSION['id'])//Si on est connecté
+	{
+		$reponseJSON["contextes"]=array();
+		connectToBDD();
+		$req = $bdd->query("SELECT id, nom FROM ".$BDD_PREFIXE."contextes");
+		while($data = $req->fetch())
+			array_push($reponseJSON["contextes"],array("id"=>$data["id"], "nom"=>$data['nom']));
+		$reponseJSON["messageRetour"]=":XLa liste des contextes a bien été récupérée.";
+	}
+	else
+		$reponseJSON["messageRetour"]=":(Vous devez être connecté pour récupérer les contextes";
+		
+}
+
+// Renvoie la page (déjà codée en HTML) contenant le <table></table> des liens indicateurs / contextes
+if($action == "getGrilleHTMLContextes")
+{
+	connectToBDD();
+	$reponseJSON["HTML"] = getTableauContextesHTML();
+	$reponseJSON["messageRetour"]=":XEnvoie du tableau HTML des contextes.";
+
+}
+
+
+
+// Renvoie la page (déjà codée en HTML) contenant le <table></table> des liens indicateurs / contextes
+if($action == "supprimeContexte")
+{
+	if($_SESSION['statut']=="admin")
+	{
+		$idCont = isset($_POST['contexte']) ? intval($_POST['contexte']) : 0 ;
+		if($idCont)
+		{
+			connectToBDD();
+			// Supprime le contexte
+			$req = $bdd->prepare("DELETE FROM ".$BDD_PREFIXE."contextes WHERE id=:idCont");
+			$req->execute(array("idCont"=>$idCont));
+			// Supprime les lignes associées dans les liens indicateurs / contextes
+			$req2 = $bdd->prepare("DELETE FROM ".$BDD_PREFIXE."liensIndicateursContextes WHERE contexte=:idCont");
+			$req2->execute(array("idCont"=>$idCont));
+			
+			$reponseJSON["messageRetour"]=":)Le contexte (ainsi que les liens avec ses indicateurs) a été supprimé.";
+		}
+		else
+			$reponseJSON["messageRetour"]=":(Aucune n° de contexte à supprimé n'a été transmis";
+	}
+	else
+		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de supprimer un contexte";
+}
 
 echo json_encode($reponseJSON);
 

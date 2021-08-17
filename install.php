@@ -1076,6 +1076,7 @@ function creeTable($nom,$attr1)
 {
 		global $bdd;
 
+
 		//Vérifie si elle existe
 		$rep=$bdd->query("SHOW TABLES FROM ".$_SESSION['BDD_NOM_BDD']." LIKE '".$_SESSION['BDD_PREFIXE'].$nom."'");
 		if($donnees=$rep->fetch()) //Si la table existe... on le dit...
@@ -1090,20 +1091,27 @@ function creeTable($nom,$attr1)
 		}
 }
 
-function creeAttribut($table,$nom,$type)
+function creeAttribut($table,$nom,$type,$efface=false)
 {
 		global $bdd;
 		$rep=$bdd->query("SHOW COLUMNS FROM ".$_SESSION['BDD_PREFIXE'].$table." LIKE  '".$nom."'");
 		if($donnees=$rep->fetch())
-			echo "			<li style=\"color:blue;font-style:italic;\">&nbsp;&nbsp;&nbsp;Attribut '".$nom."' (Table '".$_SESSION['BDD_PREFIXE'].$table."') existe déjà.</li>";
-		else
 		{
-			try
-			{$bdd->query("ALTER TABLE ".$_SESSION['BDD_PREFIXE'].$table." ADD ".$nom." ".$type);
-				echo "			<li style=\"color:green;\">&nbsp;&nbsp;&nbsp;Attribut '".$nom."' (Table '".$_SESSION['BDD_PREFIXE'].$table."') créée.</li>";}
-			catch(Execption $e)
-			{echo "			<li style=\"color:red;font-weight:bold;\">&nbsp;&nbsp;&nbsp;Erreur de création de l'attribut '".$nom."' (Table '".$_SESSION['BDD_PREFIXE'].$table."').</li>";}
+			echo "			<li style=\"color:blue;font-style:italic;\">&nbsp;&nbsp;&nbsp;Attribut '".$nom."' (Table '".$_SESSION['BDD_PREFIXE'].$table."') existe déjà.</li>";
+			if($efface)
+			{
+				$bdd->query("ALTER TABLE ".$_SESSION['BDD_PREFIXE'].$table." DROP ".$nom);
+				echo "			<li style=\"color:orange;font-style:italic;\">&nbsp;&nbsp;&nbsp;Attribut '".$nom."' (Table '".$_SESSION['BDD_PREFIXE'].$table."') supprimé en vue d'être refait.</li>";
+			}
+			else
+				return ;
 		}
+		
+		try
+		{$bdd->query("ALTER TABLE ".$_SESSION['BDD_PREFIXE'].$table." ADD ".$nom." ".$type);
+			echo "			<li style=\"color:green;\">&nbsp;&nbsp;&nbsp;Attribut '".$nom."' (Table '".$_SESSION['BDD_PREFIXE'].$table."') créée.</li>";}
+		catch(Execption $e)
+		{echo "			<li style=\"color:red;font-weight:bold;\">&nbsp;&nbsp;&nbsp;Erreur de création de l'attribut '".$nom."' (Table '".$_SESSION['BDD_PREFIXE'].$table."').</li>";}
 }
 
 ?>
@@ -1145,7 +1153,7 @@ creeTable("notation","id");
 	creeAttribut("notation","eleve","MEDIUMINT UNSIGNED DEFAULT 0");
 	creeAttribut("notation","indicateur","MEDIUMINT UNSIGNED DEFAULT 0");
 	creeAttribut("notation","examinateur","MEDIUMINT UNSIGNED DEFAULT 0");
-	creeAttribut("notation","contexte","TEXT NOT NULL");
+	creeAttribut("notation","contexte","MEDIUMINT UNSIGNED DEFAULT 0",true);
 	creeAttribut("notation","commentaire","TEXT NOT NULL");
 	
 creeTable("utilisateurs","id");
@@ -1163,7 +1171,13 @@ creeTable("utilisateurs","id");
 	creeAttribut("utilisateurs","nouveaux_badges","TEXT NOT NULL");
 	creeAttribut("utilisateurs","derniere_connexion","TIMESTAMP NOT NULL DEFAULT 0");
 
+creeTable("contextes","id");
+	creeAttribut("contextes","id","MEDIUMINT UNSIGNED AUTO_INCREMENT PRIMARY KEY");
+	creeAttribut("contextes","nom","TEXT NOT NULL");
 
+creeTable("liensIndicateursContextes","id");
+	creeAttribut("liensIndicateursContextes","contexte","MEDIUMINT UNSIGNED DEFAULT 0");
+	creeAttribut("liensIndicateursContextes","indicateur","MEDIUMINT UNSIGNED DEFAULT 0");
 
 ?>
 		</ul>

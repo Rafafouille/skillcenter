@@ -25,8 +25,17 @@
 						<form id="notationFormulaireListesClasseEtEleves" style="float:right;">
 							<div class="dropdown_menu_notation">
 									Filtre :<br/>
-									<select id="BILAN_listeContextes" name="BILAN_listeContextes" onchange="getNotationEleve($('#notationListeEleves').val(),$(this).val());">
-										<option value="ALL_CONTEXTE">Choix du contexte</option>
+									<select id="BILAN_listeContextes" name="BILAN_listeContextes" onchange="getNotationEleve(getIdEleveCourant(),$(this).val());">
+										<option value="0">Tout contexte</option>
+										<?php
+											// REMARQUE : CE QUI SUIT EST AUSSI FAIT PAR LA FONCTION JS updateContextesMenuBilan()
+											$req = $bdd->query("SELECT id, nom FROM ".$BDD_PREFIXE."contextes");
+											while($data = $req->fetch())
+											{
+												echo "
+										<option value=\"".strval($data['id'])."\">".$data['nom']."</option>";
+											}
+										?>
 									</select>
 							</div>
 							<?php

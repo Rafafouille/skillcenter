@@ -135,3 +135,17 @@ function afficheBarreChargement()
 	{$("#barre_notification").show(200);}
 function cacheBarreChargement()
 	{$("#barre_notification").hide(200);}
+	
+	
+	
+	
+	
+// Fonction qui indique quel est le n°ID de l'utilisateur dont on veut récupérer la note :
+// Si on est prof / evaluateur : cela prend le n°indiqué dans la page Bilan, dans la liste
+// Si on est élèves, ca renvoie son propre numéro ID
+function getIdEleveCourant()
+{
+	if($("#notationListeEleves").val()==undefined)
+		return ID_COURANT;
+	return parseInt($("#notationListeEleves").val());
+}

@@ -132,9 +132,20 @@ function NOTATION_ajouteIndicateur(indicateur,conteneur)
 "										<div class=\"commentaireIndicateur\">"+
 "											<form data-ideval=\"0\">"+
 "												<img class=\"boutonValideCommentaireEval\" alt=\"[V]\" src=\"./sources/images/valide.png\" onclick=\"valideCommentaireEval("+indicateur.id+");\"/>"+
-"												<img class=\"boutonAnnuleCommentaireEval\" alt=\"[X]\" src=\"./sources/images/invalide.png\" onclick=\"bilanFermeCommentaire("+indicateur.id+");\"/>"+
-(AUTORISE_CONTEXT?"												<input list=\"listeContexteAutocompletion\" type=\"text\" class=\"commentaireIndicateur-contexte\" name=\"commentaireIndicateur-contexte\" placeholder=\"Contexte (ex : TP1)\" size=\"15\"/>":"")+
-(AUTORISE_COMMENTAIRES?"											<input type=\"text\" class=\"commentaireIndicateur-commentaire"+(!AUTORISE_COMMENTAIRES?"-invisible":"")+"\" name=\"commentaireIndicateur-commentaire\" placeholder=\"Commentaire (ex : N'a pas posé les hypothèses)\" size=\"38\"/>":"")+
+"												<img class=\"boutonAnnuleCommentaireEval\" alt=\"[X]\" src=\"./sources/images/invalide.png\" onclick=\"bilanFermeCommentaire("+indicateur.id+");\"/>";
+	if(AUTORISE_CONTEXT)
+	{
+		rendu += "												<select name=\"commentaireIndicateur_contexte\" class=\"commentaireIndicateur_contexte\">"+
+			"												    <option value=\"0\">Pas de contexte</option>";
+		rendu += "												</select>";
+//		<input list=\"listeContexteAutocompletion\" type=\"text\" class=\"commentaireIndicateur-contexte\" name=\"commentaireIndicateur-contexte\" placeholder=\"Contexte (ex : TP1)\" size=\"15\"/>":"");
+	}
+	if(AUTORISE_COMMENTAIRES)
+	{
+		rendu += "												<input type=\"text\" class=\"commentaireIndicateur-commentaire"+(!AUTORISE_COMMENTAIRES?"-invisible":"")+"\" name=\"commentaireIndicateur-commentaire\" placeholder=\"Commentaire (ex : N'a pas posé les hypothèses)\" size=\"38\"/>";
+	}
+	
+	rendu += ""+
 "											</form>"+
 "										</div>"+
 "									</td>"+
@@ -241,13 +252,28 @@ bilanOuvreCommentaire=function(idInd,idEval)
 {
 	if(AUTORISE_CONTEXT || AUTORISE_COMMENTAIRES)
 	{
-		//Update idEval
-		$("#NOTATION_indicateur_"+idInd+" .commentaireIndicateur form").attr("data-ideval",idEval);
-		$("#NOTATION_indicateur_"+idInd+" .commentaireIndicateur form .commentaireIndicateur-contexte").val(DERNIER_CONTEXT);
+		//Update idEval (id de l'évaluation, et non pas de l'indicateur !!!)
+			$("#NOTATION_indicateur_"+idInd+" .commentaireIndicateur form").attr("data-ideval",idEval);
+		
+		//MAJ des contextes
+			var identif_select_contexte = "#NOTATION_indicateur_"+String(idInd)+" .commentaireIndicateur_contexte"
+			$(identif_select_contexte).empty();
+			if(parseInt($("#BILAN_listeContextes").val()))//On met en priorité l'élément qui est sélectionné (non nul)
+			{
+				$(identif_select_contexte).append("<option value=\"0\">Pas de contexte</option>");
+				$(identif_select_contexte).append("<option value=\""+String($("#BILAN_listeContextes").val())+"\" selected=\"selected\">"+$("#BILAN_listeContextes option:selected").text()+"</option>");
+			}//Sinon, juste le "pas de contexte", sélectionné
+			else
+				$(identif_select_contexte).append("<option value=\"0\" selected=\"selected\">Pas de contexte</option>");
+			//Les autres lignes
+			LISTE_CONTEXTES.forEach(function(cont){
+				if( cont.id != parseInt($("#BILAN_listeContextes").val()))
+					$(identif_select_contexte).append("<option value=\""+String(cont.id)+"\">"+cont.nom+"</option>");
+			})
 
 		//Animation
-		$("#NOTATION_indicateur_"+idInd+" .titreIndicateur").hide("slide",{direction: "left" }, 500);
-		setTimeout(function(){$("#NOTATION_indicateur_"+idInd+" .commentaireIndicateur").show("slide", { direction: "right" }, 500);},510);
+			$("#NOTATION_indicateur_"+idInd+" .titreIndicateur").hide("slide",{direction: "left" }, 500);
+			setTimeout(function(){$("#NOTATION_indicateur_"+idInd+" .commentaireIndicateur").show("slide", { direction: "right" }, 500);},510);
 	}
 }
 
@@ -276,7 +302,8 @@ fermeAllCommentaires=function()
 
 //Fonction qui vérivie si un contexte est déjà présent dans la data-liste contexte, et qui l'ajoute le cas échéant.
 //Renvoie vrai si le contexte éxistait deja
-ajouteListeContextSiAbsent=function(contexte)
+// OBSOLETE depuis les nouveaux contextes
+/*ajouteListeContextSiAbsent=function(contexte)
 {
 	if($("#listeContexteAutocompletion option[value='"+contexte+"']").size()==0)//Si le contexte n'a pas été ajouté à la liste...
 	{
@@ -284,18 +311,15 @@ ajouteListeContextSiAbsent=function(contexte)
 		return false;
 	}
 	return true;
-}
+}*/
 
-//Fonction qui vérivie si un contexte est déjà présent dans la data-liste contexte, et qui l'ajoute le cas échéant.
-//Renvoie vrai si le contexte éxistait deja
+// Fonction qui crée la liste des contextes dans le menu des notations
 updateListeContexteDansMenu=function()
 {
 	$("#BILAN_listeContextes").empty();
-	$("#BILAN_listeContextes").append("<option value=\"ALL_CONTEXTE\">Choix du contexte</option>");
-	$("#listeContexteAutocompletion option").each(function(index)
-	{
-		var contexte=$(this).val();
-		$("#BILAN_listeContextes").append("<option value=\""+contexte+"\">"+contexte+"</option>");
+	$("#BILAN_listeContextes").append("<option value=\"ALL_CONTEXTE\">Tout contexte</option>");
+	LISTE_CONTEXTES.forEach(function(contexte){
+		$("#BILAN_listeContextes").append("<option value=\""+String(contexte.id)+"\">"+contexte.nom+"</option>");
 	});
 	$("#BILAN_listeContextes").data("selectBox-selectBoxIt").refresh();
 }

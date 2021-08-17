@@ -11,3 +11,4 @@
 - Faire le ménage dans les notes quand on baisse le nombre de niveau d'un critère
 - Ajouter la possibilité de mettre des commentaires à la notation
 - Le message réponse de retour de JSON devrait avoir cette structure : [message, valide ou pas, affiche message ou pas (public ou debug)]
+- il y a une erreur quand on nome une BDD avec un tiré "-" (par exemple "competence-test") au moment de l'install

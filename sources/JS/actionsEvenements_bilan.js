@@ -12,8 +12,10 @@
 function ouvreFermeBilanGroupe(id)
 {
 	var groupe=$("#NOTATION_groupe_"+id);
+	//groupe.find('.listeIndicateurs').slideToggle('easings');
+	if(groupe.find('.groupe_contenu').is(":hidden"))
+		groupe.find('.listeIndicateurs').show();
 	groupe.find('.groupe_contenu').slideToggle('easings');
-	groupe.find('.listeIndicateurs').slideToggle('easings');
 }
 
 // ****************************************************
@@ -62,10 +64,13 @@ bilanBoutonEleveSuivant=function()
 	$('#notationListeEleves').data("selectBox-selectBoxIt").moveDown();
 }
 
+
+
 //METTRE A JOUR LA NOTATION POUR UN ELEVE**********************
 getNotationEleve=function(eleve,contexte)
 {
 	contexte=(typeof contexte !== 'undefined') ? contexte : "ALL_CONTEXTE";
+	eleve=(typeof eleve !== 'undefined') ? eleve : ID_COURANT;
 
 	$.post(
 			'./sources/PHP/actionneurJSON.php',//Requete appelée
@@ -92,11 +97,16 @@ updateNotationEleve=function(reponse)
 	var sommeNiveaux=0;		//Somme des niveaux (~notes) de l'eleve pour chaque critere de ce domaine
 	var sommeNiveauxMax=0;	//Somme des niveaux maxi atteignables
 
+
+
 	if(NOTATION_REDESSINE_DE_ZERO)
+	{
 		$("#RecapNotationEleve").empty();
+	}
 
 	var listeGroupes=reponse.listeGroupes;
 
+	AAA = reponse;
 	//Preparation pour le graphique bilan
 	if(STATUT=="admin" || STATUT=="evaluateur")
 	{
@@ -145,7 +155,7 @@ updateNotationEleve=function(reponse)
 
 	
 	
-	NOTATION_REDESSINE_DE_ZERO=false;//Si on change d'élève, on ne redessine pas tout
+	NOTATION_REDESSINE_DE_ZERO=true;// =false //Si on change d'élève, on ne redessine pas tout (avant c'était à False, mais plus maintenant)
 }
 
 
@@ -196,11 +206,8 @@ valideNouvelleNote=function(reponse)
 	{
 		var idIndicateur=reponse.note.idIndicateur;
 		var idEval=reponse.notation.id;
-		/*$(".commentaireIndicateur:visible").each(function(index,element)//Fermeture des bilan deja ouverts
-					{var i=parseInt($(this).parent().parent().attr("data-id"));
-					bilanFermeCommentaire(i)})*/
 		valideAllCommentaireEval();//Valide et ferme tous les commentaires encore ouverts
-		bilanOuvreCommentaire(idIndicateur,idEval);//Ouverture
+		bilanOuvreCommentaire(idIndicateur,idEval);//Ouverture de la ligne de commentaire
 	}
 
 
@@ -226,19 +233,20 @@ COMMENTAIRES
 *********************************** */
 
 //Fonction qui envoie les commentaires d'une évaluation fraichement donnée ********************
-valideCommentaireEval=function(idInd)
+valideCommentaireEval = function(idInd)
 {
 
 	var idEval=parseInt($("#NOTATION_indicateur_"+idInd).find(".commentaireIndicateur").find("form").attr('data-ideval'));
-	var contexte=$("#NOTATION_indicateur_"+idInd).find(".commentaireIndicateur").find(".commentaireIndicateur-contexte").val();
+	var contexte=parseInt($("#NOTATION_indicateur_"+String(idInd)+" .commentaireIndicateur_contexte").val());
+	//$("#NOTATION_indicateur_"+idInd).find(".commentaireIndicateur").find(".commentaireIndicateur-contexte").val());
 	var commentaire=$("#NOTATION_indicateur_"+idInd).find(".commentaireIndicateur").find(".commentaireIndicateur-commentaire").val();
 
 	
 	//On enregistre le contexte dans un coin, en vue de le reproposer automatiquement après
-	DERNIER_CONTEXT=contexte;
+	//DERNIER_CONTEXT=contexte; obsolete
 	
 	//Mise a jour de la liste d'autocompletion des contextes
-	ajouteListeContextSiAbsent(contexte);
+	//ajouteListeContextSiAbsent(contexte); Obsolète
 
 
 	$.post(
@@ -246,7 +254,7 @@ valideCommentaireEval=function(idInd)
 		{	//Les données à passer par POST
 			action:"addCommentaireEval",
 			idEval:idEval,
-			contexte:contexte,
+			idContexte:contexte,
 			commentaire:commentaire
 		},
 		valideCommentaireEval_callback,	//Fonction callback
@@ -270,7 +278,7 @@ valideCommentaireEval_callback=function(reponse)
 {
 	cacheBarreChargement();
 	afficheMessage(reponse.messageRetour);
-	var idIndicateur=reponse.evaluation.indicateur;//Recupere le numero de l'indicateur
+	var idIndicateur = reponse.evaluation.indicateur;//Recupere le numero de l'indicateur
 	if(reponse.commentaire.commentaire!="")
 		$("#NOTATION_indicateur_"+idIndicateur+" .boutonCommentaires").css("visibility","visible");//Affiche la bulle, si elle n'est pas visible
 	bilanFermeCommentaire(idIndicateur);

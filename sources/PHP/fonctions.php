@@ -10,7 +10,7 @@ function initSession()
 		$_SESSION['statut']="";
 		$_SESSION['nom']="";
 		$_SESSION['prenom']="";
-		$_SESSION['id']=0;	//ATTENTION : 0 = pas connecté.
+		$_SESSION['id'] = 0;	//ATTENTION : 0 = pas connecté.
 		$_SESSION['classe']="";
 	}
 }
@@ -751,43 +751,8 @@ function setArcEnCiel($val,$maxi)
 }
 
 
-// =================================
-// A SUPPRIMER ?????
 
-//Ecrit le code html pour afficher
-//l'échelle de couleur
-// Note : entier représentant la note courante
-// $modifiable : true si c'est le prof (qui peut cliquer et modifier), false sinon
-// $maxi : valeur maxi de l'échelle
-// $indicateur donne le numéro ID de l'indicateur (pour pouvoir cliquer dessus et enregistrer la note)
-/*function printEchelleCouleur($note,$maxi,$modifiable=false,$indicateur=0)
-{
-	for($i=0;$i<=$maxi;$i++)
-	{
-		
-		$classCSS="indicateurEteint";
-		$styleBackground="";
-		$actionJS="";
-		if($modifiable)
-		{
-			if($i<=$note)
-				{$classCSS="indicateurAllumeModifiable";
-				$styleBackground='background-color:'.setArcEnCiel($i,$maxi).';';}
-			else
-				$classCSS="indicateurEteintModifiable";
-			$actionJS="donneNote(".$i.",$('#notationListeEleves').val(),".$indicateur.")";
-		}
-		elseif($i<=$note)
-			{$classCSS="indicateurAllume";
-			$styleBackground='background-color:'.setArcEnCiel($i,$maxi).';';}
-		
-		
-		
-		echo '
-			<div class="'.$classCSS.'" style="'.$styleBackground.'" onclick="'.$actionJS.'">'.$i.'</div>';
-		
-	}
-}*/
+
 
 
 
@@ -823,6 +788,182 @@ function initReponseJSON()
 	$initJSON['debug']="(no comment)";	//Variable de debug
 
 	return $initJSON;
+}
+
+
+
+
+// Fonction qui renvoie un tableau [domaine1 : [competence1 : [indicateur1, indicateur2, ....], competence2:...], domaine 2 :[...] ]
+function getListeCompetences()
+{
+	global $bdd,$BDD_PREFIXE;
+	
+	$req = $bdd->prepare('SELECT g.nom AS groupe_nom, g.id AS groupe_id, c.nom AS comp_nom, c.id AS comp_id, i.nom AS ind_nom, i.id AS ind_id FROM '.$BDD_PREFIXE.'indicateurs AS i JOIN '.$BDD_PREFIXE.'competences AS c JOIN '.$BDD_PREFIXE.'groupes_competences AS g ON i.competence=c.id AND c.groupe=g.id ORDER BY g.position, c.position, i.position');
+	$req->execute();
+	
+	$tab = array();
+	while($data = $req->fetch())
+	{
+		//Si le groupe n'existe pas
+		if(!isset($tab[$data['groupe_id']]))
+		{
+			$tab[$data['groupe_id']]["nom"] = $data['groupe_nom'];
+			$tab[$data['groupe_id']]["id"] = $data['groupe_id'];
+			$tab[$data['groupe_id']]["nb_indicateurs"] = 0;
+			$tab[$data['groupe_id']]["competences"] = array();
+		}
+		//Si la competence n'existe pas
+		if(!isset($tab[$data['groupe_id']]['competences'][$data['comp_id']]))
+		{
+			$tab[$data['groupe_id']]['competences'][$data['comp_id']]['nom'] = $data["comp_nom"];
+			$tab[$data['groupe_id']]['competences'][$data['comp_id']]['id'] = $data["comp_id"];
+			$tab[$data['groupe_id']]['competences'][$data['comp_id']]['nb_indicateurs'] = 0;
+			$tab[$data['groupe_id']]['competences'][$data['comp_id']]["indicateurs"] = array();
+		}
+		// On ajoute l'indicateur
+		$tab[$data['groupe_id']]['competences'][$data['comp_id']]["indicateurs"][$data['ind_id']]['nom'] = $data['ind_nom'];
+		$tab[$data['groupe_id']]['competences'][$data['comp_id']]["indicateurs"][$data['ind_id']]['id'] = $data['ind_id'];
+		$tab[$data['groupe_id']]["nb_indicateurs"]++;
+		$tab[$data['groupe_id']]['competences'][$data['comp_id']]['nb_indicateurs']++;
+	}	
+	
+	return $tab;
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+// ==============================================
+// CONTEXTES
+// ================================================
+
+// Fonction qui construit le tableau <table> </table> avec les liens indicateurs / contextes
+function getTableauContextesHTML()
+{
+	global $bdd,$BDD_PREFIXE;
+
+	$tab=getListeCompetences(); 	// On recupere la liste des indicateurs
+
+
+	$res = "
+					<table id=\"table_contextes\">
+						<!-- ENTETE ======================================================== -->
+						<tr>
+							<td class=\"contexte_titre_domaine_legende\" >Domaines</td>
+							<td class=\"case_blanche_tab\"></td>";
+
+	foreach($tab AS $dom)
+	{	
+		$res .= "
+							<td class=\"contexte_titre_domaine\" colspan=\"".$dom['nb_indicateurs']."\">".$dom['nom']."</td>
+							<td class=\"case_blanche_tab\"></td>";
+	}
+	
+	$res .= "
+						</tr>
+						<tr>
+							<td class=\"contexte_titre_competence_legende\">Compétences</td>
+							<td class=\"case_blanche_tab\"></td>";
+
+	foreach($tab AS $dom)
+	{	
+		foreach($dom['competences'] AS $comp)
+		{
+		$res .= "
+							<td class=\"contexte_titre_competence\" colspan=\"".$comp['nb_indicateurs']."\">".$comp['nom']."</td>";
+		}
+		$res .= "
+							<td class=\"case_blanche_tab\"></td>";
+	}
+
+	$res .= "
+						</tr>
+						<tr id=\"titre_indicateurs\">
+							<td class=\"contexte_titre_indicateur_legende\">Indicateurs</td>
+							<td class=\"case_blanche_tab\"></td>";
+
+	$nb_indicateurs = 0;
+	foreach($tab AS $dom)
+	{	
+		foreach($dom['competences'] AS $comp)
+		{
+			foreach($comp['indicateurs'] AS $ind)
+			{
+				$res .= "
+							<td class=\"contexte_titre_indicateur\">".$ind['nom']."</td>";
+				$nb_indicateurs++;
+			}
+		}
+		$res .= "
+							<td class=\"case_blanche_tab\"></td>";
+	}
+	
+	$res .= "
+						</tr>
+						
+						<!-- LIGNE BLANCHE ======================================================== -->
+						<tr class=\"case_blanche_tab\">";
+						
+	for($i = 0; $i < $nb_indicateurs+2+sizeof($tab) ;$i++)
+	{
+		$res .= "
+							<td class=\"case_blanche_tab\"></td>";
+	}
+						
+	$res .= "
+						</tr>
+							<!-- CONTENU ======================================================== -->";
+
+
+	$req = $bdd->query("SELECT nom,id FROM ".$BDD_PREFIXE."contextes");
+						
+	while($data = $req->fetch())
+	{
+		$id_contexte = $data['id'];
+		$res .= "
+						<tr id=\"titre_contexte_".strval($id_contexte)."\" data-id=\"".strval($id_contexte)."\">
+							<td class=\"contexte_titre_contexte\">
+								<div class=\"contexte_titre_contexte_seul\">".$data['nom']."</div>
+								<img class=\"boutonSupprimeContexte\" src=\"./sources/images/poubelle.png\" title=\"Supprimer le contexte\" alt=\"[Suppr]\" onclick=\"supprimeContexte_ouvreBoite(".strval($id_contexte).")\"/>
+								<img class=\"boutonModifContexte\" src=\"./sources/images/icone-modif.png\" alt=\"[§]\" onclick=\"ouvreBoiteModifContexte(".strval($id_contexte).");\"/>
+							</td>
+							<td class=\"case_blanche_tab\"></td>";
+		foreach($tab AS $dom)
+		{	
+			foreach($dom['competences'] AS $comp)
+			{
+				foreach($comp['indicateurs'] AS $ind)
+				{
+					//Le contexte est-il déjà associé à l'indicateur ?
+					$validite = "invalide";
+					$req2 = $bdd->query("SELECT * FROM ".$BDD_PREFIXE."liensIndicateursContextes WHERE contexte=".strval($id_contexte)." AND indicateur=".strval($ind['id']));
+					if($d = $req2->fetch())
+						$validite = "valide";
+									
+					$res .= "
+									<td id=\"lienContexteIndicateur_".strval($id_contexte)."_".strval($ind['id'])."\" class=\"contexte_indicateur ".$validite."\" onclick=\"activeDesactiveLienContexteIndicateur(".strval($id_contexte).",".strval($ind['id']).")\" title=\"Associer (Vert) / Désassocier (Rouge)\"></td>";
+				}
+			}
+			$res .= "
+							<td class=\"case_blanche_tab\"></td>";
+		}
+		$res .= "
+						</tr>";
+	}
+	
+	$res .= "
+					</table>";
+
+	return $res;
 }
 
 ?>

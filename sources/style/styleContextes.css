@@ -1,0 +1,136 @@
+
+/********************************
+ENTETE
+*******************************/
+
+#table_contextes
+{
+	/*border-collapse : collapse ;*/
+	margin : auto;
+	
+}
+#table_contextes td
+{
+/*	border : solid black 2px;*/
+
+}
+
+
+.contexte_titre_domaine
+{
+	text-align:center;
+	font-weight:bold;
+	background-color:#BBBBFF;
+	text-overflow:ellipsis;
+	border-top-left-radius:20px;
+	border-top-right-radius:20px;
+	margin-right : solid 5px;
+}
+
+.contexte_titre_competence
+{
+	text-align:center;
+	font-weight:bold;
+	background-color:#DDDDFF;
+	text-overflow:ellipsis;
+}
+
+.contexte_titre_indicateur
+{
+	writing-mode: vertical-rl;
+	transform: rotate(180deg);
+	text-align:center;
+	font-weight:bold;
+	background-color:#EEEEFF;
+	text-overflow:ellipsis;
+}
+
+
+.contexte_titre_domaine_legende, .contexte_titre_competence_legende, .contexte_titre_indicateur_legende
+{
+	background-color : #000055;
+	color:white;
+	text-align:center;
+	padding:5px;
+	font-weight:bold;
+	border-radius:10px;
+	box-shadow: 5px 5px 6px #aaa;
+}	
+
+.case_blanche_tab
+{
+	background-color:transparent;
+	min-width : 10px;
+	height : 10px;
+}
+/* ********************************
+CONTENU TABLEAU
+******************************* */
+
+.contexte_titre_contexte
+{
+	background-color : #000077;
+	color:white;
+	text-align:center;
+	font-weight:bold;
+	border-radius:5px;
+	box-shadow: 5px 5px 6px #aaa;
+	width:200px;
+}
+
+.contexte_titre_contexte_seul
+{
+	display:inline-block;
+	vertical-align:middle;
+	width:120px;
+	overflow-wrap: break-word;
+}
+
+.contexte_indicateur
+{
+	width:20px;
+	cursor : pointer;
+}
+
+.valide
+{
+	background-color:#55FF55;
+}
+
+.invalide
+{
+	background-color:#BB0000;
+}
+
+
+
+
+/* ************************************
+ BOUTONS
+ ********************************** */
+ 
+ 
+.boutonSupprimeContexte, .boutonModifContexte
+{
+/*	float:right;*/
+	display:inline-block;
+	vertical-align:middle;
+	cursor:pointer;
+	margin-top:0px;
+	margin-left:0px;
+	margin-bottom:0px;
+	margin-right:5px;
+	height:20px;
+ -webkit-filter: drop-shadow(4px 4px 5px #777799);
+  filter: drop-shadow(4px 4px 5px #777799);
+}
+
+.boutonSupprimeContexte:hover, .boutonModifContexte:hover
+{
+	margin-top:0px;
+	margin-left:2px;
+	margin-bottom:-2px;
+	margin-right:3px;
+	-webkit-filter: drop-shadow(2px 2px 3px #555577);
+	filter: drop-shadow(2px 2px 3px #555577);	
+}

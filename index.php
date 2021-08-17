@@ -4,7 +4,7 @@
 include_once('./sources/PHP/options.php');
 include_once('./sources/PHP/fonctions.php');
 
-$VERSION="16.10.2";	//N° de la version
+$VERSION="21.08.2";	//N° de la version
 
 initSession();
 connectToBDD();
@@ -18,8 +18,10 @@ if(isset($_POST['loginBox-login']))	$loginBoxLogin=$_POST['loginBox-login'];
 $loginBoxPwd="";
 if(isset($_POST['loginBox-pwd']))	$loginBoxPwd=$_POST['loginBox-pwd'];
 $tabDefaut=0;
+// Onglet initialement ouvert : ***********************
 if(isset($_GET["tab"])) $tabDefaut=intval($_GET['tab']);
 if(isset($_POST["tab"])) $tabDefaut=intval($_POST['tab']);
+// Messages *****************
 $messageRetour="";//Message en renvoyer apres une action
 if(isset($_GET["message"])) $messageRetour=$_GET['message'];
 if(isset($_POST["message"])) $messageRetour=$_POST['message'];
@@ -38,6 +40,7 @@ include("./sources/PHP/actions.php");
 		<link rel="stylesheet" href="./sources/style/style.css" />
 		<?php if($_SESSION["statut"]=="admin") { ?>
 		<link rel="stylesheet" href="./sources/style/styleUsers.css" />
+		<link rel="stylesheet" href="./sources/style/styleContextes.css" />
 		<?php }
 		if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur" || $_SESSION['statut']=="autoeval") { ?>
 		<link rel="stylesheet" href="./sources/style/styleHistorique.css" />
@@ -64,10 +67,11 @@ include("./sources/PHP/actions.php");
 		<script type="text/javascript" src="./sources/JS/actionsEvenements.js"></script>
 
 
-		<?php if($_SESSION["id"]>0) { //Si connecté ?>
+		<?php if($_SESSION["id"]) { //Si connecté ?>
 		<script type="text/javascript" src="./sources/JS/fonctions_bilan.js"></script>
 		<script type="text/javascript" src="./sources/JS/actionsEvenements_bilan.js"></script>
 		<script type="text/javascript" src="./sources/JS/fonctions_home.js"></script>
+		<script type="text/javascript" src="./sources/JS/fonctions_context.js"></script>
 		<?php }
 
 		if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur" || $_SESSION['statut']=="autoeval") {//Si admin ou prof ?>
@@ -78,6 +82,7 @@ include("./sources/PHP/actions.php");
 		<script type="text/javascript" src="./sources/JS/fonctions_competences.js"></script>
 		<script type="text/javascript" src="./sources/JS/actionsEvenements_utilisateurs.js"></script>
 		<script type="text/javascript" src="./sources/JS/actionsEvenements_competences.js"></script>
+		<script type="text/javascript" src="./sources/JS/actionsEvenements_contexte.js"></script>
 		<?php } ?>
 
 
@@ -132,6 +137,8 @@ include("./sources/PHP/actions.php");
 					<?php if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur" || $_SESSION['statut']=="autoeval") echo '<li><a href="#tab-historique"><img src="./sources/images/icone-historique.png"/><br/>Historique</a></li>';?>
 					
 					<?php if($_SESSION['statut']=="admin") echo '<li><a href="#tab-competences"><img src="./sources/images/icone-checklist-edit.png"/><br/>Paramétrage</a></li>';?>
+					
+					<?php if($_SESSION['statut']=="admin") echo '<li><a href="#tab-contextes"><img src="./sources/images/icone-contexte.png"/><br/>Contextes</a></li>';?>
 				</ul>
 				
 				
@@ -151,6 +158,8 @@ include("./sources/PHP/actions.php");
 					if($_SESSION['statut']=="admin")	//Si admin
 					include("./sources/PHP/competences.php");//Administration Compétences
 
+					if($_SESSION['statut']=="admin")	//Si admin
+					include("./sources/PHP/contextes.php");//Administration Compétences
 
 				?>
 	
