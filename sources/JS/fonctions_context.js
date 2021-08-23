@@ -18,21 +18,29 @@ updateContextesFromServer_callback = function(reponse)
 	{
 		LISTE_CONTEXTES.push({'id':item.id, 'nom':item.nom});
 	})
-	updateContextesMenuBilan();
+	updateListeContexteDansMenu();
 }
 
 
 
-// Fonction qui met à jour la liste des contextes dans le menu Bilan, à partir de LISTE_CONTEXTES
-updateContextesMenuBilan = function()
+// Fonction qui met à jour la liste des contextes dans le menu Bilan ET Bilan général, à partir de LISTE_CONTEXTES
+//updateContextesMenuBilan = function()
+updateListeContexteDansMenu = function()
 {
 	$("#BILAN_listeContextes").empty();
+	$("#BILAN_GENERAL_choix_contexte").empty();
+	
 	$("#BILAN_listeContextes").append("										<option value=\"0\">Tout contexte</option>");
+	$("#BILAN_GENERAL_choix_contexte").append("										<option value=\"0\">Tout contexte</option>");
+	
 	LISTE_CONTEXTES.forEach(function(item)
 	{
-	$("#BILAN_listeContextes").append("										<option value=\""+String(item['id'])+"\">"+item['nom']+"</option>");
+		$("#BILAN_listeContextes").append("										<option value=\""+String(item['id'])+"\">"+item['nom']+"</option>");
+		$("#BILAN_GENERAL_choix_contexte").append("										<option value=\""+String(item['id'])+"\">"+item['nom']+"</option>");
 	})
+	
 	$('#BILAN_listeContextes').data('selectBox-selectBoxIt').refresh();	//Mise à jour du menu déroulant
+	$('#BILAN_GENERAL_choix_contexte').data('selectBox-selectBoxIt').refresh();	//Mise à jour du menu déroulant
 }
 
 

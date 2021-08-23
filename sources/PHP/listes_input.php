@@ -38,12 +38,35 @@ while($donnees=$reponse->fetch())
 </script>
 
 <!-- Liste des classes pour l'auto-completion -->
-<datalist id="listeClassesAutocompletion">
-	<?php
+<?php
+	$liste_classes = array();
 	$reponse=$bdd->query("SELECT DISTINCT classe FROM ".$BDD_PREFIXE."utilisateurs WHERE classe<>''");
 	while($donnees=$reponse->fetch())
 	{
-		echo "<option value=\"".$donnees["classe"]."\">\n";
+		array_push($liste_classes,$donnees["classe"]);
+	}
+	?>
+<datalist id="listeClassesAutocompletion">
+	<?php
+	foreach($liste_classes as $cl)
+	{
+		echo "<option value=\"".$cl."\">\n";
 	}
 	?>
 </datalist>
+
+<script>
+	LISTE_CLASSES = [<?php
+	$first = true;
+	foreach($liste_classes as $cl)
+	{
+		if($first)
+			$first = false;
+		else
+			echo ",";
+			
+		echo "\"".$cl."\"";
+	}
+	?>];
+</script>
+

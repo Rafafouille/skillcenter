@@ -1,0 +1,67 @@
+/* ***********************
+TABLEAU
+************************** */
+
+#grille_bilan_general table
+{
+	border-collapse : collapse ;
+	margin : auto;
+}
+
+#grille_bilan_general table td
+{
+	/*border : solid black 2px;*/
+}
+
+.BILAN_GENE_eleve
+{
+	color:white;
+	background-color:#000055;
+	writing-mode: vertical-rl;
+	text-orientation: mixed;
+	border:solid 1px white;
+	font-weight:bold;
+}
+
+
+/* ***********************
+Colonne de gauche 
+*********************** */
+
+.BILAN_GENE_domaine
+{
+	background-color:#BBBBFF;
+	border-top-left-radius : 10px;
+	border-bottom-left-radius : 10px;
+	text-align:center;
+	font-weight:bold;
+	writing-mode: vertical-rl;
+	text-orientation: mixed;
+}
+
+.BILAN_GENE_competence
+{
+	background-color:#DDDDFF;
+	text-align:center;
+	font-weight:bold;
+}
+
+.BILAN_GENE_indicateur
+{
+	background-color:#EEEEFF;
+	text-align:center;
+	font-style:italic;
+	font-size:small;
+}
+
+
+
+/* ************************
+CASES EVALUATION
+************************** */
+.BILAN_GENE_evaluation
+{
+	border : 1px solid white;
+	font-size:small;
+	text-align:center;
+}

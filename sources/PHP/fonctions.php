@@ -201,7 +201,7 @@ function milieuMailBilan($id,$date_dernier_envoi_bilan)
 
 				$messageHTML.="<tr>\n <td class=\"nomCritere\">".$data2["nomInd"]."</td>\n <td>".afficheNiveauDansMailHTML($data2["note"],$data2["niveaux"])."</td>\n</tr>\n";
 
-				$messageTXT.="  - ".(sizeof($data2["nomInd"])<40?substr($data2["nomInd"]."                                                                                             ",0,40):$data2["nomInd"])."   ".afficheNiveauDansMailTXT($data2["note"],$data2["niveaux"])."\n";
+				$messageTXT.="  - ".(strlen($data2["nomInd"])<40?substr($data2["nomInd"]."                                                                                             ",0,40):$data2["nomInd"])."   ".afficheNiveauDansMailTXT($data2["note"],$data2["niveaux"])."\n";
 
 			}
 			$messageHTML.="</table>\n";
@@ -758,9 +758,152 @@ function setArcEnCiel($val,$maxi)
 
 
 
-// ==============================================
+// ================================================
 // COMPETENCES
 // ================================================
+
+//Fonction qui renvoie la réponse de la requete qui récupère tous les indicateurs éventuellement filtrés par un contexte
+function requeteGetListeIndicateurs($classe="ALL_CLASSES", $contexte=0)
+{
+	global $bdd,$BDD_PREFIXE;
+	
+	$variableRequette = array();
+	
+	
+	$requete_liste_indicateurs_dans_contexte ='SELECT
+
+gr.id AS idGroup, gr.nom AS nomGroup,
+comp.id AS idComp, comp.nom AS nomComp, comp.nomAbrege AS nomCompAbrege,
+ind.id AS idInd, ind.nom AS nomInd, ind.details AS detailsInd, ind.niveaux AS niveauxInd, ind.lien AS lienInd, ind.position AS positionInd
+
+FROM '.$BDD_PREFIXE.'indicateurs AS ind JOIN '.$BDD_PREFIXE.'competences AS comp JOIN '.$BDD_PREFIXE.'groupes_competences AS gr
+JOIN '.$BDD_PREFIXE.'liensClassesIndicateurs AS lci '.
+($contexte!="ALL_CONTEXTE"?'JOIN '.$BDD_PREFIXE.'liensIndicateursContextes AS lic JOIN '.$BDD_PREFIXE.'contextes AS cont':'').'
+
+ON ind.competence=comp.id AND comp.groupe=gr.id
+AND lci.indicateur=ind.id '.
+($contexte!="ALL_CONTEXTE"?'AND lic.indicateur=ind.id AND lic.contexte=cont.id':'');
+
+if($contexte or $classe != "ALL_CLASSES")
+	$requete_liste_indicateurs_dans_contexte .= " WHERE ";
+
+if($contexte)
+	{
+		//echo "contexte !!!!\n";
+		$requete_liste_indicateurs_dans_contexte .= " cont.id=:contexte";
+		$variableRequette["contexte"] = $contexte;
+	}
+
+if($contexte and $classe != "ALL_CLASSES")
+	$requete_liste_indicateurs_dans_contexte .= " AND ";
+	
+if($classe != "ALL_CLASSES")
+	{
+		//echo "classe !!!!\n";
+		$requete_liste_indicateurs_dans_contexte .= " lci.classe=:classe";
+		$variableRequette["classe"] = $classe;
+	}
+
+//echo $requete_liste_indicateurs_dans_contexte;
+
+
+	$requete = $bdd->prepare($requete_liste_indicateurs_dans_contexte);
+	$requete->execute($variableRequette);
+
+	return $requete;
+}
+
+
+
+
+// Identique à requeteGetListeIndicateurs, mais qui renvoie le résultat sous forme de talbeau associatif hierarchique :
+// GROUPE 1
+//	-> id
+//	-> nom
+//	-> seleted (?)
+//	-> listecompetences
+//		-> idCompetence1
+//			-> id
+//			-> nom
+//			-> nomAbrege
+//			-> selected (?)
+//			-> listeInicateurs
+//				-> idIndicateur1
+//					-> id
+function getListeIndicateursInArray($classe="ALL_CLASSES", $contexte=0)
+{
+	$requete = requeteGetListeIndicateurs($classe,$contexte);
+	
+	$tableau = array();
+	
+	
+	while($reponse=$requete->fetch())
+	{
+		$idGroup=intval($reponse['idGroup']);
+		$nomGroup=$reponse['nomGroup'];
+
+		$idComp=intval($reponse['idComp']);
+		$nomComp=$reponse['nomComp'];
+		$nomCompAbrege=($reponse['nomCompAbrege']!="")?$reponse['nomCompAbrege']:substr($reponse['nomComp'],0,20);;
+
+		$idInd=intval($reponse['idInd']);
+		$nomInd=$reponse['nomInd'];
+		$detailsInd=$reponse['detailsInd'];
+		$niveauxInd=intval($reponse['niveauxInd']);
+		$lienInd=$reponse['lienInd'];
+		$positionInd=intval($reponse['positionInd']);
+
+		//Si le groupe n'existe pas, on le crée
+		if(!isset($tableau[$idGroup]))
+		{
+			$tableau[$idGroup]["id"]=$idGroup;
+			$tableau[$idGroup]["nom"]=$nomGroup;
+			$tableau[$idGroup]["selected"]=true;
+			$tableau[$idGroup]["listeCompetences"]=array();
+			$tableau[$idGroup]["nbIndicateurs"]=0;
+			$tableau[$idGroup]["nbCompetences"]=0;
+		}
+		//Si la compétence n'existe pas...
+		if(!isset($tableau[$idGroup]["listeCompetences"][$idComp]))
+		{
+			$tableau[$idGroup]["listeCompetences"][$idComp]["id"]=$idComp;
+			$tableau[$idGroup]["listeCompetences"][$idComp]["nom"]=$nomComp;
+			$tableau[$idGroup]["listeCompetences"][$idComp]["nomAbrege"]=$nomCompAbrege;
+			$tableau[$idGroup]["listeCompetences"][$idComp]["selected"]=true;
+			$tableau[$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"]=array();
+			$tableau[$idGroup]["listeCompetences"][$idComp]["nbIndicateurs"]=0;
+			//Comptage
+			$tableau[$idGroup]["nbCompetences"]++;
+		}
+
+		if(!isset($tableau[$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]))
+		{
+
+			$tableau[$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["id"]=$idInd;
+			$tableau[$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["nom"]=$nomInd;
+			$tableau[$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["details"]=$detailsInd;
+			$tableau[$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauMax"]=$niveauxInd;
+			$tableau[$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["lien"]=$lienInd;
+			$tableau[$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveMax"]=-1;//Par defaut
+			$tableau[$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveMoy"]=-1;//Par defaut
+			$tableau[$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveLast"]=-1;//Par defaut
+			$tableau[$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["commentaires"]=false;//Dit si il y a des commentaires ou non
+			$tableau[$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["selected"]=true;
+			$tableau[$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["position"]=$positionInd;
+			//Comptage
+			$tableau[$idGroup]["nbIndicateurs"]++;
+			$tableau[$idGroup]["listeCompetences"][$idComp]["nbIndicateurs"]++;
+		}
+	}
+				
+	return $tableau;		
+}
+
+
+
+
+
+
 
 
 

@@ -2,7 +2,17 @@
 header('Content-type: application/json');
 include_once('options.php');
 include_once('fonctions.php');
+// Envoi de mail
 require_once './biblio_php/PHPMailer-5.2.18/PHPMailerAutoload.php';	//Bibliotheque d'envoi de mail
+/*use ./biblio_php/PHPMailer-6.5.1 PHPMailer;
+use ./biblio_php/PHPMailer-6.5.1/Exception;
+
+require 'p./biblio_php/PHPMailer-6.5.1/src/Exception.php';
+require './biblio_php/PHPMailer-6.5.1/src/PHPMailer.php';
+require './biblio_php/PHPMailer-6.5.1/src/SMTP.php';
+*/
+
+
 initSession();
 
 
@@ -445,7 +455,7 @@ if($action=="getListeEleves")
 if($action=="getNotationEleves")
 {
 	$eleve = isset($_POST['eleve'])?intval($_POST['eleve']):0;
-	$contexte = isset($_POST['contexte'])?$_POST['contexte']:"ALL_CONTEXTE";
+	$contexte = isset($_POST['contexte'])?intval($_POST['contexte']):0;//"ALL_CONTEXTE";
 	
 	$conditionSurContexte="";
 	if($contexte!="ALL_CONTEXTE") $conditionSurContexte=" AND contexte='".$contexte."'";
@@ -461,7 +471,7 @@ if($action=="getNotationEleves")
 		if($donneesClasse=$reqClasse->fetch())
 		{		
 			$classe=$donneesClasse['classe'];
-			
+/*
 			//Cette requete permet de sélectionner les indiacteurs demandés
 			$requete_liste_indicateurs_dans_contexte ='SELECT
 
@@ -491,6 +501,9 @@ WHERE lci.classe=:classe';
 				$requete = $bdd->prepare($requete_liste_indicateurs_dans_contexte);
 				$requete->execute(array("classe"=>$classe));
 			}
+	*/		
+			
+			$requete = requeteGetListeIndicateurs($classe,$contexte);
 			
 
 			while($reponse=$requete->fetch())
@@ -570,38 +583,6 @@ WHERE lci.classe=:classe';
 				
 				
 				
-				/*
-				
-				$reqNote = $bdd->prepare("SELECT MAX(note) as max FROM ".$BDD_PREFIXE."notation WHERE eleve=:eleve AND indicateur=".$idInd.$conditionSurContexte);
-				$reqNote->execute(array('eleve'=>$eleve));
-				if($donneesNote=$reqNote->fetch())
-					{if($donneesNote["max"]==null) $donneesNote["max"]=-1;
-					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveMax"]=$donneesNote["max"];
-					}
-
-				//Note moyenne
-				$reqNote = $bdd->prepare("SELECT AVG(note) as moy FROM ".$BDD_PREFIXE."notation WHERE eleve=:eleve AND indicateur=".$idInd.$conditionSurContexte);
-				$reqNote->execute(array('eleve'=>$eleve));
-				if($donneesNote=$reqNote->fetch())
-					{if($donneesNote["moy"]==null) $donneesNote["moy"]=-1;
-					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveMoy"]=$donneesNote["moy"];
-					}
-
-				//Derniere note
-				$reqNote = $bdd->prepare("SELECT note as last FROM ".$BDD_PREFIXE."notation WHERE eleve=:eleve AND indicateur=".$idInd.$conditionSurContexte." ORDER BY date DESC LIMIT 1");
-				$reqNote->execute(array('eleve'=>$eleve));
-				if($donneesNote=$reqNote->fetch())
-					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveLast"]=$donneesNote["last"];
-
-				//Commentaires ou non ?
-				if($AUTORISE_COMMENTAIRES)
-				{
-					$reqCom = $bdd->prepare("SELECT id FROM ".$BDD_PREFIXE."notation WHERE eleve=:eleve AND indicateur=".$idInd.$conditionSurContexte." AND commentaire<>\"\" LIMIT 1");
-					$reqCom->execute(array('eleve'=>$eleve));
-					if($donneesCom=$reqCom->fetch())
-						$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["commentaires"]=true;
-				}
-				*/
 			}	
 
 			$reponseJSON["messageRetour"]=":XEvaluation récupérées.";
@@ -1684,6 +1665,180 @@ if($action == "supprimeContexte")
 	else
 		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de supprimer un contexte";
 }
+
+
+// Fonction qui construit une tableau HTML avec le bilan des notation pour toute une classe
+if($action == "getBilanGeneral")
+{
+	$contexte = isset($_POST['contexte'])?intval($_POST['contexte']):0;
+	$classe = isset($_POST['classe'])?$_POST['classe']:"ALL_CLASSES";
+	$type = isset($_POST['type'])?$_POST['type']:"last";
+	
+	
+	if($_SESSION['statut']=="admin" or $_SESSION['statut']=="evaluateur")
+	{
+		connectToBDD();
+		
+		//Liste des élèves *********************************
+			if($classe=="ALL_CLASSES")
+				$reqEleves = $bdd->query("SELECT nom, prenom, id FROM ".$BDD_PREFIXE."utilisateurs WHERE statut<>'admin' AND statut<>'evaluateur' ORDER BY classe, nom, prenom");
+			else
+			{
+				$reqEleves = $bdd->prepare("SELECT nom, prenom, id FROM ".$BDD_PREFIXE."utilisateurs WHERE statut<>'admin' AND statut<>'evaluateur' AND classe=:classe ORDER BY classe, nom, prenom");
+				$reqEleves->execute(array('classe'=>$classe));
+			}
+			
+			$listeEleves = array();
+			while($data = $reqEleves->fetch())
+				array_push($listeEleves, array('nom'=>$data['nom'].' '.$data['prenom'], 'id'=>$data['id']));
+		
+		
+		//Liste des indicateurs / competences / groupes *********************************
+		
+		$listeCompetences = getListeIndicateursInArray($classe,$contexte);
+		
+		$nbEleves = 0;
+		
+		
+		// ENTETE ********************************
+		$res = "
+		<table>
+			<tr class=\"bilan_gene_entete\">
+				<td class=\"case_blanche_tab\"></td>
+				<td class=\"case_blanche_tab\"></td>
+				<td class=\"case_blanche_tab\"></td>
+				<td class=\"case_blanche_tab\"></td>";
+
+		function ligneBlanche($nbColonnes) // >>>>>>>>>>>>>>>>>>
+		{
+			$ligne = "
+			<tr>";
+			for($i=0;$i<$nbColonnes+4;$i++)
+			{
+				$ligne .= "
+					<td class=\"case_blanche_tab\"></td>";
+			}
+			$ligne .= "
+			</tr>";
+			return $ligne;
+		} // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+		foreach($listeEleves as $eleve)
+		{
+			$nbEleves++;
+			$res.= "
+				<td class=\"BILAN_GENE_eleve\">".$eleve['nom']."</td>";
+		}
+		$res .= "
+			</tr>";
+			
+		// Ligne blanche ****************************	
+		$res .= ligneBlanche($nbEleves);
+		
+		// EVAL ****************************
+		
+		foreach($listeCompetences AS $domaine)
+		{
+			$res .= "
+			<tr>
+				<td class=\"BILAN_GENE_domaine\" rowspan=\"".strval($domaine["nbIndicateurs"]+$domaine['nbCompetences']-1)."\">".$domaine["nom"]."</td>";
+			$ligneDejaCommencee = true;				
+			$premiereCompetence = true;
+			
+			foreach($domaine["listeCompetences"] AS $competence) 
+			{
+			
+				if($premiereCompetence)
+					$premiereCompetence=false;
+				else
+					$res .= ligneBlanche($nbEleves-1);
+					
+			
+				if(!$ligneDejaCommencee)
+				{
+					$res .= "
+			<tr>";
+					$ligneDejaCommencee = true;
+				}
+				
+				
+				$res .= "
+				<td class=\"BILAN_GENE_competence\" rowspan=\"".$competence["nbIndicateurs"]."\">".$competence["nom"]."</td>";
+			
+				foreach($competence["listeIndicateurs"] AS $indicateur)
+				{
+					if(!$ligneDejaCommencee)
+					{
+						$res .= "
+			<tr>";
+					}
+					$res .= "
+				<td class=\"BILAN_GENE_indicateur\">".$indicateur["nom"]."</td>
+				<td class=\"case_blanche_tab\"></td>";
+				
+					$niveauMax = $indicateur['niveauMax'];
+				
+					foreach($listeEleves as $eleve)
+					{
+						$eval=-1;
+						if($type=="maxi")
+						{
+							$reqNote = $bdd->prepare("SELECT MAX(note) AS eval ,COUNT(note) AS compte  FROM ".$BDD_PREFIXE."notation WHERE indicateur=:indicateur AND eleve=:eleve");
+							$reqNote->execute(array("indicateur"=>intval($indicateur["id"]), "eleve"=>$eleve["id"]));
+							if($data=$reqNote->fetch())
+							{
+								if($data['compte'])
+									$eval=intval($data['eval']);
+							}
+						}
+						if($type=="moy")
+						{
+							$reqNote = $bdd->prepare("SELECT AVG(note) AS eval ,COUNT(note) AS compte FROM ".$BDD_PREFIXE."notation WHERE indicateur=:indicateur AND eleve=:eleve");
+							$reqNote->execute(array("indicateur"=>intval($indicateur["id"]), "eleve"=>$eleve["id"]));
+							if($data=$reqNote->fetch())
+							{
+								if($data['compte'])
+									$eval=intval($data['eval']);
+							}
+						}
+						if($type=="last")
+						{
+							$reqNote = $bdd->prepare("SELECT note AS eval FROM ".$BDD_PREFIXE."notation WHERE indicateur=:indicateur AND eleve=:eleve ORDER BY date DESC LIMIT 1");
+							$reqNote->execute(array("indicateur"=>intval($indicateur["id"]), "eleve"=>$eleve["id"]));
+							if($data=$reqNote->fetch())
+								$eval=round(floatval($data['eval']));
+						}
+						
+						if($eval==-1)
+							$couleur = "#EEEEEE";
+						else
+							$couleur = setArcEnCiel($eval,$niveauMax);
+						
+						$res .= "
+				<td class=\"BILAN_GENE_evaluation\" style=\"background-color:".$couleur."\">".($eval==-1?"":$INTITULES_NIVEAUX_CRITERES[$niveauMax-1][$eval])."</td>";
+					}
+					$res .= "
+			</tr>";
+					$ligneDejaCommencee = false;
+				}			
+			}
+			$res .= ligneBlanche($nbEleves);
+		}
+	
+		$res .= "
+		</table>";
+	
+	
+	
+	
+		$reponseJSON["HTML"] = $res;
+		$reponseJSON["tableau"] = $listeCompetences;
+		$reponseJSON["messageRetour"] = ":)Le bilan général a bien été récupéré";
+	}
+	else
+		$reponseJSON["messageRetour"]=":(Vous n'avez pas le droit de récupérer le bilan général de plusieurs élèves";
+}
+
 
 echo json_encode($reponseJSON);
 

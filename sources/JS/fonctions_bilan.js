@@ -314,7 +314,7 @@ fermeAllCommentaires=function()
 }*/
 
 // Fonction qui crée la liste des contextes dans le menu des notations
-updateListeContexteDansMenu=function()
+/*updateListeContexteDansMenu=function()
 {
 	$("#BILAN_listeContextes").empty();
 	$("#BILAN_listeContextes").append("<option value=\"ALL_CONTEXTE\">Tout contexte</option>");
@@ -323,7 +323,7 @@ updateListeContexteDansMenu=function()
 	});
 	$("#BILAN_listeContextes").data("selectBox-selectBoxIt").refresh();
 }
-
+*/
 
 
 

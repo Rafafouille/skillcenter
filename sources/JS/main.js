@@ -26,9 +26,20 @@ $(function()//Fonction lancée au chargement de la page
 		updateListesClasses();// Met a jour les listes des classes
 
 	//Mise en page des menus déroulants ******************
-	 $("#userAdminSelectClasse").selectBoxIt();
-	 $("#notationFormulaireListesClasseEtEleves select").selectBoxIt();
+	$("#userAdminSelectClasse").selectBoxIt();
+	$("#notationFormulaireListesClasseEtEleves select").selectBoxIt();
 	
+	if(STATUT=="admin" || STATUT=="evaluateur")
+	{
+		$("#menu_bilan_general select").selectBoxIt();
+		$("#BILAN_GENERAL_type_evaluation").data('selectBox-selectBoxIt').refresh();
+	}
+
+	//Génère (une premiere fois) la liste des contextes
+	if(STATUT != "")
+		updateContextesFromServer()
+	if(STATUT == "admin" || STATUT=="evaluateur")
+		updateListeClasseFromServer();
 
 
 	//Enregistrement du dernier context ********

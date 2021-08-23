@@ -42,6 +42,9 @@ include("./sources/PHP/actions.php");
 		<link rel="stylesheet" href="./sources/style/styleUsers.css" />
 		<link rel="stylesheet" href="./sources/style/styleContextes.css" />
 		<?php }
+		if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur") { ?>
+		<link rel="stylesheet" href="./sources/style/styleBilanGeneral.css" />
+		<?php }
 		if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur" || $_SESSION['statut']=="autoeval") { ?>
 		<link rel="stylesheet" href="./sources/style/styleHistorique.css" />
 		<?php } ?>
@@ -83,7 +86,13 @@ include("./sources/PHP/actions.php");
 		<script type="text/javascript" src="./sources/JS/actionsEvenements_utilisateurs.js"></script>
 		<script type="text/javascript" src="./sources/JS/actionsEvenements_competences.js"></script>
 		<script type="text/javascript" src="./sources/JS/actionsEvenements_contexte.js"></script>
-		<?php } ?>
+		<?php } 
+		
+		if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur")
+		{ ?>
+		<script type="text/javascript" src="./sources/JS/actionsEvenements_bilan_general.js"></script>
+		<?php }
+		?>
 
 
 		<script type="text/javascript" src="./sources/JS/main.js"></script>
@@ -139,6 +148,8 @@ include("./sources/PHP/actions.php");
 					<?php if($_SESSION['statut']=="admin") echo '<li><a href="#tab-competences"><img src="./sources/images/icone-checklist-edit.png"/><br/>Paramétrage</a></li>';?>
 					
 					<?php if($_SESSION['statut']=="admin") echo '<li><a href="#tab-contextes"><img src="./sources/images/icone-contexte.png"/><br/>Contextes</a></li>';?>
+					
+					<?php if($_SESSION['statut']=="admin") echo '<li><a href="#tab-bilan_general"><img src="./sources/images/icone-checklist-plusieurs.png"/><br/>Bilan général</a></li>';?>
 				</ul>
 				
 				
@@ -159,8 +170,10 @@ include("./sources/PHP/actions.php");
 					include("./sources/PHP/competences.php");//Administration Compétences
 
 					if($_SESSION['statut']=="admin")	//Si admin
-					include("./sources/PHP/contextes.php");//Administration Compétences
+					include("./sources/PHP/contextes.php");//Gestion des contextes
 
+					if($_SESSION['statut']=="admin")	//Si admin
+					include("./sources/PHP/bilan_general.php");//Bilan général
 				?>
 	
 			</div>
@@ -179,5 +192,6 @@ include("./sources/PHP/actions.php");
 		</footer>
 
 		<?php include("./sources/PHP/barre_notification.php");?> 
+		
 	</body>
 </html>

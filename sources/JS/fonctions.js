@@ -149,3 +149,51 @@ function getIdEleveCourant()
 		return ID_COURANT;
 	return parseInt($("#notationListeEleves").val());
 }
+
+
+
+
+
+
+// Fonction qui va chercher la liste des classes sur le serveur et qui met à jour la variable JS LISTE_CLASSES
+function updateListeClasseFromServer()
+{
+	
+	$.post(
+		'./sources/PHP/actionneurJSON.php',//Requete appelée
+		{	//Les données à passer par POST
+			action : "getListeClasses"
+		},
+		updateListeClasseFromServer_callback,	//Fonction callback
+		"json"	//Type de réponse
+	);
+}
+function updateListeClasseFromServer_callback(reponse)
+{
+	LISTE_CLASSES = Array()
+	reponse.listeClasses.forEach(function(item)
+	{
+		LISTE_CLASSES.push(item);
+	})
+	updateListeClassesDansMenu();
+}
+
+//Fonction qui met à jour les menus déroulant des classes, à partir de la variable JS LISTE_CLASSES
+// Cette fonction peut être utilisée après updateListeClasseFromServer()
+function updateListeClassesDansMenu()
+{
+	$("#notationListeClasses").empty();
+	$("#BILAN_GENERAL_choix_classe").empty()
+	
+	$("#BILAN_GENERAL_choix_classe").append("										<option value=\"ALL_CLASSES\">Toute classe</option>");
+			
+	LISTE_CLASSES.forEach(function(item)
+	{
+		$("#notationListeClasses").append("										<option value=\""+item+"\">"+item+"</option>");
+		$("#BILAN_GENERAL_choix_classe").append("										<option value=\""+item+"\">"+item+"</option>");
+	})
+	
+	$('#notationListeClasses').data('selectBox-selectBoxIt').refresh();	//Mise à jour du menu déroulant
+	$('#BILAN_GENERAL_choix_classe').data('selectBox-selectBoxIt').refresh();	//Mise à jour du menu déroulant
+}
+

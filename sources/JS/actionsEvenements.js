@@ -17,9 +17,8 @@ onChangeTab=function(event,ui)
 	if(listeOnglets[iOnglet]=="Bilan" && !NOTATION_LOADED)//Si la page "notation" n'a jamais été chargée
 	{
 
-	 $("#bilanTypeEvaluation").data("selectBox-selectBoxIt").refresh();//Bug : sinon le dropdown s'affiche mal
 
-		updateListeContexteDansMenu();
+
 		NOTATION_LOADED=true;
 		if(STATUT=="admin" || STATUT=="evaluateur")	//Si c'est un prof qui est connecté
 		{
@@ -36,6 +35,10 @@ onChangeTab=function(event,ui)
 		ADMIN_COMPETENCES_LOADED=true;
 		var classe=$("#selectClasseCompetences").val();
 		updateCompetencesSelonClasse(classe);
+	}
+	if(listeOnglets[iOnglet]=="Bilan général")
+	{
+		$("#BILAN_GENERAL_type_evaluation").data('selectBox-selectBoxIt').refresh();
 	}
 }
 
