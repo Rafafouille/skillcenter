@@ -1,16 +1,20 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 header('Content-type: application/json');
 include_once('options.php');
 include_once('fonctions.php');
 // Envoi de mail
-require_once './biblio_php/PHPMailer-5.2.18/PHPMailerAutoload.php';	//Bibliotheque d'envoi de mail
-/*use ./biblio_php/PHPMailer-6.5.1 PHPMailer;
-use ./biblio_php/PHPMailer-6.5.1/Exception;
+//require_once './biblio_php/PHPMailer-5.2.18/PHPMailerAutoload.php';	//Bibliotheque d'envoi de mail
+//use "biblio_php\PHPMailer-6.5.1\src" PHPMailer;
+//use "biblio_php\PHPMailer-6.5.1\src" Exception;
 
-require 'p./biblio_php/PHPMailer-6.5.1/src/Exception.php';
-require './biblio_php/PHPMailer-6.5.1/src/PHPMailer.php';
-require './biblio_php/PHPMailer-6.5.1/src/SMTP.php';
-*/
+
+require 'biblio_php/PHPMailer_6.5.1/src/Exception.php';
+require 'biblio_php/PHPMailer_6.5.1/src/PHPMailer.php';
+require 'biblio_php/PHPMailer_6.5.1/src/SMTP.php';
+
 
 
 initSession();

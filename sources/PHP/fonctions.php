@@ -50,12 +50,13 @@ function envoieMail($adresse,$sujet,$contenuHTML,$contenuTXT)
 	global $AUTORISE_MAILS,$MAIL_SMTP,$MAIL_SMTP_SECURE,$MAIL_SMTP_HOTE,$MAIL_SMTP_PORT,$MAIL_SMTP_LOGIN,$MAIL_SMTP_MDP,$MAIL_MAIL_EXPEDITEUR,$MAIL_NOM_EXPEDITEUR,$MAIL_MAIL_REPONDRE_A;
 	if($AUTORISE_MAILS)
 	{
-		$mail = new PHPMailer();	//Nouveau mail
+		$mail = new PHPMailer\PHPMailer\PHPMailer();	//Nouveau mail
 		if($MAIL_SMTP)
 			$mail->IsSMTP();	//Indique qu'on passe par du SMTP
-		$mail->SMTPDebug = 0;	//Permet de degguer (0= non, 1=tout, 2=juste message)
+		$mail->SMTPDebug = 0;	//Permet de degguer (0= non, 1=tout, 2=juste message, 3=erreurs de réseau/serveur)
 		$mail->CharSet="UTF-8";
 		$mail->SMTPSecure = $MAIL_SMTP_SECURE;	//Type de cryptage
+//		$mail->SMTPAutoTLS = false;
 		$mail->Host = $MAIL_SMTP_HOTE;	//Hote SMTP
 		$mail->Port = $MAIL_SMTP_PORT;	//Port
 		$mail->Username = $MAIL_SMTP_LOGIN;	//Login
@@ -70,6 +71,7 @@ function envoieMail($adresse,$sujet,$contenuHTML,$contenuTXT)
 		$mail->Subject    = $sujet;
 		$mail->AltBody    = $contenuTXT;
 		$mail->Body    = $contenuHTML;
+		
 
 		if(!$mail->Send())
 			return  ":(Erreur d'envoi de mail : ". $mail->ErrorInfo;
@@ -228,6 +230,7 @@ function signatureMailBilanHTML()
 //Fonction qui dit si, oui ou non, il y a eu des évaluations depuis la dernière évaluation pour l'user n°id*****************************
 function aEuDesEvaluationDepuisLaDerniereDate($id,$date_dernier_envoi)
 {
+	//$date_dernier_envoi = "2020-08-23 15:42:13";//A SUPPRIMER
 	global $bdd,$BDD_PREFIXE;
 	$req=$bdd->prepare("SELECT * FROM ".$BDD_PREFIXE."notation WHERE eleve=:id AND date>:dateDernierEnvoi LIMIT 1");
 	$req->execute(array('id'=>$id,'dateDernierEnvoi'=>$date_dernier_envoi));
