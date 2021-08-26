@@ -565,6 +565,7 @@ WHERE lci.classe=:classe';
 					$reqNoteAgr->execute(array('eleve'=>$eleve));	
 					$reqNoteLast = $bdd->prepare("SELECT note as last FROM ".$BDD_PREFIXE."notation WHERE eleve=:eleve AND indicateur=".$idInd." ORDER BY date DESC LIMIT 1");
 					$reqNoteLast->execute(array('eleve'=>$eleve));
+//					$reqCommentaires = $bdd->prepare("SELECT ")
 				}
 				else
 				{
@@ -585,7 +586,16 @@ WHERE lci.classe=:classe';
 					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["niveauEleveLast"] = $donneesNoteLast["last"];
 				}
 				
+				// Commentaires
 				
+				//Commentaires ou non ?
+				if($AUTORISE_COMMENTAIRES)
+				{
+					$reqCom = $bdd->prepare("SELECT id FROM ".$BDD_PREFIXE."notation WHERE eleve=:eleve AND indicateur=".$idInd.$conditionSurContexte." AND commentaire<>\"\" LIMIT 1");
+					$reqCom->execute(array('eleve'=>$eleve));
+					if($donneesCom=$reqCom->fetch())
+						$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"][$idInd]["commentaires"]=true;
+				}
 				
 			}	
 
@@ -622,7 +632,7 @@ if($action=="getComments")
 							));
 				while($donnees=$req->fetch())
 				{
-					$contexte=$donnees['contexte'];
+					$contexte=intval($donnees['contexte']);
 					$idEval=intval($donnees['id']);
 					$commentaire=$donnees['commentaire'];
 					$date=date_format(date_create($donnees['date']),'d/m/y H:i');

@@ -316,14 +316,18 @@ updateBoiteCommentBilan_callback=function(reponse)
 {
 	cacheBarreChargement();
 	var commentaires=reponse['commentaires'];
-	for(var context in commentaires)
+	for(var contexte in commentaires)
 	{
-		if(context!="")//S'il y a un context
-			$("#dialog-commentaireEvaluation .commentairesListeContextes").append("<div class=\"commentairesContexte\">"+context+"</div>");//On affiche le titre. (sinon, non)
-		var comSTR="<div class=\"commentairesListeCommentaires\">";//Liste des commentaires pour un contexte donné
-		for(var idCom in commentaires[context])
+		console.log(contexte);
+		if(contexte!=0)//S'il y a un context
 		{
-			comSTR+="<div class=\"commentairesCom\"><span class=\"commentairesDate\">["+commentaires[context][idCom]['date']+"]</span> "+commentaires[context][idCom]['texte']+"</div>";
+			var nomContexte = LISTE_CONTEXTES[contexte].nom;
+			$("#dialog-commentaireEvaluation .commentairesListeContextes").append("<div class=\"commentairesContexte\">"+nomContexte+"</div>");//On affiche le titre. (sinon, non)
+		}
+		var comSTR="<div class=\"commentairesListeCommentaires\">";//Liste des commentaires pour un contexte donné
+		for(var idCom in commentaires[contexte])
+		{
+			comSTR+="<div class=\"commentairesCom\"><span class=\"commentairesDate\">["+commentaires[contexte][idCom]['date']+"]</span> "+commentaires[contexte][idCom]['texte']+"</div>";
 		}
 		comSTR+="</div>";
 			$("#dialog-commentaireEvaluation .commentairesListeContextes").append(comSTR);

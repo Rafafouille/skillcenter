@@ -16,7 +16,7 @@ updateContextesFromServer_callback = function(reponse)
 	LISTE_CONTEXTES = Array()
 	reponse.contextes.forEach(function(item)
 	{
-		LISTE_CONTEXTES.push({'id':item.id, 'nom':item.nom});
+		LISTE_CONTEXTES[item.id]={'id':item.id, 'nom':item.nom};
 	})
 	updateListeContexteDansMenu();
 }
