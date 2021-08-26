@@ -4,7 +4,8 @@
 include_once('./sources/PHP/options.php');
 include_once('./sources/PHP/fonctions.php');
 
-$VERSION="21.08.2";	//N° de la version
+include('./sources/PHP/version.php');
+
 
 initSession();
 connectToBDD();
@@ -179,6 +180,8 @@ include("./sources/PHP/actions.php");
 			</div>
 		</div>
 
+	
+		<div id="version">V<?php echo $VERSION; ?></div>
 	
 
 		<?php

@@ -29,6 +29,17 @@ Barre notifications
 	border-radius:10px;
 }
 
+/*******************
+Version
+******************/
+
+#version
+{
+	opacity:0.33;
+	position:absolute;
+	bottom:0;
+	left:0;
+}
 
 /*******************
 Entete
