@@ -36,7 +36,7 @@ Version
 #version
 {
 	opacity:0.33;
-	position:absolute;
+	position: fixed;
 	bottom:0;
 	left:0;
 }

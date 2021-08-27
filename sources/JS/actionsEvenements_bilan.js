@@ -100,13 +100,8 @@ updateNotationEleve=function(reponse)
 
 
 	if(NOTATION_REDESSINE_DE_ZERO)
-	{
 		$("#RecapNotationEleve").empty();
-	}
 
-	var listeGroupes=reponse.listeGroupes;
-
-	AAA = reponse;
 	//Preparation pour le graphique bilan
 	if(STATUT=="admin" || STATUT=="evaluateur")
 	{
@@ -117,6 +112,13 @@ updateNotationEleve=function(reponse)
 	}
 
 	var i=0;
+
+
+	// Remettre les groupes dans l'ordre
+	var listeGroupes = Array();
+	for(idGr in reponse.listeGroupes)//On copie dans un tableau normal
+		listeGroupes.push(reponse.listeGroupes[idGr])
+	trieCompetencesParPosition(listeGroupes)// On trie par ordre de position
 
 	for(idGr in listeGroupes)
 	{

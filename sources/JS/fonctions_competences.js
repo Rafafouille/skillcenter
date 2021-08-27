@@ -9,23 +9,27 @@ function ADMIN_COMPETENCES_ajouteGroupe(groupe,conteneur)
 	if(!groupe.selected)
 		styleClass+="_unselected";
 
-	var rendu=ADMIN_COMPETENCES_rendu_HTML_groupe(groupe.nom,groupe.id,styleClass);
+	var rendu=ADMIN_COMPETENCES_rendu_HTML_groupe(groupe.nom,groupe.id,styleClass,groupe.position);
 
 	$(conteneur).append(rendu);
 
 	//Ajout des competences
-	for(idComp in groupe.listeCompetences)
+	var listeComp = Array();
+	for(idComp in groupe.listeCompetences)//On copie dans un tableau normal
+		listeComp.push(groupe.listeCompetences[idComp])
+	trieCompetencesParPosition(listeComp)// On trie par ordre de position
+	for(idComp in listeComp)
 	{
-		var competence=groupe.listeCompetences[idComp];
+		var competence=listeComp[idComp];
 		ADMIN_COMPETENCES_ajouteCompetence(competence,"#ADMIN_COMPETENCES_groupe_"+groupe.id+" .groupe_contenu");
 	}
 }
 
 // -------------------------
-function ADMIN_COMPETENCES_rendu_HTML_groupe(nom,id,styleClass)
+function ADMIN_COMPETENCES_rendu_HTML_groupe(nom,id,styleClass,position=0)
 {
 	return ""+
-"			<div class=\""+styleClass+"\" id=\"ADMIN_COMPETENCES_groupe_"+id+"\" data-id=\""+id+"\">"+
+"			<div class=\""+styleClass+"\" id=\"ADMIN_COMPETENCES_groupe_"+id+"\" data-id=\""+id+"\" data-position=\""+String(position)+"\">"+
 "				<div class=\"entete_groupe_competences\">"+
 "					<img class=\"boutonModifDomaine\" src=\"./sources/images/icone-modif.png\" alt=\"[§]\" onclick=\"ouvreBoiteModifDomaine("+id+");\"/>"+
 "					<img class=\"boutonSupprimerDomaine\" src=\"./sources/images/poubelle.png\" alt=\"[X]\" onclick=\"ouvreBoiteSupprimeDomaine('"+addslashes(nom)+"',"+id+")\"/>"+
@@ -33,7 +37,7 @@ function ADMIN_COMPETENCES_rendu_HTML_groupe(nom,id,styleClass)
 "						<img src=\"./sources/images/icone-plus.png\" alt=\"[+]\"/>"+
 "						Ajouter une compétence"+
 "					</div>"+
-"					<h3 onclick=\"$(this).parent().parent().find('.groupe_contenu').slideToggle('easings');\">"+
+"					<h3 onclick=\"$(this).parent().parent().find('.groupe_contenu').slideToggle('easings');\">"+String(romanize(position))+" - "+
 "						<span class=\"ADMIN_PARAMETRES_titre_domaine_dans_h3\">"+nom+"</span>"+
 "					</h3>"+
 "				</div>"+
@@ -55,25 +59,28 @@ function ADMIN_COMPETENCES_ajouteCompetence(competence,conteneur)
 	if(!competence.selected)
 		styleClass+="_unselected";
 
-	var rendu=ADMIN_COMPETENCES_rendu_HTML_competence(competence.nom,competence.nomAbrege,competence.id,numeroCompetence,styleClass)
+	var rendu=ADMIN_COMPETENCES_rendu_HTML_competence(competence.nom,competence.nomAbrege,competence.id,competence.position,styleClass,competence.position);
 
 	$(conteneur).append(rendu);
 
-
 	//Ajout des indicateurs
-	for(idInd in competence.listeIndicateurs)
+	var listeInd = Array();
+	for(idInd in competence.listeIndicateurs)//On copie dans un tableau normal
+		listeInd.push(competence.listeIndicateurs[idInd])
+	trieCompetencesParPosition(listeInd)// On trie par ordre de position
+	for(idInd in listeInd)
 	{
-		var indicateur=competence.listeIndicateurs[idInd];
-		ADMIN_COMPETENCES_ajouteIndicateur(indicateur,"#ADMIN_COMPETENCES_competence_"+competence.id+" .listeIndicateurs table");
+		var indicateur=listeInd[idInd];
+		ADMIN_COMPETENCES_ajouteIndicateur(indicateur,"#ADMIN_COMPETENCES_competence_"+competence.id+" .listeIndicateurs table",competence);
 	}
 }
 
 
 // -------------------------
-function ADMIN_COMPETENCES_rendu_HTML_competence(nom,nomAbrege,id,numeroCompetence,styleClass)
+function ADMIN_COMPETENCES_rendu_HTML_competence(nom,nomAbrege,id,numeroCompetence,styleClass,position=0)
 {
 	return ""+
-"					<div class=\""+styleClass+"\" id=\"ADMIN_COMPETENCES_competence_"+id+"\" data-id=\""+id+"\" data-nomAbrege=\""+addslashes(nomAbrege)+"\">"+
+"					<div class=\""+styleClass+"\" id=\"ADMIN_COMPETENCES_competence_"+id+"\" data-id=\""+id+"\" data-nomAbrege=\""+addslashes(nomAbrege)+"\" data-position=\""+String(position)+"\">"+
 "						<img class=\"boutonModifCompetence\" src=\"./sources/images/icone-modif.png\" alt=\"[§]\" style=\"cursor:pointer;height:25px;\" title=\"Modifier la compétence\" onclick=\"ouvreBoiteModifCompetence("+id+")\"/>"+
 "						<img class=\"boutonSupprimerCompetence\" src=\"./sources/images/poubelle.png\" alt=\"[X]\" onclick=\"ouvreBoiteSupprimeCompetence('"+addslashes(nom)+"',"+id+")\"/>"+
 "						<div class=\"boutonAjouterIndicateur\" onclick=\"ouvreBoiteAddIndicateur('"+addslashes(nom)+"',"+id+");$(this).parent().find('.listeIndicateurs').slideDown('easings');\">"+
@@ -94,7 +101,7 @@ function ADMIN_COMPETENCES_rendu_HTML_competence(nom,nomAbrege,id,numeroCompeten
 
 
 //Fonction qui ajoute une indicateur dans une compétence *************************
-function ADMIN_COMPETENCES_ajouteIndicateur(indicateur,conteneur)
+function ADMIN_COMPETENCES_ajouteIndicateur(indicateur,conteneur,competence)
 {
 	numeroIndicateur++;
 
@@ -104,7 +111,7 @@ function ADMIN_COMPETENCES_ajouteIndicateur(indicateur,conteneur)
 		styleClass+="_unselected";
 
 
-	var rendu = ADMIN_COMPETENCES_rendu_HTML_indicateur(indicateur,numeroCompetence,numeroIndicateur,styleClass);
+	var rendu = ADMIN_COMPETENCES_rendu_HTML_indicateur(indicateur,competence.position,indicateur.position,styleClass);
 	
 	$(conteneur).append(rendu);
 }
@@ -116,7 +123,7 @@ function ADMIN_COMPETENCES_ajouteIndicateur(indicateur,conteneur)
 function ADMIN_COMPETENCES_rendu_HTML_indicateur(indicateur,numeroCompetence,numeroIndicateur,styleClass)
 {
 	var rendu=""+
-"								<tr id=\"ADMIN_COMPETENCES_indicateur_"+indicateur.id+"\" class=\""+styleClass+"\" data-id=\""+indicateur.id+"\" data-lien=\""+indicateur.lien+"\">"+
+"								<tr id=\"ADMIN_COMPETENCES_indicateur_"+indicateur.id+"\" class=\""+styleClass+"\" data-id=\""+indicateur.id+"\" data-lien=\""+indicateur.lien+"\" data-position=\""+String(indicateur.position)+"\">"+
 "									<td class=\"ADMIN_PARAMETRAGE_checkbox_indicateur\">"+
 "										<form>"+
 "											<input type=\"checkbox\" name=\"selectIndicateur"+indicateur.id+"\" value=\""+indicateur.id+"\"";
@@ -267,3 +274,5 @@ function PARAMETRES_update_selected_unselected_domaines_competences()
 	});
 	
 }
+
+

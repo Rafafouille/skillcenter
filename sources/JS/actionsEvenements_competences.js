@@ -130,12 +130,16 @@ updateCompetencesSelonClasse_Callback=function(reponse)
 	numeroIndicateur=0;
 
 	$("#liste_competences").empty();
-	var listeGroupes=reponse.listeGroupes;
+	var listeGroupes = Array();
+	for(idGr in reponse.listeGroupes)//On copie dans un tableau normal
+		listeGroupes.push(reponse.listeGroupes[idGr])
+	trieCompetencesParPosition(listeGroupes)// On trie par ordre de position
 	for(idGr in listeGroupes)
+	//listeGroupes.forEach(function(groupe)
 	{
 		var groupe=listeGroupes[idGr];
 		ADMIN_COMPETENCES_ajouteGroupe(groupe,"#liste_competences","adminComp");
-	}
+	};
 }
 
 
@@ -173,20 +177,23 @@ ouvreBoiteModifDomaine=function(idDomaine)
 	$("#dialog-modifDomaine-nom").val(intitule);
 	//idDomaine
 	var idDomaine=$("#ADMIN_COMPETENCES_groupe_"+idDomaine).attr("data-id");
+	var posDomaine = $("#ADMIN_COMPETENCES_groupe_"+idDomaine).attr("data-position");
 	$("#dialog-modifDomaine").attr("data-iddomaine",idDomaine)
+	$("#dialog-modifDomaine-position").val(posDomaine);
 	
 	$("#dialog-modifDomaine").dialog("open" );
 }
 
 //MODIF DOMAINE --------------------------
-modifDomaine=function(nom,idDomaine)
+modifDomaine=function(nom,idDomaine,posDomaine)
 {
 	$.post(
 			'./sources/PHP/actionneurJSON.php',//Requete appelée
 			{	//Les données à passer par POST
 				action:"modifDomaine",
 				nom:nom,
-				idDomaine:idDomaine
+				idDomaine:idDomaine,
+				posDomaine:posDomaine
 			},
 			modifDomaine_callback,	//Fonction callback
 			"json"	//Type de réponse
@@ -296,12 +303,14 @@ ouvreBoiteModifCompetence=function(idCompetence)
 	var idDomaine=$("#ADMIN_COMPETENCES_competence_"+idCompetence).parent().parent().data("id");
 	getDomainesInFormulaireOption("#dialog-modifCompetence-idDomaine",idDomaine);
 	
+	var posCompetence = $("#ADMIN_COMPETENCES_competence_"+idCompetence).attr("data-position");
+	$("#dialog-modifCompetence-position").val(posCompetence);
 
 	$("#dialog-modifCompetence").dialog( "open" );
 }
 
 //MODIF COMPETENCE -----------------------------
-modifCompetence=function(nom,nomAbrege,idDomaine,idCompetence)
+modifCompetence=function(nom,nomAbrege,idDomaine,idCompetence,position)
 {
 	$.post(
 			'./sources/PHP/actionneurJSON.php',//Requete appelée
@@ -310,6 +319,7 @@ modifCompetence=function(nom,nomAbrege,idDomaine,idCompetence)
 				nom:nom,
 				nomAbrege:nomAbrege,
 				idDomaine:idDomaine,
+				position:position,
 				idCompetence:idCompetence
 			},
 			modifCompetence_callback,	//Fonction callback
@@ -431,11 +441,14 @@ ouvreBoiteModifCritere=function(idCrit)
 	$("#dialog-modifIndicateur-lien").val(lien);
 	//idCritere à modifier
 	$("#dialog-modifIndicateur").data("id_critere",idCrit)
+	
+	var position = $("#ADMIN_COMPETENCES_indicateur_"+idCrit).data("position");
+	$("#dialog-modifIndicateur-position").val(position);
 
 	$("#dialog-modifIndicateur").dialog("open");
 }
 
-modifCritere=function(nom,details,niveaux,idCompetence,idCritere,lien)
+modifCritere=function(nom,details,niveaux,idCompetence,idCritere,lien,position)
 {
 	$.post(
 			'./sources/PHP/actionneurJSON.php',//Requete appelée
@@ -446,6 +459,7 @@ modifCritere=function(nom,details,niveaux,idCompetence,idCritere,lien)
 				niveaux:niveaux,
 				idCompetence:idCompetence,
 				lien:lien,
+				position:position,
 				idCritere:idCritere
 			},
 			modifCritere_callback,	//Fonction callback

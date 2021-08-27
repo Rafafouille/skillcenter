@@ -22,6 +22,9 @@
 			<form>
 				<label for="dialog-modifDomaine-nom">Intitulé du domaine :</label>
 				<input type="text" name="dialog-modifDomaine-nom" id="dialog-modifDomaine-nom" />
+				<br/>
+				<label for="dialog-modifDomaine-position">Numéro du domaine :</label>
+				<input type="number" name="dialog-modifDomaine-position" id="dialog-modifDomaine-position" min="0"/>
 			</form>
 		</div>
 		<script>
@@ -29,7 +32,7 @@
 				autoOpen: false,
 				modal: true,
 				buttons: {
-							"Modifier": function() {$("#dialog-modifDomaine").dialog( "close" );modifDomaine($("#dialog-modifDomaine-nom").val(),parseInt($("#dialog-modifDomaine").attr("data-iddomaine")));},
+							"Modifier": function() {$("#dialog-modifDomaine").dialog( "close" );modifDomaine($("#dialog-modifDomaine-nom").val(),parseInt($("#dialog-modifDomaine").attr("data-iddomaine")),$("#dialog-modifDomaine-position").val());},
 							"Annuler": function() {$("#dialog-modifDomaine").dialog( "close" );}
 						}
 			});
@@ -105,6 +108,8 @@
 				<br/>
 				<label for="dialog-addCompetence-nomAbrege">Intitulé Abrégé :</label>
 				<input type="text" name="dialog-modifCompetence-nomAbrege" id="dialog-modifCompetence-nomAbrege" />
+				<label for="dialog-addCompetence-position">Numéro de la compétence :</label>
+				<input type="number" name="dialog-modifCompetence-position" id="dialog-modifCompetence-position" min="0"/>
 				<!--<input type="hidden" name="dialog-modifCompetence-idDomaine" id="dialog-modifCompetence-idDomaine"/>-->
 			</form>
 		</div>
@@ -113,7 +118,7 @@
 				autoOpen: false,
 				modal: true,
 				buttons: {
-							"Modifier": function() {$("#dialog-modifCompetence").dialog( "close" );modifCompetence($("#dialog-modifCompetence-nom").val(),$("#dialog-modifCompetence-nomAbrege").val(),parseInt($("#dialog-modifCompetence-idDomaine").val()),parseInt($("#dialog-modifCompetence").attr("data-idcompetence")));},
+							"Modifier": function() {$("#dialog-modifCompetence").dialog( "close" );modifCompetence($("#dialog-modifCompetence-nom").val(),$("#dialog-modifCompetence-nomAbrege").val(),parseInt($("#dialog-modifCompetence-idDomaine").val()),parseInt($("#dialog-modifCompetence").attr("data-idcompetence")),parseInt($("#dialog-modifCompetence-position").val()));},
 							"Annuler": function() {$("#dialog-modifCompetence").dialog( "close" );}
 						}
 			});
@@ -218,6 +223,9 @@
 							};
 					?>
 				</select>
+			<br/>
+				<label for="dialog-modifIndicateur-position">Numéro de l'indicateur :</label>
+				<input type="number" name="dialog-modifIndicateur-position" id="dialog-modifIndicateur-position" min="0"/>
 
 				<!--<input type="hidden" name="dialog-modifIndicateur-idCompetenceOLD" id="dialog-modifIndicateur-idCompetenceOLD"/>-->
 				<!--<input type="hidden" name="dialog-modifCritere-idCritere" id="dialog-modifCritere-idCritere"/>-->
@@ -228,7 +236,7 @@
 				autoOpen: false,
 				modal: true,
 				buttons: {
-							"Modifier": function() {$("#dialog-modifIndicateur").dialog( "close" );modifCritere($("#dialog-modifIndicateur-nom").val(),$('#dialog-modifIndicateur-details').val(),$('#dialog-modifIndicateur-niveaux').val(),parseInt($("#dialog-modifIndicateur-idCompetence").val()),parseInt($("#dialog-modifIndicateur").data("id_critere")),$("#dialog-modifIndicateur-lien").val());},
+							"Modifier": function() {$("#dialog-modifIndicateur").dialog( "close" );modifCritere($("#dialog-modifIndicateur-nom").val(),$('#dialog-modifIndicateur-details').val(),$('#dialog-modifIndicateur-niveaux').val(),parseInt($("#dialog-modifIndicateur-idCompetence").val()),parseInt($("#dialog-modifIndicateur").data("id_critere")),$("#dialog-modifIndicateur-lien").val(), parseInt($("#dialog-modifIndicateur-position").val()) );},
 							"Annuler": function() {$("#dialog-modifIndicateur").dialog( "close" );}
 						}
 			});

@@ -21,7 +21,7 @@ function NOTATION_ajouteGroupeCompetences(groupe,conteneur,modeNotation,recreeDe
 "			<div class=\"groupe_competences\" id=\"NOTATION_groupe_"+groupe.id+"\">"+
 "				<div class=\"entete_groupe_competences\" onclick=\"ouvreFermeBilanGroupe("+groupe.id+");\">"+//$(this).parent().find('.groupe_contenu').slideToggle('easings');$(this).parent().find('.listeIndicateurs').slideToggle('easings');
 "					<h3>"+
-"						"+groupe.nom+
+"						"+String(romanize(groupe.position))+" - "+groupe.nom+
 "					</h3>"+
 "				</div>"+
 "				<div class=\"groupe_contenu\">"+
@@ -38,10 +38,18 @@ function NOTATION_ajouteGroupeCompetences(groupe,conteneur,modeNotation,recreeDe
 		var listeLabelsCompetences=Array();//Liste des evaluations (en pourcentage)
 	}
 
+
+
+	// Remettre les competences dans l'ordre
+	var listeComp = Array();
+	for(idComp in groupe.listeCompetences)//On copie dans un tableau normal
+		listeComp.push(groupe.listeCompetences[idComp])
+	trieCompetencesParPosition(listeComp)// On trie par ordre de position
+
 	//Ajout des competences
-	for(idComp in groupe.listeCompetences)
+	for(idComp in listeComp)
 	{
-		var competence=groupe.listeCompetences[idComp];
+		var competence=listeComp[idComp];
 		var evaluation=NOTATION_ajouteCompetence(competence,"#NOTATION_groupe_"+groupe.id+" .groupe_contenu",modeNotation,recreeDeZero);$
 		sommeNiveaux+=evaluation.niveau;
 		sommeNiveauxMax+=evaluation.niveauMax;
@@ -85,7 +93,7 @@ function NOTATION_ajouteCompetence(competence,conteneur,modeNotation,recreeDeZer
 		var rendu=""+
 "					<div class=\"competence\" id=\"NOTATION_competence_"+competence.id+"\">"+
 "						<h3 onclick=\"$(this).parent().find('.listeIndicateurs').slideToggle('easings');\">"+
-"							"+numeroCompetence+" - "+competence.nom+
+"							"+String(competence.position)+" - "+competence.nom+
 "						</h3>"+
 "						<div class=\"listeIndicateurs\">"+
 "							<table class=\"indicateurs\">"+
@@ -96,10 +104,19 @@ function NOTATION_ajouteCompetence(competence,conteneur,modeNotation,recreeDeZer
 	}
 
 	//Ajout des indicateurs
-	for(idInd in competence.listeIndicateurs)
+	
+	// Remettre les indicateurs dans l'ordre
+	var listeInd = Array();
+	for(idInd in competence.listeIndicateurs)//On copie dans un tableau normal
+		listeInd.push(competence.listeIndicateurs[idInd])
+	trieCompetencesParPosition(listeInd)// On trie par ordre de position
+
+	
+	
+	for(idInd in listeInd)
 	{
-		var indicateur=competence.listeIndicateurs[idInd];
-		var evaluation=NOTATION_ajouteIndicateur(indicateur,"#NOTATION_competence_"+competence.id+" .listeIndicateurs table");
+		var indicateur=listeInd[idInd];
+		var evaluation=NOTATION_ajouteIndicateur(indicateur,"#NOTATION_competence_"+competence.id+" .listeIndicateurs table",competence);
 
 		sommeNiveaux+=evaluation.niveau;
 		sommeNiveauxMax+=evaluation.niveauMax;
@@ -112,7 +129,7 @@ function NOTATION_ajouteCompetence(competence,conteneur,modeNotation,recreeDeZer
 
 //Fonction qui ajoute une indicateur dans une compétence
 //Renvoie la valeur de l'evaluation et le nombre de niveaux max
-function NOTATION_ajouteIndicateur(indicateur,conteneur)
+function NOTATION_ajouteIndicateur(indicateur,conteneur,competence)
 {
 	numeroIndicateur++;
 
@@ -127,7 +144,7 @@ function NOTATION_ajouteIndicateur(indicateur,conteneur)
 "								<tr class=\"indicateur\" id=\"NOTATION_indicateur_"+indicateur.id+"\" data-id=\""+indicateur.id+"\">"+
 "									<td class=\"intituleIndicateur\">"+
 "										<div class=\"titreIndicateur\"  nowrap=\"nowrap\">"+
-"											"+numeroCompetence+"."+numeroIndicateur+" - "+indicateur.nom+
+"											"+String(competence.position)+"."+String(indicateur.position)+" - "+indicateur.nom+
 "										</div>"+
 "										<div class=\"commentaireIndicateur\">"+
 "											<form data-ideval=\"0\">"+

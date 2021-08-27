@@ -775,8 +775,8 @@ function requeteGetListeIndicateurs($classe="ALL_CLASSES", $contexte=0)
 	
 	$requete_liste_indicateurs_dans_contexte ='SELECT
 
-gr.id AS idGroup, gr.nom AS nomGroup,
-comp.id AS idComp, comp.nom AS nomComp, comp.nomAbrege AS nomCompAbrege,
+gr.id AS idGroup, gr.nom AS nomGroup, gr.position AS positionGroup,
+comp.id AS idComp, comp.nom AS nomComp, comp.nomAbrege AS nomCompAbrege, comp.position AS positionComp,
 ind.id AS idInd, ind.nom AS nomInd, ind.details AS detailsInd, ind.niveaux AS niveauxInd, ind.lien AS lienInd, ind.position AS positionInd
 
 FROM '.$BDD_PREFIXE.'indicateurs AS ind JOIN '.$BDD_PREFIXE.'competences AS comp JOIN '.$BDD_PREFIXE.'groupes_competences AS gr
@@ -1111,5 +1111,15 @@ function getTableauContextesHTML()
 
 	return $res;
 }
+
+
+
+
+
+
+
+
+
+
 
 ?>

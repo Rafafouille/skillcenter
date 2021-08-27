@@ -12,6 +12,7 @@ onChangeTab=function(event,ui)
 {
 
 	var iOnglet=$('#tab-onglets').tabs('option', 'active');
+	
 
 	//1er affichage de l'onglet "Notation"
 	if(listeOnglets[iOnglet]=="Bilan" && !NOTATION_LOADED)//Si la page "notation" n'a jamais été chargée

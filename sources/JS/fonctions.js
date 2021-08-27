@@ -197,3 +197,47 @@ function updateListeClassesDansMenu()
 	$('#BILAN_GENERAL_choix_classe').data('selectBox-selectBoxIt').refresh();	//Mise à jour du menu déroulant
 }
 
+
+
+
+
+
+// Met en chiffres romains
+function romanize(num)
+{
+    if (isNaN(num))
+        return NaN;
+    var digits = String(+num).split(""),
+        key = ["","C","CC","CCC","CD","D","DC","DCC","DCCC","CM",
+               "","X","XX","XXX","XL","L","LX","LXX","LXXX","XC",
+               "","I","II","III","IV","V","VI","VII","VIII","IX"],
+        roman = "",
+        i = 3;
+    while (i--)
+        roman = (key[+digits.pop() + (i * 10)] || "") + roman;
+    return Array(+digits.join("") + 1).join("M") + roman;
+}
+
+
+
+
+
+// Fonction qui trie un tableau de compétence (ou de domain, ou d'indicateur) par position.
+// Il faut que ce soit un tableau contenant des petits tableaux associatifs avec la clé "position"
+// Ne renvoie rien (modifie directement le tableau)
+function trieCompetencesParPosition(tab)
+{
+	for(i=0;i<tab.length;i++)
+	{
+		for(j=0;j<tab.length-i-1;j++)
+		{
+			if(tab[j].position > tab[j+1].position)
+			{
+				a=tab[j]
+				b=tab[j+1]
+				tab[j]=b
+				tab[j+1]=a
+			}
+		}
+	}
+}

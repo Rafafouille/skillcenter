@@ -514,9 +514,11 @@ WHERE lci.classe=:classe';
 			{
 				$idGroup=intval($reponse['idGroup']);
 				$nomGroup=$reponse['nomGroup'];
+				$positionGroup = intval($reponse['positionGroup']);
 
 				$idComp=intval($reponse['idComp']);
 				$nomComp=$reponse['nomComp'];
+				$positionComp = intval($reponse['positionComp']);
 				$nomCompAbrege=($reponse['nomCompAbrege']!="")?$reponse['nomCompAbrege']:substr($reponse['nomComp'],0,20);;
 
 				$idInd=intval($reponse['idInd']);
@@ -532,6 +534,7 @@ WHERE lci.classe=:classe';
 					$reponseJSON['listeGroupes'][$idGroup]["id"]=$idGroup;
 					$reponseJSON['listeGroupes'][$idGroup]["nom"]=$nomGroup;
 					$reponseJSON['listeGroupes'][$idGroup]["selected"]=true;
+					$reponseJSON['listeGroupes'][$idGroup]["position"]=$positionGroup;
 					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"]=array();
 				}
 				//Si la compétence n'existe pas...
@@ -540,6 +543,7 @@ WHERE lci.classe=:classe';
 					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["id"]=$idComp;
 					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["nom"]=$nomComp;
 					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["nomAbrege"]=$nomCompAbrege;
+					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["position"]=$positionComp;
 					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["selected"]=true;
 					$reponseJSON['listeGroupes'][$idGroup]["listeCompetences"][$idComp]["listeIndicateurs"]=array();
 				}
@@ -1138,6 +1142,7 @@ if($action=="addGroupeCompetences")
 				$reponseJSON["messageRetour"]=":)Le domaine ".$nom." a bien été créé.";
 				$reponseJSON["groupe"]["nom"]=$nom;
 				$reponseJSON["groupe"]["id"]=intval($donnees['id']);
+				$reponseJSON["groupe"]["position"]=intval($donnees['position']);
 			}
 			else
 				$reponseJSON["messageRetour"]=":(Le domaine n'a pas été enregistré pour une raison inconnue";
@@ -1155,21 +1160,22 @@ if($action=="modifDomaine")
 	if($_SESSION['statut']=="admin")
 	{
 		connectToBDD();
-		$nom="";
-		if(isset($_POST['nom'])) $nom=$_POST['nom'];
-		$idDomaine="";
-		if(isset($_POST['idDomaine'])) $idDomaine=intval($_POST['idDomaine']);
+		$nom = isset($_POST['nom']) ? $_POST['nom'] : "" ;
+		$idDomaine= isset($_POST['idDomaine']) ? intval($_POST['idDomaine']) : 0;
+		$posDomaine = isset($_POST['posDomaine']) ? intval($_POST['posDomaine']) : 0;
 		if($idDomaine!=0)
 		{
 			//Écriture
-			$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'groupes_competences SET nom=:nom WHERE id=:idDomaine');
-			$req->execute(array('nom' => $nom,
-								"idDomaine"=>$idDomaine));
+			$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'groupes_competences SET nom=:nom, position=:posDomaine WHERE id=:idDomaine');
+			$req->execute(array(	'nom' => $nom,
+						"idDomaine"=>$idDomaine,
+						"posDomaine"=>$posDomaine));
 
 			
 			$reponseJSON["messageRetour"]=":XLe domaine ".$nom." a bien été créé.";
 			$reponseJSON["domaine"]["nom"]=$nom;
 			$reponseJSON["domaine"]["id"]=$idDomaine;
+			$reponseJSON["domaine"]["position"]=$posDomaine;
 		}
 		else
 			$reponseJSON["messageRetour"]=":(Aucun n° de domaine n'a été envoyé.";
@@ -1238,6 +1244,7 @@ if($action=="addCompetence")
 				$reponseJSON["competence"]["nomAbrege"]=$nomAbrege;
 				$reponseJSON["competence"]["id"]=intval($donnees['id']);
 				$reponseJSON["competence"]["groupe"]=$idGroupe;
+				$reponseJSON["competence"]["position"]=$position;
 			}
 			else
 				$reponseJSON["messageRetour"]=":(La compétence n'a pas été enregistrée pour une raison inconnue";
@@ -1256,30 +1263,29 @@ if($action=="modifCompetence")
 	if($_SESSION['statut']=="admin")
 	{
 		connectToBDD();
-		$nom="";
-		if(isset($_POST['nom'])) $nom=$_POST['nom'];
-		$nomAbrege="";
-		if(isset($_POST['nomAbrege'])) $nomAbrege=$_POST['nomAbrege'];
-		$idDomaine=0;
-		if(isset($_POST['idDomaine'])) $idDomaine=intval($_POST['idDomaine']);
-		$idCompetence=0;
-		if(isset($_POST['idCompetence'])) $idCompetence=intval($_POST['idCompetence']);
+		$nom = isset($_POST['nom']) ? $_POST['nom'] : "" ;
+		$nomAbrege = isset($_POST['nomAbrege']) ? $_POST['nomAbrege'] : "";
+		$idDomaine = isset($_POST['idDomaine']) ? intval($_POST['idDomaine']) : 0;
+		$idCompetence = isset($_POST['idCompetence']) ? intval($_POST['idCompetence']) : 0;
+		$position = isset($_POST['position']) ? intval($_POST['position']) : 0;
 		
 		if($idCompetence!=0)
 		{
-			$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'competences SET nom=:nom, nomAbrege=:nomAbrege, groupe=:idDomaine WHERE id=:idCompetence');
+			$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'competences SET nom=:nom, nomAbrege=:nomAbrege, groupe=:idDomaine, position=:position WHERE id=:idCompetence');
 			$req->execute(array(
 						'nom' => $nom,
 						'nomAbrege' => $nomAbrege,
 						'idDomaine' => $idDomaine,
-						'idCompetence' => $idCompetence
+						'idCompetence' => $idCompetence,
+						'position' => $position
 					));
 
-			$reponseJSON["messageRetour"]=":XLa compétence ".$nom." a bien été modifiée.";
-			$reponseJSON["competence"]["nom"]=$nom;
-			$reponseJSON["competence"]["nomAbrege"]=$nomAbrege;
-			$reponseJSON["competence"]["id"]=$idCompetence;
-			$reponseJSON["competence"]["groupe"]=$idDomaine;
+			$reponseJSON["messageRetour"] = ":XLa compétence ".$nom." a bien été modifiée.";
+			$reponseJSON["competence"]["nom"] = $nom;
+			$reponseJSON["competence"]["nomAbrege"] = $nomAbrege;
+			$reponseJSON["competence"]["id"] = $idCompetence;
+			$reponseJSON["competence"]["groupe"] = $idDomaine;
+			$reponseJSON["competence"]["position"] = $position;
 		}
 		else
 			$reponseJSON["messageRetour"]=":(Aucun n° de compétence envoyé.";
@@ -1390,30 +1396,26 @@ if($action=="modifCritere")
 	if($_SESSION['statut']=="admin")
 	{
 		connectToBDD();
-		$nom="";
-		if(isset($_POST['nom'])) $nom=$_POST['nom'];
-		$details="";
-		if(isset($_POST['details'])) $details=$_POST['details'];
-		$niveaux=1;
-		if(isset($_POST['niveaux'])) $niveaux=intval($_POST['niveaux']);
-		$idCompetence=0;
-		if(isset($_POST['idCompetence'])) $idCompetence=intval($_POST['idCompetence']);
-		$idCritere=0;
-		if(isset($_POST['idCritere'])) $idCritere=intval($_POST['idCritere']);
-		$lien="";
-		if(isset($_POST['lien'])) $lien=$_POST['lien'];
+		$nom = isset($_POST['nom']) ? $_POST['nom'] : "" ;
+		$details = isset($_POST['details']) ? $_POST['details'] : "" ;
+		$niveaux = isset($_POST['niveaux']) ? intval($_POST['niveaux']) : 1 ;
+		$idCompetence = isset($_POST['idCompetence']) ? intval($_POST['idCompetence']) : 0 ;
+		$idCritere = isset($_POST['idCritere']) ? intval($_POST['idCritere']) : 0 ;
+		$lien = isset($_POST['lien']) ? $_POST['lien'] : "" ;
+		$position = isset($_POST['position']) ? intval($_POST['position']) : 0 ;
 		
 		if($idCritere!=0)
 		{
 			if($nom!="")
 			{
-				$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'indicateurs SET nom=:nom, details=:details, niveaux=:niveaux, competence=:idCompetence, lien=:lien WHERE id=:idCritere');
+				$req = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'indicateurs SET nom=:nom, details=:details, niveaux=:niveaux, competence=:idCompetence, lien=:lien, position=:position WHERE id=:idCritere');
 				$req->execute(array(
 							'nom' => $nom,
 							'details' => $details,
 							'niveaux' => $niveaux,
 							'idCompetence' => $idCompetence,
 							'idCritere' => $idCritere,
+							'position' => $position,
 							'lien' => $lien
 						));
 
@@ -1423,6 +1425,7 @@ if($action=="modifCritere")
 					$reponseJSON["indicateur"]["id"]=$idCritere;
 					$reponseJSON["indicateur"]["competence"]=$idCompetence;
 					$reponseJSON["indicateur"]["lien"]=$lien;
+					$reponseJSON["indicateur"]["position"]=$position;
 
 					$reponseJSON["messageRetour"]=":XL'indicateur ".$nom." a bien été modifié.";
 					
