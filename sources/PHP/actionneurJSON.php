@@ -1125,16 +1125,19 @@ if($action=="addGroupeCompetences")
 	if($_SESSION['statut']=="admin")
 	{
 		connectToBDD();
-		$nom="";
-		if(isset($_POST['nom'])) $nom=$_POST['nom'];
+		$nom = isset($_POST['nom']) ? $_POST['nom'] : "";
+		$position = isset($_POST['position']) ? intval($_POST['position']) : 0;
 		if($nom!="")
 		{
 			//Écriture
-			$req = $bdd->prepare('INSERT INTO '.$BDD_PREFIXE.'groupes_competences (nom) VALUES(:nom)');
-			$req->execute(array('nom' => $nom));
+			$req = $bdd->prepare('INSERT INTO '.$BDD_PREFIXE.'groupes_competences (nom,position) VALUES(:nom,:position)');
+			$req->execute(array(
+				'nom' => $nom,
+				'position' => $position
+				));
 
 			//Vérification
-			$req2 =  $bdd->prepare('SELECT id FROM '.$BDD_PREFIXE.'groupes_competences WHERE nom=:nom ORDER BY id DESC LIMIT 1');
+			$req2 =  $bdd->prepare('SELECT id,position FROM '.$BDD_PREFIXE.'groupes_competences WHERE nom=:nom ORDER BY id DESC LIMIT 1');
 			$req2->execute(array('nom' => $nom));
 
 			if($donnees=$req2->fetch())

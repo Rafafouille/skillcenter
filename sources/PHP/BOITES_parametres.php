@@ -4,6 +4,9 @@
 			<form>
 				<label for="dialog-addGroupeCompetences-nom">Nom du nouveau domaine :</label>
 				<input type="text" name="dialog-addGroupeCompetences-nom" id="dialog-addGroupeCompetences-nom" />
+				<br/>
+				<label for="dialog-addGroupeCompetences-position">Nom du nouveau domaine :</label>
+				<input type="number" name="dialog-addGroupeCompetences-position" id="dialog-addGroupeCompetences-position" />
 			</form>
 		</div>
 		<script>
@@ -11,7 +14,7 @@
 				autoOpen: false,
 				modal: true,
 				buttons: {
-							"Créer": function() {$("#dialog-addGroupeCompetences").dialog( "close" );addGroupeCompetences($("#dialog-addGroupeCompetences-nom").val());},
+							"Créer": function() {$("#dialog-addGroupeCompetences").dialog( "close" );addGroupeCompetences($("#dialog-addGroupeCompetences-nom").val(),parseInt($("#dialog-addGroupeCompetences-position").val()));},
 							"Annuler": function() {$("#dialog-addGroupeCompetences").dialog( "close" );}
 						}
 			});
