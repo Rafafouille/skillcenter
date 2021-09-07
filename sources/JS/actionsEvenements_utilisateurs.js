@@ -110,6 +110,21 @@ valideNewUpdateUser=function(reponse)
 	getListeUsersAdmin($("#userAdminSelectClasse").val());
 }
 
+// NOUVEAU USER
+ouvreBoiteAddUser=function()
+{
+	$( "#newUser_nom").val("");
+	$( "#newUser_prenom").val("");
+	//var classe=$( "#newUser_classe").val($("#user_"+i+" .classe-user").text());
+	$( "#newUser_login").val("");
+	$( "#newUser_psw").val("");
+	$( "#newUser_id").val(-1);
+	$("#newUser_mail").val("");
+	$("#newUser_notifieMail").prop('checked', true);
+	
+	$('#dialog-addUser').dialog('open');
+}
+
 // MODIF USER
 ouvreBoiteModifieUser=function(i)
 {

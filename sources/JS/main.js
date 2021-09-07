@@ -36,7 +36,8 @@ $(function()//Fonction lancée au chargement de la page
 	}
 
 	//Génère (une premiere fois) la liste des contextes
-	if(STATUT != "")
+	console.log(STATUT);
+	if(STATUT != "" && STATUT != "visiteur")
 		updateContextesFromServer()
 	if(STATUT == "admin" || STATUT=="evaluateur")
 		updateListeClasseFromServer();

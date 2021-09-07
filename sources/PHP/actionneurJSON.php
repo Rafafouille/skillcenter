@@ -1237,7 +1237,7 @@ if($action=="addCompetence")
 					));
 
 			//Vérification
-			$req2 =  $bdd->prepare('SELECT id FROM '.$BDD_PREFIXE.'competences WHERE nom=:nom ORDER BY id DESC LIMIT 1');
+			$req2 =  $bdd->prepare('SELECT id, position FROM '.$BDD_PREFIXE.'competences WHERE nom=:nom ORDER BY id DESC LIMIT 1');
 			$req2->execute(array('nom' => $nom));
 
 			if($donnees=$req2->fetch())
@@ -1247,7 +1247,7 @@ if($action=="addCompetence")
 				$reponseJSON["competence"]["nomAbrege"]=$nomAbrege;
 				$reponseJSON["competence"]["id"]=intval($donnees['id']);
 				$reponseJSON["competence"]["groupe"]=$idGroupe;
-				$reponseJSON["competence"]["position"]=$position;
+				$reponseJSON["competence"]["position"]=intval($donnees['position']);
 			}
 			else
 				$reponseJSON["messageRetour"]=":(La compétence n'a pas été enregistrée pour une raison inconnue";
