@@ -241,3 +241,13 @@ function trieCompetencesParPosition(tab)
 		}
 	}
 }
+
+
+//Fonction qui tronque un str trop long
+function tronqueSTR(texte,longueur)
+{
+	if(texte.length>longueur)
+		return texte.substring(0,15)+"...";
+	else
+		return texte;
+}

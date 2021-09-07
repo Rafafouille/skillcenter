@@ -68,7 +68,7 @@ foreach($listeBilanDomaines as &$dom)	//Construction des labels
 {
 	if($first)	$first=false;
 	else	echo ",";
-	echo '"'.$dom['nom'].'"';
+	echo 'tronqueSTR("'.$dom['nom'].'",15)';
 }
 ?>];
 

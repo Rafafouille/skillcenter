@@ -131,10 +131,7 @@ updateNotationEleve=function(reponse)
 		if(STATUT=="admin" || STATUT=="evaluateur")
 		{
 			listeEvaluationsDomaines.push(evaluation.niveau/evaluation.niveauMax*100);
-			if(groupe.nom.length>15)
-				listeLabelsDomaines.push(groupe.nom.substring(0,15)+"...");
-			else
-				listeLabelsDomaines.push(groupe.nom);
+			listeLabelsDomaines.push(tronqueSTR(groupe.nom,15));
 			listeIdsDomaines.push(groupe.id);
 		}
 		i+=1;
