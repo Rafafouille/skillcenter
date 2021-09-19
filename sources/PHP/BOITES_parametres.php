@@ -5,7 +5,7 @@
 				<label for="dialog-addGroupeCompetences-nom">Nom du nouveau domaine :</label>
 				<input type="text" name="dialog-addGroupeCompetences-nom" id="dialog-addGroupeCompetences-nom" />
 				<br/>
-				<label for="dialog-addGroupeCompetences-position">Nom du nouveau domaine :</label>
+				<label for="dialog-addGroupeCompetences-position">Numéro du domaine :</label>
 				<input type="number" name="dialog-addGroupeCompetences-position" id="dialog-addGroupeCompetences-position" />
 			</form>
 		</div>
@@ -85,7 +85,7 @@
 				<label for="dialog-addCompetence-nomAbrege">Intitulé Abrégé :</label>
 				<input type="text" name="dialog-addCompetence-nomAbrege" id="dialog-addCompetence-nomAbrege" />
 				<br/>
-				<label for="dialog-addCompetence-position">Position :</label>
+				<label for="dialog-addCompetence-position">Numéro de la compétence :</label>
 				<input type="number" name="dialog-addCompetence-position" id="dialog-addCompetence-position" />
 				<input type="hidden" name="dialog-addCompetence-idGroupe" id="dialog-addCompetence-idGroupe"/>
 			</form>
@@ -185,7 +185,7 @@
 						?>
 				</select>
 				<br/>
-					<label for="dialog-addIndicateur-position">Numéro :</label>
+					<label for="dialog-addIndicateur-position">Numéro du critère :</label>
 					<input type="number" name="dialog-addIndicateur-position" id="dialog-addIndicateur-position" />
 
 				<input type="hidden" name="dialog-addIndicateur-idCompetence" id="dialog-addIndicateur-idCompetence"/>

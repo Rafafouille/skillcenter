@@ -268,7 +268,6 @@ function envoieBilan($id)
 					$messageHTML.=signatureMailBilanHTML();
 					$messageTXT.=signatureMailBilanTXT();
 
-
 					//Update de la derniere date
 					$req3=$bdd->prepare("UPDATE ".$BDD_PREFIXE."utilisateurs SET date_dernier_envoi_bilan=NOW() WHERE id=:id");
 					$req3->execute(array('id'=>$id));
@@ -1045,7 +1044,7 @@ function getTableauContextesHTML()
 			foreach($comp['indicateurs'] AS $ind)
 			{
 				$res .= "
-							<td class=\"contexte_titre_indicateur\">".$ind['nom']."</td>";
+							<td class=\"contexte_titre_indicateur\" title=\"".str_replace("\"","&#8223;",strip_tags($ind['nom']))."\">".tronque(strip_tags($ind['nom']),40)."</td>";
 				$nb_indicateurs++;
 			}
 		}
@@ -1118,7 +1117,19 @@ function getTableauContextesHTML()
 
 
 
+/* =============================================
+AUTRES
+============================================== */
 
+
+//Fonction qui tronque le texte à n caractères
+// Attention, si dots=true, il y a un caractère en plus (3 points)
+function tronque($texte,$n,$dots = true)
+{
+	if(strlen($texte)>$n)
+		return substr($texte,0,$n).($dots ? "⋯" : "");
+	return $texte ;
+}
 
 
 
