@@ -180,6 +180,9 @@
 								};
 						?>
 				</select>
+				<br/>
+					<label for="dialog-addIndicateur-position">Numéro :</label>
+					<input type="number" name="dialog-addIndicateur-position" id="dialog-addIndicateur-position" />
 
 				<input type="hidden" name="dialog-addIndicateur-idCompetence" id="dialog-addIndicateur-idCompetence"/>
 				<?php /*<input type="hidden" name="dialog-addIndicateur-idIndicateur" id="dialog-addIndicateur-idIndicateur"/>*/?>
@@ -188,9 +191,10 @@
 		<script>
 			$( "#dialog-addIndicateur").dialog({
 				autoOpen: false,
+				width: 500,
 				modal: true,
 				buttons: {
-							"Ajouter": function() {$("#dialog-addIndicateur").dialog( "close" );addIndicateur($("#dialog-addIndicateur-nom").val(),$('#dialog-addIndicateur-details').val(),$('#dialog-addIndicateur-niveaux').val(),parseInt($("#dialog-addIndicateur-idCompetence").val()),((true) ? $("#selectClasseCompetences").val() : ""),$("#dialog-addIndicateur-lien").val());},
+							"Ajouter": function() {$("#dialog-addIndicateur").dialog( "close" );addIndicateur($("#dialog-addIndicateur-nom").val(),$('#dialog-addIndicateur-details').val(),$('#dialog-addIndicateur-niveaux').val(),parseInt($("#dialog-addIndicateur-idCompetence").val()),((true) ? $("#selectClasseCompetences").val() : ""),$("#dialog-addIndicateur-lien").val(),parseInt($('#dialog-addIndicateur-position').val()));},
 							"Annuler": function() {$("#dialog-addIndicateur").dialog( "close" );}
 						}
 			});

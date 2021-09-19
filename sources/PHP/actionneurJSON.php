@@ -1331,28 +1331,24 @@ if($action=="addIndicateur")
 	if($_SESSION['statut']=="admin")
 	{
 		connectToBDD();
-		$nom="";
-		if(isset($_POST['nom'])) $nom=$_POST['nom'];
-		$details="";
-		if(isset($_POST['details'])) $details=$_POST['details'];
-		$niveaux=1;
-		if(isset($_POST['niveaux'])) $niveaux=intval($_POST['niveaux']);
-		$idCompetence=0;
-		if(isset($_POST['idCompetence'])) $idCompetence=intval($_POST['idCompetence']);
-		$classe="";
-		if(isset($_POST['classe'])) $classe=$_POST['classe'];
-		$lien="";
-		if(isset($_POST['lien'])) $lien=$_POST['lien'];
+		$nom = isset($_POST['nom']) ?  $_POST['nom'] : "" ;
+		$details = isset($_POST['details']) ? $_POST['details'] : "" ;
+		$niveaux = isset($_POST['niveaux']) ? intval($_POST['niveaux']) : 1 ;
+		$idCompetence = isset($_POST['idCompetence']) ? intval($_POST['idCompetence']) : 0 ;
+		$classe = isset($_POST['classe']) ? $_POST['classe'] : "" ;
+		$lien = isset($_POST['lien']) ? $_POST['lien'] : "" ;
+		$position = isset($_POST['position']) ? intval($_POST['position']) : 0 ;
 		
 		if($nom!="")
 		{
-			$req = $bdd->prepare('INSERT INTO '.$BDD_PREFIXE.'indicateurs (nom,details,niveaux,competence,lien) VALUES(:nom,:details,:niveaux,:idCompetence,:lien)');
+			$req = $bdd->prepare('INSERT INTO '.$BDD_PREFIXE.'indicateurs (nom,details,niveaux,competence,lien,position) VALUES(:nom,:details,:niveaux,:idCompetence,:lien,:position)');
 			$req->execute(array(
 						'nom' => $nom,
 						'details' => $details,
 						'niveaux' => $niveaux,
 						'idCompetence' => $idCompetence,
-						'lien' => $lien
+						'lien' => $lien,
+						'position' => $position
 					));
 					
 					
@@ -1369,6 +1365,7 @@ if($action=="addIndicateur")
 				$reponseJSON["indicateur"]["competence"]=$idCompetence;
 				$reponseJSON["indicateur"]["lien"]=$lien;
 				$reponseJSON["indicateur"]["selected"]=false; //Par défaut
+				$reponseJSON["indicateur"]["position"]=$position;
 				
 				
 				//Ajout du lien du nouvel indicateur avec la classe sélectionnée

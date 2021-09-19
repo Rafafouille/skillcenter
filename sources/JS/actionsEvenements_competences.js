@@ -385,6 +385,14 @@ supprimeCompetence_callback=function(reponse)
 //AJOUTE UN CRITERE  -------------------
 ouvreBoiteAddIndicateur=function(competence,idComp)
 {
+	//Efface
+	$("#dialog-addIndicateur-nom").val("");
+	$("#dialog-addIndicateur-details").val("");
+	$("#dialog-addIndicateur-lien").val("");
+	$("#dialog-addIndicateur-position").val(parseInt($("#dialog-addIndicateur-position").val() || 0)+1);	//Le || Permet de transformer NaN en 0
+
+
+
 	//$("#dialog-addIndicateur").dialog('option', 'title', 'Ajouter un critère');
 	$( "#dialog-addIndicateur .dialog-addIndicateur_nomCompetence").text(competence);
 	$( "#dialog-addIndicateur-idCompetence").val(idComp);
@@ -392,7 +400,7 @@ ouvreBoiteAddIndicateur=function(competence,idComp)
 	$( "#dialog-addIndicateur").dialog("open");
 }
 
-addIndicateur=function(nom,details,niveaux,idCompetence,classe,lien)
+addIndicateur=function(nom,details,niveaux,idCompetence,classe,lien,position)
 {
 	$.post(
 			'./sources/PHP/actionneurJSON.php',//Requete appelée
@@ -403,6 +411,7 @@ addIndicateur=function(nom,details,niveaux,idCompetence,classe,lien)
 				niveaux:niveaux,
 				idCompetence:idCompetence,
 				lien:lien,
+				position:position,
 				classe: classe//Pour lier tout de suite la classe au nouvel indicateur
 			},
 			addIndicateur_callback,	//Fonction callback
@@ -416,7 +425,7 @@ addIndicateur_callback=function(reponse)
 	cacheBarreChargement();
 	afficheMessage(reponse.messageRetour);
 	var indicateur=reponse.indicateur;
-	var rendu=ADMIN_COMPETENCES_rendu_HTML_indicateur(indicateur,0,0,"indicateur");
+	var rendu=ADMIN_COMPETENCES_rendu_HTML_indicateur(indicateur,$("#ADMIN_COMPETENCES_competence_"+String(indicateur.competence)).data("position"),indicateur.position,"indicateur");
 	$("#ADMIN_COMPETENCES_competence_"+indicateur.competence+" .listeIndicateurs .indicateurs").append(rendu);
 	
 	NOTATION_LOADED=false;//Impose de recharger la notation en cas de nouvelle indicateur
