@@ -253,13 +253,18 @@ supprimeDomaine_callback=function(reponse)
 //BOITE AJOUTE COMPETENCES -----------------------------
 ouvreBoiteAddCompetence=function(groupe,i)
 {
+	//Vide
+	$("#dialog-addCompetence-nom").val("");
+	$("#dialog-addCompetence-nomAbrege").val("");
+	$("#dialog-addCompetence-position").val( parseInt( $("#dialog-addCompetence-position").val() || 0)+1 );
+	
 	$( "#dialog-addCompetence .dialog-addCompetence_nomGroupe").text(groupe);
 	$( "#dialog-addCompetence-idGroupe").val(i);
 	$( "#dialog-addCompetence").dialog( "open" );
 }
 
 //AJOUTE COMPETENCE -----------------------------
-addCompetence=function(nom,nomAbrege,idGroupe)
+addCompetence=function(nom,nomAbrege,position,idGroupe)
 {
 	$.post(
 			'./sources/PHP/actionneurJSON.php',//Requete appelée
@@ -267,6 +272,7 @@ addCompetence=function(nom,nomAbrege,idGroupe)
 				action:"addCompetence",
 				nom:nom,
 				nomAbrege:nomAbrege,
+				position,
 				idGroupe:idGroupe
 			},
 			addCompetence_callback,	//Fonction callback
@@ -281,7 +287,7 @@ addCompetence_callback=function(reponse)
 	cacheBarreChargement();
 	var comp=reponse.competence;
 	afficheMessage(reponse.messageRetour);
-	var rendu=ADMIN_COMPETENCES_rendu_HTML_competence(comp.nom,comp.nomAbrege,comp.id,0,"competence_unselected");
+	var rendu=ADMIN_COMPETENCES_rendu_HTML_competence(comp.nom,comp.nomAbrege,comp.id,comp.position,"competence_unselected");
 	$("#ADMIN_COMPETENCES_groupe_"+comp.groupe+" .groupe_contenu").append(rendu);
 }
 

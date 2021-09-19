@@ -1221,19 +1221,18 @@ if($action=="addCompetence")
 	if($_SESSION['statut']=="admin")
 	{
 		connectToBDD();
-		$nom="";
-		if(isset($_POST['nom'])) $nom=$_POST['nom'];
-		$nomAbrege="";
-		if(isset($_POST['nomAbrege'])) $nomAbrege=$_POST['nomAbrege'];
-		$idGroupe=0;
-		if(isset($_POST['idGroupe'])) $idGroupe=intval($_POST['idGroupe']);
+		$nom = isset($_POST['nom']) ? $_POST['nom'] : "" ;
+		$nomAbrege = isset($_POST['nomAbrege']) ? $_POST['nomAbrege'] : "" ;
+		$idGroupe = isset($_POST['idGroupe']) ? intval($_POST['idGroupe']) : 0 ;
+		$position = isset($_POST['position']) ? intval($_POST['position']) : 0 ;
 		if($nom!="")
 		{
-			$req = $bdd->prepare('INSERT INTO '.$BDD_PREFIXE.'competences (nom,nomAbrege,groupe) VALUES(:nom,:nomAbrege,:idGroupe)');
+			$req = $bdd->prepare('INSERT INTO '.$BDD_PREFIXE.'competences (nom,nomAbrege,groupe,position) VALUES(:nom,:nomAbrege,:idGroupe,:position)');
 			$req->execute(array(
 						'nom' => $nom,
 						'nomAbrege' => $nomAbrege,
-						'idGroupe' => $idGroupe
+						'idGroupe' => $idGroupe,
+						'position' => $position
 					));
 
 			//Vérification

@@ -84,15 +84,19 @@
 				<br/>
 				<label for="dialog-addCompetence-nomAbrege">Intitulé Abrégé :</label>
 				<input type="text" name="dialog-addCompetence-nomAbrege" id="dialog-addCompetence-nomAbrege" />
+				<br/>
+				<label for="dialog-addCompetence-position">Position :</label>
+				<input type="number" name="dialog-addCompetence-position" id="dialog-addCompetence-position" />
 				<input type="hidden" name="dialog-addCompetence-idGroupe" id="dialog-addCompetence-idGroupe"/>
 			</form>
 		</div>
 		<script>
 			$( "#dialog-addCompetence").dialog({
 				autoOpen: false,
+				width:500,
 				modal: true,
 				buttons: {
-							"Ajouter": function() {$("#dialog-addCompetence").dialog( "close" );addCompetence($("#dialog-addCompetence-nom").val(),$("#dialog-addCompetence-nomAbrege").val(),parseInt($("#dialog-addCompetence-idGroupe").val()));},
+							"Ajouter": function() {$("#dialog-addCompetence").dialog( "close" );addCompetence($("#dialog-addCompetence-nom").val(),$("#dialog-addCompetence-nomAbrege").val(),parseInt($("#dialog-addCompetence-position").val()),parseInt($("#dialog-addCompetence-idGroupe").val()));},
 							"Annuler": function() {$("#dialog-addCompetence").dialog( "close" );}
 						}
 			});
