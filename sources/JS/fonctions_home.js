@@ -4,7 +4,7 @@
 // donnees = liste de valeurs
 // labels = liste de labels
 // id domaine = id pour savoir quand on clique dessus
-// legende = true si on affiche la legende (par defaut) et false sinon
+// legende = true si on affiche la legende+les valeurs (par defaut) et false sinon (<-- Utile pour le bouton "graphiques" en admin)
 function traceGraphiqueRecap_Domaine(context_,donnees_,labels_,idDomaines_,legende_)
 {
 	var context=$(context_);//context jquery
@@ -21,12 +21,20 @@ function traceGraphiqueRecap_Domaine(context_,donnees_,labels_,idDomaines_,legen
 										}],
 						idDomaines:idDomaines_
 					}
-	var options={
-			legend:{display:legende_},
+	var options={			
 			responsive: false,
-			scale:{
-				ticks:{max:100,display: false}
-				}
+			plugins :{
+				legend:{
+					display:legende_
+					}
+				},
+		     	scales:{
+		     		r:{
+					max:100,
+					min:0,
+		     			ticks:{display:legende_}
+		     		  }
+		     		}
 			}
 	var	chart=new Chart(context,{type,data,options});//Création du graphique
 
@@ -65,36 +73,38 @@ fermeGraphiquesCompetences=function()
 function traceGraphiqueRecap_Competence(context_,donnees_,labels_,titre_,couleur_)
 {
 	var context=$(context_);//context jquery
-
 	var data={
-								labels:labels_,
-								datasets:[{
-														data:donnees_,
-														backgroundColor: couleur_,
-														borderColor: couleur_
-													}]
-						};
+			labels:labels_,
+			datasets:	//Liste des graphiques (si plusieurs se superposent)
+				[{
+				data:donnees_,
+				backgroundColor: couleur_,
+				borderColor: couleur_
+				}]
+		};
 var options={
-								responsive: false,
-								legend:{
-												display:false
-											},
-								title:{
-												display:true,
-												text:titre_
-											}
-					}
+		responsive: false,
+		plugins:{
+			title:{
+				display:true,
+				text:titre_
+				},
+			legend:{
+				display:false
+				}
+			}
+	}
 
 	//Modification de l'échelle selon le type de graphique
 	if(labels_.length>2)
 	{
 		var type="radar";
-		options.scale={ticks:{max:100,min:0}};//Pour les radars
+		options.scale={max:100,min:0};//Pour les radars
 	}
 	else
 	{
-		var type="bar"
-		options.scales={yAxes:[{ticks:{max:100,min:0}}]};//Pour les barres
+		var type="bar" ;
+		options.scales={y:{max:100,min:0}};//Pour les barres
 	}
 
 

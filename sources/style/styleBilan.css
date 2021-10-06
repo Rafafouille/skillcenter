@@ -41,19 +41,20 @@ Boutons
 #bouton_bilan_graphe_icone canvas
 {
 	display:inline-block;
+	margin:0px;
 }
 
 #bouton_bilan_graphe_icone
 {
 	display:inline-block;
-	width:50px;
-	height:28px;
-	margin-top:-65px;
-	margin-bottom:-15px;
-	margin-left:-40px;
-	margin-right:0px;
-	padding-top:9px;
-	padding-bottom:-50px;
+	width:30px;
+	height:30px;
+	margin-top:-10px;
+	margin-bottom:-10px;
+	margin-left:0px;
+	margin-right:5px;
+	padding-top:0px;
+	padding-bottom:0px;
 	overflow:hidden;
 }
 

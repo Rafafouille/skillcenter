@@ -59,7 +59,7 @@ include("./sources/PHP/actions.php");
 		<script type="text/javascript" src="./sources/JS/libraries/jquery-ui/jquery-ui.min.js"></script>
 		
 		<!-- CHART.JS (pour les graphiques) + Moment.js ---------->
-		<script type="text/javascript" src="./sources/JS/libraries/chartjs/Chart.min.js"></script>
+		<script type="text/javascript" src="./sources/JS/libraries/chartjs/chart.min.js"></script>
 		<!--<script type="text/javascript" src="./sources/JS/libraries/momentjs/moment.js"></script>-->
 
 		<!-- Menus déroulants -->

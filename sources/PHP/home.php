@@ -86,13 +86,14 @@ graphiqueDomainesChartJS=traceGraphiqueRecap_Domaine("#radarDomaines",donneesDom
 
 //Gestion des clicks
 document.getElementById("radarDomaines").onclick = function(evt){
-            var activePoints = graphiqueDomainesChartJS.getElementsAtEvent(evt);
+            var activePoints = graphiqueDomainesChartJS.getElementsAtEventForMode(evt,'nearest', { intersect: true }, true);
+            console.log(activePoints);
 	          var firstPoint = activePoints[0];
 						if(firstPoint!=undefined)
 						{
 		          //var label = graphiqueDomainesChartJS.data.labels[firstPoint._index]; //Affiche le label
 		          //var value = graphiqueDomainesChartJS.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
-							idDomaine=graphiqueDomainesChartJS.data.idDomaines[firstPoint._index];
+							idDomaine=graphiqueDomainesChartJS.data.idDomaines[firstPoint.index];
 							ouvreGraphiqueCompetence(idDomaine);
 						}
 						else
