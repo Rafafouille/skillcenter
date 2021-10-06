@@ -335,13 +335,17 @@ if($etape=="TestconnexionAdminMdP")
 	{
 		$bdd = new PDO('mysql:host='.$_SESSION['BDD_SERVER'].';dbname='.$_SESSION['BDD_NOM_BDD'].';charset=utf8',$_SESSION['BDD_LOGIN'],$_SESSION['BDD_MOT_DE_PASSE']);
 
-		$requete=$bdd->prepare("SELECT * FROM ".$_SESSION['BDD_PREFIXE']."utilisateurs WHERE statut='admin' AND login=:login AND (mdp=:mdp OR mdp=:mdp2)");
-		$requete->execute(array("login"=>$login,"mdp"=>$mdp,"mdp2"=>crypt($mdp,"$232#;E")));
+		$requete=$bdd->prepare("SELECT * FROM ".$_SESSION['BDD_PREFIXE']."utilisateurs WHERE statut='admin' AND login=:login");
+		$requete->execute(array(
+					"login"=>$login
+					));
 
 
-		if($requete->fetch())//S'il y a au moins un admin
-			$connexionReussie=true;
-		
+		if($data=$requete->fetch())//S'il y a au moins un admin
+		{
+			if($data['mdp'] == $mdp || $data['mdp'] == crypt($mdp,"$232#;E") || password_verify($mdp,$data['mdp']) )	# A terme, ne laisser que password_verif
+				$connexionReussie=true;
+		}
 	}
 	catch(PDOException $e)
 	{}
@@ -1214,16 +1218,11 @@ if($etape=="enregistreAdmin")
 {
 		$bdd = new PDO('mysql:host='.$_SESSION['BDD_SERVER'].';dbname='.$_SESSION['BDD_NOM_BDD'].';charset=utf8',$_SESSION['BDD_LOGIN'],$_SESSION['BDD_MOT_DE_PASSE']);
 
-		$nom="";
-		if(isset($_POST['admin_nom'])) $nom=strtoupper($_POST['admin_nom']);
-		$prenom="";
-		if(isset($_POST['admin_prenom'])) $prenom=ucwords($_POST['admin_prenom']);
-		$login="";
-		if(isset($_POST['admin_login'])) $login=strtolower($_POST['admin_login']);
-		$mdp="";
-		if(isset($_POST['admin_mdp'])) $mdp=crypt($_POST['admin_mdp'],"$232#;E");
-		$mail="";
-		if(isset($_POST['admin_mail'])) $mail=strtolower($_POST['admin_mail']);
+		$nom = isset($_POST['admin_nom']) ? strtoupper($_POST['admin_nom']) : "" ;
+		$prenom = isset($_POST['admin_prenom']) ? ucwords($_POST['admin_prenom']) : "" ;
+		$login = isset($_POST['admin_login']) ? strtolower($_POST['admin_login']) : "" ;
+		$mdp = isset($_POST['admin_mdp']) ? password_hash("rasmuslerdorf", PASSWORD_DEFAULT) : "" ;//crypt($_POST['admin_mdp'],"$232#;E");
+		$mail = isset($_POST['admin_mail']) ? strtolower($_POST['admin_mail']) : "" ;
 
 
 		if($nom!="" && $login!="" && $mdp!="")
