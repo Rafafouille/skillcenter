@@ -1221,7 +1221,7 @@ if($etape=="enregistreAdmin")
 		$nom = isset($_POST['admin_nom']) ? strtoupper($_POST['admin_nom']) : "" ;
 		$prenom = isset($_POST['admin_prenom']) ? ucwords($_POST['admin_prenom']) : "" ;
 		$login = isset($_POST['admin_login']) ? strtolower($_POST['admin_login']) : "" ;
-		$mdp = isset($_POST['admin_mdp']) ? password_hash("rasmuslerdorf", PASSWORD_DEFAULT) : "" ;//crypt($_POST['admin_mdp'],"$232#;E");
+		$mdp = isset($_POST['admin_mdp']) ? password_hash($_POST['admin_mdp'], PASSWORD_DEFAULT) : "" ;//crypt($_POST['admin_mdp'],"$232#;E");
 		$mail = isset($_POST['admin_mail']) ? strtolower($_POST['admin_mail']) : "" ;
 
 
