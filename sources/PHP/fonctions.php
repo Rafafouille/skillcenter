@@ -1,6 +1,14 @@
 <?php
 include_once('options.php');
 
+// GRAINS DE SEL pour le cryptage
+$SALT = "$232#;E";
+$SALT2 = "$232#;E$232#;E$232#;E$232#;E$232#;E$232#;E$232#;E";
+
+
+// SUPPRIMER LES WARNING POUR EVITER D'AVOIR DES PARASITES DANS LES RETOURS
+error_reporting(E_ERROR | E_PARSE);
+
 //Lance la session et initialise les variables associées
 function initSession()
 {
@@ -40,8 +48,19 @@ function getNextFreeIdOfTable($DB,$table)
 	return intval($data['m'])+1;
 }
 
-
-
+# Verifie qu'un mot de passe rentrée (non crypté) d'un utilisateur ($mdp_check, non crypté)
+# matche avec un mot de passe crypté de la BDD ($mdp_crypte_BDD)
+# Teste selon les versions du site
+function verif_MDP_BDD_crypt($mdp_check,$mdp_crypte_BDD)
+{
+	if($mdp_check == $mdp_crypte_BDD)	# Vieilles versions de Skillcenter (non crypté). Est-ce bien de le garder ?
+		return true;
+	if(crypt($mdp_check,$SALT) == $mdp_crypte_BDD)	# Version avec crypt (et petit salt)
+		return true;
+	if(password_verify($mdp_check,$mdp_crypte_BDD))	# Version avec password_hash (plus récent)
+		return true;
+	return false;
+}
 
 //Fonction qui permet d'envoyer un mail *************************************
 // La bibliotheque PHPMailerAutoload.php doit être chargée
@@ -705,7 +724,7 @@ function supprimeIndicateur($idIndicateur)
 	$req->execute(array('idIndicateur' => $idIndicateur));
 }
 
-//Fonction qui supprime une compétence
+//Fonction qui supprime une compétenceVERIF
 function supprimeCompetence($idCompetence,$supprInd=true)
 {
 	global $bdd,$BDD_PREFIXE;
@@ -953,6 +972,7 @@ function getListeCompetences()
 		if(!isset($tab[$data['groupe_id']]))
 		{
 			$tab[$data['groupe_id']]["nom"] = $data['groupe_nom'];
+
 			$tab[$data['groupe_id']]["id"] = $data['groupe_id'];
 			$tab[$data['groupe_id']]["nb_indicateurs"] = 0;
 			$tab[$data['groupe_id']]["competences"] = array();

@@ -20,7 +20,7 @@ require 'biblio_php/PHPMailer_6.5.1/src/SMTP.php';
 initSession();
 
 
-$SALT="$232#;E";//Grain de sel pour le hachage du mot de passe
+#$SALT="$232#;E";//Grain de sel pour le hachage du mot de passe (<-- remplace par la fonction verif_MDP_BDDcrypt() dans fonctions.php)
 
 /* ******************************
 	Programme pour ajax (avec réponse JSON)
@@ -62,24 +62,35 @@ if($action=="login")
 	if($login!="" && $mdp!="")	//Si les paramètres ne sont pas vides
 	{
 		usleep(300000);//Pause pour ne pas tester 500000 mot de passe par seconde (3/seconde, max)
-		$req = $bdd->prepare('SELECT * FROM '.$BDD_PREFIXE.'utilisateurs WHERE (login=:login OR login=:loginlower) AND (mdp = :mdp OR mdp=:mdpCrypt)');
-		$req->execute(array('login' => $login, 'loginlower' => $loginLower, 'mdp' => $mdp, 'mdpCrypt' => crypt($mdp,$SALT)));
+#		$req = $bdd->prepare('SELECT * FROM '.$BDD_PREFIXE.'utilisateurs WHERE (login=:login OR login=:loginlower) AND (mdp = :mdp OR mdp=:mdpCrypt)');
+#		$req->execute(array('login' => $login, 'loginlower' => $loginLower, 'mdp' => $mdp, 'mdpCrypt' => crypt($mdp,$SALT))); <-- Obsolete. Il faut utiliser password_hash
+#		$req->execute(array('login' => $login, 'loginlower' => $loginLower, 'mdp' => $mdp, 'mdpCrypt' => password_hash($mdp,PASSWORD_BCRYPT,["salt"=>$SALT])));
+		
+		$req = $bdd->prepare('SELECT * FROM '.$BDD_PREFIXE.'utilisateurs WHERE (login=:login OR login=:loginlower)');
+		$req->execute(array('login' => $login, 'loginlower' => $loginLower));
+		
 		if($donnees = $req->fetch())	//Si l'utilisateur est dans la BDD, avec le bon mot de passe
 		{
-			$_SESSION['nom']=$donnees['nom'];
-			$_SESSION['prenom']=$donnees['prenom'];
-			$_SESSION['statut']=$donnees['statut'];
-			$_SESSION['id']=$donnees['id'];
-			$_SESSION['classe']=$donnees['classe'];
-			$reponseJSON["messageRetour"]=":)Vous êtes connecté. Bonjour ".$_SESSION['prenom']." ".$_SESSION['nom']." !";
+			$mot_de_passe_bdd = $donnees['mdp'];
+			if( verif_MDP_BDD_crypt($mdp,$mot_de_passe_bdd) )
+			{
+				$_SESSION['nom']=$donnees['nom'];
+				$_SESSION['prenom']=$donnees['prenom'];
+				$_SESSION['statut']=$donnees['statut'];
+				$_SESSION['id']=$donnees['id'];
+				$_SESSION['classe']=$donnees['classe'];
+				$reponseJSON["messageRetour"]=":)Vous êtes connecté. Bonjour ".$_SESSION['prenom']." ".$_SESSION['nom']." !";
 
-			//MAJ date de connexion
-			$req2=$bdd->prepare("UPDATE ".$BDD_PREFIXE."utilisateurs SET derniere_connexion=NOW() WHERE id=:id");
-			$req2->execute(array('id'=>$_SESSION['id']));
+				//MAJ date de connexion
+				$req2=$bdd->prepare("UPDATE ".$BDD_PREFIXE."utilisateurs SET derniere_connexion=NOW() WHERE id=:id");
+				$req2->execute(array('id'=>$_SESSION['id']));
 
-			//Badges
-			if($AUTORISE_BADGES)
-				updateBadges_aLaConnexion($_SESSION['id']);
+				//Badges
+				if($AUTORISE_BADGES)
+					updateBadges_aLaConnexion($_SESSION['id']);
+			}
+			else
+				$reponseJSON["messageRetour"]=":(Le mot de passe ou l'identifiant.";
 		}
 		else	//Si le couple (utilisateur<->mot de passe) n'est pas trouvé...
 			$reponseJSON["messageRetour"]=":(L'identifiant ou le mot de passe est incorrect.";
@@ -189,7 +200,8 @@ if($action=="addUser")
 				'nom' => strtoupper($_POST["newUser_nom"]),
 				'prenom' => ucwords($_POST['newUser_prenom']),
 				'login' => $_POST['newUser_login'],
-				'mdp' => crypt($_POST['newUser_psw'],$SALT),//Le 2ème paramètre : voir la fonction crypt (salt (pas très efficace si constant... mais tant pis)
+				#'mdp' => crypt($_POST['newUser_psw'],$SALT),//Le 2ème paramètre : voir la fonction crypt (salt (pas très efficace si constant... mais tant pis)
+				'mdp' => password_hash($_POST['newUser_psw'],PASSWORD_DEFAULT),
 				'classe' => strtoupper($_POST['newUser_classe']),
 				'mail' => $_POST['newUser_mail'],
 				'notifieMail' => $_POST['newUser_notifieMail']
@@ -236,7 +248,8 @@ if($action=="updateUser")
 						'nom' => $_POST["newUser_nom"],
 						'prenom' => $_POST['newUser_prenom'],
 						'login' => $_POST['newUser_login'],
-						'mdp' => crypt($_POST['newUser_psw'],$SALT),
+						#'mdp' => crypt($_POST['newUser_psw'],$SALT),
+						'mdp' => password_hash($_POST['newUser_psw'],PASSWORD_DEFAULT),
 						'classe' => $_POST['newUser_classe'],
 						'mail' => $_POST['newUser_mail'],
 						'notifieMail' => $_POST['newUser_notifieMail'],
