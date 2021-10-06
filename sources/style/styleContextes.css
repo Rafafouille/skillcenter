@@ -43,6 +43,8 @@ ENTETE
 	font-weight:bold;
 	background-color:#EEEEFF;
 	text-overflow:ellipsis;
+	vertical-align:top;
+	text-align:left;
 }
 
 
