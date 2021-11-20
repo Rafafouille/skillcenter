@@ -576,7 +576,7 @@ WHERE lci.classe=:classe';
 				
 				
 				//Note max et moyenne
-				if($contexte == "ALL_CONTEXTE")
+				if($contexte == "ALL_CONTEXTE" || true) // true pour afficher les évaluations, meme si elles ne sont pas du contexte
 				{
 					$reqNoteAgr = $bdd->prepare("SELECT MAX(note) AS max, AVG(note) AS moy FROM ".$BDD_PREFIXE."notation WHERE eleve=:eleve AND indicateur=".$idInd);
 					$reqNoteAgr->execute(array('eleve'=>$eleve));	
