@@ -265,29 +265,37 @@ function NOTATION_getNiveauxIndicateur(val,maxi,indicateur, clickable,degrade)
 
 
 // Fonction qui ouvre la ligne de commentaire
-bilanOuvreCommentaire=function(idInd,idEval)
+bilanOuvreCommentaire=function(idInd,idEval,commentaire="",contexte=0)
 {
+	contexte = parseInt(contexte);
+	if(contexte==0)	// Si pas de contexte de proposé, on part sur celui qui est sélectionné dans le menu
+		contexte = parseInt($("#BILAN_listeContextes").val());
+	
 	if(AUTORISE_CONTEXT || AUTORISE_COMMENTAIRES)
 	{
 		//Update idEval (id de l'évaluation, et non pas de l'indicateur !!!)
 			$("#NOTATION_indicateur_"+idInd+" .commentaireIndicateur form").attr("data-ideval",idEval);
 		
 		//MAJ des contextes
-			var identif_select_contexte = "#NOTATION_indicateur_"+String(idInd)+" .commentaireIndicateur_contexte"
+			var identif_select_contexte = "#NOTATION_indicateur_"+String(idInd)+" .commentaireIndicateur_contexte";
 			$(identif_select_contexte).empty();
-			if(parseInt($("#BILAN_listeContextes").val()))//On met en priorité l'élément qui est sélectionné (non nul)
+			if(contexte)//On met en priorité l'élément qui est sélectionné (non nul)
 			{
 				$(identif_select_contexte).append("<option value=\"0\">Pas de contexte</option>");
-				$(identif_select_contexte).append("<option value=\""+String($("#BILAN_listeContextes").val())+"\" selected=\"selected\">"+$("#BILAN_listeContextes option:selected").text()+"</option>");
+				$(identif_select_contexte).append("<option value=\""+String(contexte)+"\" selected=\"selected\">"+$("#BILAN_listeContextes option[value=\""+String(contexte)+"\"]").text()+"</option>");
 			}//Sinon, juste le "pas de contexte", sélectionné
 			else
 				$(identif_select_contexte).append("<option value=\"0\" selected=\"selected\">Pas de contexte</option>");
 			//Les autres lignes
 			LISTE_CONTEXTES.forEach(function(cont){
-				if( cont.id != parseInt($("#BILAN_listeContextes").val()))
+				if( cont.id != contexte)
 					$(identif_select_contexte).append("<option value=\""+String(cont.id)+"\">"+cont.nom+"</option>");
 			})
 
+		// MAJ des commentaires
+			var identif_select_commentaire = "#NOTATION_indicateur_"+String(idInd)+" .commentaireIndicateur-commentaire";
+			$(identif_select_commentaire).val(commentaire);
+			
 		//Animation
 			$("#NOTATION_indicateur_"+idInd+" .titreIndicateur").hide("slide",{direction: "left" }, 500);
 			setTimeout(function(){$("#NOTATION_indicateur_"+idInd+" .commentaireIndicateur").show("slide", { direction: "right" }, 500);},510);

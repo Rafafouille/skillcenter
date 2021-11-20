@@ -210,7 +210,7 @@ valideNouvelleNote=function(reponse)
 		var idIndicateur=reponse.note.idIndicateur;
 		var idEval=reponse.notation.id;
 		valideAllCommentaireEval();//Valide et ferme tous les commentaires encore ouverts
-		bilanOuvreCommentaire(idIndicateur,idEval);//Ouverture de la ligne de commentaire
+		bilanOuvreCommentaire(idIndicateur, idEval, reponse.notation.commentaire, reponse.notation.contexte);//Ouverture de la ligne de commentaire
 	}
 
 

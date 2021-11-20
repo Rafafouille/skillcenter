@@ -5,7 +5,6 @@
 $dOptions='./sources/PHP/';//Chemin du fichier d'option
 
 $etape="debut";
-//if(!isset($_SESSION['etape']))	$_SESSION['etape']="debut";
 if(isset($_POST['etape']))	$etape=$_POST['etape'];
 //$etape=$_SESSION['etape'];
 
@@ -38,6 +37,7 @@ if(isset($_POST['input_NOM_NIVEAU_1-0']))	//Recupere les noms de niveaux
 	}
 }
 
+if(isset($_POST['TEMPS_UPDATE_EVALUATION']))	$_SESSION['TEMPS_UPDATE_EVALUATION']=$_POST['TEMPS_UPDATE_EVALUATION'];
 if(isset($_POST['AUTORISE_CONTEXT']))		$_SESSION['AUTORISE_CONTEXT']=$_POST['AUTORISE_CONTEXT']=="oui";
 if(isset($_POST['AUTORISE_COMMENTAIRES']))	$_SESSION['AUTORISE_COMMENTAIRES']=$_POST['AUTORISE_COMMENTAIRES']=="oui";
 
@@ -230,6 +230,7 @@ if($etape=="sauvOptions")
 	$NB_NIVEAUX_MAX=5;		//Nombre de niveau max possible à donner aux élèves
 	$NIVEAU_DEFAUT=3;		//Niveau par défaut quand on crée un critères
 	$INTITULES_NIVEAUX_CRITERES=Array();	//Noms des niveaux
+	$TEMPS_UPDATE_EVALUATION=120;		//Temps avant lequel une évaluation peut être mise à jour
 	$AUTORISE_CONTEXT=true;			//Autorise de mettre un context aux évaluations
 	$AUTORISE_COMMENTAIRES=true;		//Autorise de mettre des commentaires aux évaluations
 
@@ -295,6 +296,7 @@ if($etape=="sauvOptions")
 	$_SESSION['NB_NIVEAUX']=$NB_NIVEAUX_MAX;		//Nombre de niveau max possible à donner aux élèvess
 	$_SESSION['NIVEAU_DEFAUT']=$NIVEAU_DEFAUT;		//Niveau par défaut
 	$_SESSION['NOMS_NIVEAUX']=$INTITULES_NIVEAUX_CRITERES;	//Nom des niveaux
+	$_SESSION['TEMPS_UPDATE_EVALUATION']=$TEMPS_UPDATE_EVALUATION;	// Temps d'update
 	$_SESSION['AUTORISE_CONTEXT']=$AUTORISE_CONTEXT;		//Permet de mettre un context
 	$_SESSION['AUTORISE_COMMENTAIRES']=$AUTORISE_COMMENTAIRES;	//Permet de mettre des commentaires
 
@@ -679,9 +681,13 @@ if($etape=="rentreNotation")
 						<td><label for="input_NIVEAU_DEFAUT">Niveau par défaut pour un critère <span title="Il s'agit du niveau maximum par défaut proposé lors de la création d''une compétence."><img src="./sources/images/icone-info.png" alt="[i]"/></span> :</label></td>
 						<td><input type="number" min="2" step="1" placeholder="Nombre supérieur à 0" id="input_NIVEAU_DEFAUT" name="NIVEAU_DEFAUT" value="<?php echo $_SESSION['NIVEAU_DEFAUT']+1;?>"/></td>
 					</tr>
+					<tr>
+						<td><label for="input_TEMPS_UPDATE_EVALUATION">Temps maxi pour modifier une évaluation (en s)<span title="Si on ré-évalue une même évaluation dans un temps court, elle est mise à jour. Au delà, elle compte comme nouvelle évaluation."><img src="./sources/images/icone-info.png" alt="[i]"/></span> :</label></td>
+						<td><input type="number" min="0" step="1" placeholder="Temps en seconde" id="input_TEMPS_UPDATE_EVALUATION" name="TEMPS_UPDATE_EVALUATION" value="<?php echo $_SESSION['TEMPS_UPDATE_EVALUATION'];?>"/></td>
+					</tr>
 				</table>
 
-				<h3>Commentaires/Context des évaluations</h3>
+				<h3>Commentaires/Contexte des évaluations</h3>
 
 				<table>
 					<tr>
@@ -852,21 +858,21 @@ if($etape=="ecritFichier")
 ***************************************************** */
 
 //Paramètres généraux ************************
-\$TITRE_PAGE=\"".$_SESSION['TITRE_PAGE']."\";	//Titre de la page (du navigateur + du bandeau)
-\$COULEUR_BANDEAU=\"".$_SESSION['COULEUR_BANDEAU']."\";	//Couleur d'arriere plan du bandeau
+\$TITRE_PAGE = \"".$_SESSION['TITRE_PAGE']."\";	//Titre de la page (du navigateur + du bandeau)
+\$COULEUR_BANDEAU = \"".$_SESSION['COULEUR_BANDEAU']."\";	//Couleur d'arriere plan du bandeau
 
 //Paramètres pour la base de données SQL ***********
-\$BDD_SERVER=\"".$_SESSION['BDD_SERVER']."\";	//Adresse de la base de données
-\$BDD_NOM_BDD=\"".$_SESSION['BDD_NOM_BDD']."\";	//Nom de la base de données
-\$BDD_LOGIN=\"".$_SESSION['BDD_LOGIN']."\";	//Nom d'utilisateur de la base de données
-\$BDD_MOT_DE_PASSE=\"".$_SESSION['BDD_MOT_DE_PASSE']."\";	//Mot de passe associé au nom d'utilisateur
-\$BDD_PREFIXE=\"".$_SESSION['BDD_PREFIXE']."\";		//Préfixe à donner aux tables de la BDD
+\$BDD_SERVER = \"".$_SESSION['BDD_SERVER']."\";	//Adresse de la base de données
+\$BDD_NOM_BDD = \"".$_SESSION['BDD_NOM_BDD']."\";	//Nom de la base de données
+\$BDD_LOGIN = \"".$_SESSION['BDD_LOGIN']."\";	//Nom d'utilisateur de la base de données
+\$BDD_MOT_DE_PASSE = \"".$_SESSION['BDD_MOT_DE_PASSE']."\";	//Mot de passe associé au nom d'utilisateur
+\$BDD_PREFIXE = \"".$_SESSION['BDD_PREFIXE']."\";		//Préfixe à donner aux tables de la BDD
 
 //Paramètre sur l'évaluation ********
-\$NB_NIVEAUX_MAX=".$_SESSION['NB_NIVEAUX'].";		//Nombre de niveaux maximums qu'un critère pourra prendre
-\$NIVEAU_DEFAUT=".$_SESSION['NIVEAU_DEFAUT'].";		//Niveau max initialement proposé lors de la création d'un critère
+\$NB_NIVEAUX_MAX = ".$_SESSION['NB_NIVEAUX'].";		//Nombre de niveaux maximums qu'un critère pourra prendre
+\$NIVEAU_DEFAUT = ".$_SESSION['NIVEAU_DEFAUT'].";		//Niveau max initialement proposé lors de la création d'un critère
 //Noms des criteres :
-\$INTITULES_NIVEAUX_CRITERES=array(";
+\$INTITULES_NIVEAUX_CRITERES = array(";
 	for($i=1;$i<=$_SESSION['NB_NIVEAUX'];$i++)
 	{
 		$contenu.="array(";
@@ -882,27 +888,28 @@ if($etape=="ecritFichier")
 	}
 $contenu.=");\n";
 
-$contenu.="\$AUTORISE_CONTEXT=".($_SESSION['AUTORISE_CONTEXT']?"true":"false").";		//Autorise (ou non) de mettre des contextes sur chaque évaluations (TD, TP, etc.)
-\$AUTORISE_COMMENTAIRES=".($_SESSION['AUTORISE_COMMENTAIRES']?"true":"false").";	//Autorise (ou non) de mettre des commentaires sur chaque évaluations.
+$contenu.="\$TEMPS_UPDATE_EVALUATION = ".strval($_SESSION['TEMPS_UPDATE_EVALUATION']).";	//Temps maximum pour pouvoir modifier une évaluation sans en recréer une.
+\$AUTORISE_CONTEXT = ".($_SESSION['AUTORISE_CONTEXT']?"true":"false").";		//Autorise (ou non) de mettre des contextes sur chaque évaluations (TD, TP, etc.)
+\$AUTORISE_COMMENTAIRES = ".($_SESSION['AUTORISE_COMMENTAIRES']?"true":"false").";	//Autorise (ou non) de mettre des commentaires sur chaque évaluations.
 
 //Mails ****************************************
-\$AUTORISE_MAILS=".($_SESSION['AUTORISE_MAILS']?"true":"false").";	//Autorise l'envoi de mails
-\$MAIL_SMTP=".($_SESSION['MAIL_SMTP']?"true":"false").";		//Dit si on utilise un STMP ou juste la fonction mail de base
-\$MAIL_SMTP_SECURE=\"".$_SESSION['MAIL_SMTP_SECURE']."\";		//Mode de sécurisation du SMTP
-\$MAIL_SMTP_HOTE=\"".$_SESSION['MAIL_SMTP_HOTE']."\";	//Hote SMTP
-\$MAIL_SMTP_PORT=".strval($_SESSION['MAIL_SMTP_PORT']).";				//Port pour le SMTP
-\$MAIL_SMTP_LOGIN=\"".$_SESSION['MAIL_SMTP_LOGIN']."\";	//nom d'utilisateur
-\$MAIL_SMTP_MDP=\"".$_SESSION['MAIL_SMTP_MDP']."\";		//Mot de passe
-\$MAIL_MAIL_EXPEDITEUR=\"".$_SESSION['MAIL_MAIL_EXPEDITEUR']."\";	//Mail d'envoie associé au compte SMTP
-\$MAIL_NOM_EXPEDITEUR=\"".$_SESSION['MAIL_NOM_EXPEDITEUR']."\";		//Nom qui sera affiché comme expéditeur
-\$MAIL_MAIL_REPONDRE_A=\"".$_SESSION['MAIL_MAIL_REPONDRE_A']."\";	//Mail répondre à
+\$AUTORISE_MAILS = ".($_SESSION['AUTORISE_MAILS']?"true":"false").";	//Autorise l'envoi de mails
+\$MAIL_SMTP = ".($_SESSION['MAIL_SMTP']?"true":"false").";		//Dit si on utilise un STMP ou juste la fonction mail de base
+\$MAIL_SMTP_SECURE = \"".$_SESSION['MAIL_SMTP_SECURE']."\";		//Mode de sécurisation du SMTP
+\$MAIL_SMTP_HOTE = \"".$_SESSION['MAIL_SMTP_HOTE']."\";	//Hote SMTP
+\$MAIL_SMTP_PORT = ".strval($_SESSION['MAIL_SMTP_PORT']).";				//Port pour le SMTP
+\$MAIL_SMTP_LOGIN = \"".$_SESSION['MAIL_SMTP_LOGIN']."\";	//nom d'utilisateur
+\$MAIL_SMTP_MDP = \"".$_SESSION['MAIL_SMTP_MDP']."\";		//Mot de passe
+\$MAIL_MAIL_EXPEDITEUR = \"".$_SESSION['MAIL_MAIL_EXPEDITEUR']."\";	//Mail d'envoie associé au compte SMTP
+\$MAIL_NOM_EXPEDITEUR = \"".$_SESSION['MAIL_NOM_EXPEDITEUR']."\";		//Nom qui sera affiché comme expéditeur
+\$MAIL_MAIL_REPONDRE_A = \"".$_SESSION['MAIL_MAIL_REPONDRE_A']."\";	//Mail répondre à
 
 
 
 
 //Autres ************************************
-\$AUTORISE_BADGES=".($_SESSION['AUTORISE_BADGES']?"true":"false").";		//Autorise (ou non) les étudiants à recevoir des badges de validation
-\$AUTORISE_GRAPHIQUES=".($_SESSION['AUTORISE_GRAPHIQUES']?"true":"false").";		//Autorise (ou non) à afficher les graphiques sur la page d'accueil
+\$AUTORISE_BADGES = ".($_SESSION['AUTORISE_BADGES']?"true":"false").";		//Autorise (ou non) les étudiants à recevoir des badges de validation
+\$AUTORISE_GRAPHIQUES = ".($_SESSION['AUTORISE_GRAPHIQUES']?"true":"false").";		//Autorise (ou non) à afficher les graphiques sur la page d'accueil
 
 //**************** FIN DU FICHIER ****************
 ?>";
@@ -1339,7 +1346,9 @@ if($etape=="testAdmin")
 // etape 9 : Confirme l'admin ===========================================
 if($etape=="confirmeAdmin")
 {?>
-	<div class="boite">
+	<div class="boite">eval "$(ssh-agent -s)";
+ssh-add ~/.ssh/id_rsa_github;
+
 		<h2>Administration</h2>
 		<p>
 			Le compte administrateur a bien été créé.

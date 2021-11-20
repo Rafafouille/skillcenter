@@ -671,6 +671,7 @@ if($action=="getComments")
 }
 
 // Action qui ajoute une nouvelle note **************************************
+//... ou qui met à jour une note récente
 if($action=="newNote")
 {
 	$eleve=isset($_POST['eleve'])?intval($_POST['eleve']):0;
@@ -678,26 +679,65 @@ if($action=="newNote")
 	if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur" || $_SESSION['statut']=="autoeval" && $_SESSION['id']==$eleve)
 	{
 		//RECUPERE LES DONNEES ------------
-		$indicateur=isset($_POST['indicateur'])?intval($_POST['indicateur']):0;
-		$note=isset($_POST['note'])?intval($_POST['note']):0;
+		$indicateur = isset($_POST['indicateur']) ? intval($_POST['indicateur']) : 0 ;
+		$note = isset($_POST['note']) ? intval($_POST['note']) : 0 ;
 		
-		//ECRITURE DE LA NOTE ------------
+		//Vérification si la note existe, dans le temps d'update autorisé
 		connectToBDD();
-		$nextId=getNextFreeIdOfTable($bdd,$BDD_PREFIXE.'notation');
-		$req = $bdd->prepare('INSERT INTO '.$BDD_PREFIXE.'notation (id,note,date,eleve,indicateur,examinateur,contexte,commentaire) VALUES(:id,:note,NOW(),:eleve,:indicateur,'.$_SESSION['id'].',"","")');
-		$req->execute(array(
-				'id' => $nextId,
-				'note' => $note,
+		$reqTestUpdate = $bdd->prepare('SELECT id AS idEval,contexte,commentaire FROM '.$BDD_PREFIXE.'notation WHERE indicateur=:indicateur AND eleve=:eleve AND date > NOW()-INTERVAL :tempsUpdate SECOND');
+		$reqTestUpdate->execute(array(
+				'indicateur' => $indicateur,
 				'eleve' => $eleve,
-				'indicateur' => $indicateur
+				'tempsUpdate' => $TEMPS_UPDATE_EVALUATION
+			));
+		if($data = $reqTestUpdate->fetch())	// Si update de note (modif avant le temps imparti)
+		{
+			$idEval = $data['idEval'];
+			$contexte = $data['contexte'];
+			$commentaire = $data['commentaire'];
+			$reqUpdate = $bdd->prepare('UPDATE '.$BDD_PREFIXE.'notation SET note=:note, examinateur=:examinateur, date=NOW() WHERE id=:idEval');
+			$reqUpdate->execute(array(
+					'note' => $note,
+					'examinateur' => $_SESSION['id'],
+					'idEval' => $idEval
 				));
+			
+			// RETOUR
+			$reponseJSON["messageRetour"]=":)La note a été mise à jour.";
+			$reponseJSON["notation"]["commentaire"] = $commentaire;
+			$reponseJSON["notation"]["contexte"] = $contexte;
+			$reponseJSON["nouvelleNote"]=false;
+		}
+		else // Si nouvelle note ...
+		{
 		
+			//ECRITURE DE LA NOTE ------------
+			$idEval=getNextFreeIdOfTable($bdd,$BDD_PREFIXE.'notation');
+			$req = $bdd->prepare('INSERT INTO '.$BDD_PREFIXE.'notation (id,note,date,eleve,indicateur,examinateur,contexte,commentaire) VALUES(:id,:note,NOW(),:eleve,:indicateur,:examinateur,"","")');
+			$req->execute(array(
+					'id' => $idEval,
+					'examinateur' => $_SESSION['id'],
+					'note' => $note,
+					'eleve' => $eleve,
+					'indicateur' => $indicateur
+					));
+			
+			//BADGES ---------------------------
+			if($AUTORISE_BADGES)
+				updateBadges_aLaNotation($eleve);
+		
+			//RETOUR
+			$reponseJSON["messageRetour"]=":)La note a été ajoutée.<br/><div style=\"cursor:pointer;color:red;\" onclick=\"supprimeNotation(".$dataNote["id"].");\">ANNULER LA NOTE</div>";
+			$reponseJSON["nouvelleNote"]=true;
+			$reponseJSON["notation"]["commentaire"] = "";
+			$reponseJSON["notation"]["contexte"] = 0;
 
-		
+		}// Fin de nouvelle note
+			
 		//RETOUR ------------
 		$reponseJSON["note"]=getNotationPourJSON($eleve,$indicateur);
 
-		$repNote=$bdd->query("SELECT * FROM ".$BDD_PREFIXE."notation WHERE id=".strval($nextId));
+		$repNote=$bdd->query("SELECT * FROM ".$BDD_PREFIXE."notation WHERE id=".strval($idEval));
 		$dataNote=$repNote->fetch();
 
 		$repEleve=$bdd->query("SELECT nom,prenom FROM ".$BDD_PREFIXE."utilisateurs WHERE id=".$dataNote["eleve"]);
@@ -720,17 +760,13 @@ if($action=="newNote")
 		$reponseJSON["notation"]["note"]=$dataNote['note'];
 		$reponseJSON["notation"]["niveaux"]=$dataInd['niveaux'];
 		$reponseJSON["notation"]["nomIndicateur"]=$dataInd['nom'];
-				
-		$reponseJSON["messageRetour"]=":)La note a été ajoutée.<br/><div style=\"cursor:pointer;color:red;\" onclick=\"supprimeNotation(".$dataNote["id"].");\">ANNULER LA NOTE</div>";
+		//$reponseJSON["notation"]["commentaire"] = $commentaire; // VOIR PLUS HAUT
+		//$reponseJSON["notation"]["contexte"] = $contexte;		// VOIR PLUS HAUT
 
-
-		//BADGES ---------------------------
-		if($AUTORISE_BADGES)
-			updateBadges_aLaNotation($eleve);
 	}
 	else
 	{
-		$reponseJSON["messageRetour"]=":(Vous ne pouvez pas ajouter une note.";
+		$reponseJSON["messageRetour"]=":(Vous ne pouvez pas ajouter une évaluation.";
 	}
 }
 
