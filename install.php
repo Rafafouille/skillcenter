@@ -1185,6 +1185,7 @@ creeTable("utilisateurs","id");
 creeTable("contextes","id");
 	creeAttribut("contextes","id","MEDIUMINT UNSIGNED AUTO_INCREMENT PRIMARY KEY");
 	creeAttribut("contextes","nom","TEXT NOT NULL");
+	creeAttribut("contextes","ordre","MEDIUMINT NOT NULL");
 
 creeTable("liensIndicateursContextes","id");
 	creeAttribut("liensIndicateursContextes","contexte","MEDIUMINT UNSIGNED DEFAULT 0");

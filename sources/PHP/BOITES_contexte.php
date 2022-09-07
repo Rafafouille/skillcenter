@@ -34,6 +34,10 @@
 						<td><label for="modifContexte_nom">Nom : </label></td>
 						<td><input type="text" name="modifContexte_nom" id="modifContexte_nom" placeholder="Nom du contexte (TP1, TD12, etc.)" required/></td>
 					</tr>
+					<tr>
+						<td><label for="modifContexte_ordre">Ordre : </label></td>
+						<td><input type="number" name="modifContexte_ordre" id="modifContexte_ordre" placeholder="" required/></td>
+					</tr>
 				</table>
 				<input type="hidden" name="modifContexte_id" id="modifContexte_id" value="0"/>
 			</form>

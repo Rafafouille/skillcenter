@@ -1577,16 +1577,25 @@ if($action=="newContexte")
 	if($_SESSION['statut']=="admin")
 	{
 		connectToBDD();
+		
+		// On cherche le dernier ordre
+			$req = $bdd->query("SELECT ifnull(MAX(ordre),0) AS maxi FROM ".$BDD_PREFIXE."contextes");
+			$ordre = $req->fetch()['maxi']+1;
+		
 		$nom = isset($_POST['nom'])?$_POST['nom']:"";
 		if($nom != "")
 		{
-			$req = $bdd->prepare("INSERT INTO ".$BDD_PREFIXE."contextes(nom) VALUES(:nom)");
-			$req->execute(array('nom' => $nom));
+			$req = $bdd->prepare("INSERT INTO ".$BDD_PREFIXE."contextes(nom,ordre) VALUES(:nom,:ordre)");
+			$req->execute(array(
+				'nom' => $nom,
+				'ordre' => $ordre
+				));
 			$reponseJSON["messageRetour"]=":)Le contexte '".$nom."' a bien été ajouté.";
 
 			$reponseJSON["contexte"]=array();
 			$reponseJSON["contexte"]["id"] = $bdd->lastInsertId();
 			$reponseJSON["contexte"]["nom"] = $nom;
+			$reponseJSON["contexte"]["ordre"] = $ordre;
 		}
 		else
 			$reponseJSON["messageRetour"]=":(Vous ne pouvez pas utiliser un nom vide pour un contexte.";
@@ -1606,15 +1615,27 @@ if($action=="modifContexte")
 		connectToBDD();
 		$nom = isset($_POST['nom'])?$_POST['nom']:"";
 		$id = isset($_POST['id'])?intval($_POST['id']):0;
+		$ordre = isset($_POST['ordre'])?intval($_POST['ordre']):-1;
+		
+		if($ordre==-1)
+		{
+			$req = $bdd->query("SELECT ifnull(MAX(ordre),0) AS maxi FROM ".$BDD_PREFIXE."contextes");
+			$ordre = $req->fetch()['maxi']+1;
+		}
+		
 		if($nom != "")
 		{
 			if($id)
 			{
-				$req = $bdd->prepare("UPDATE ".$BDD_PREFIXE."contextes SET nom=:nom WHERE id=:id");
-				$req->execute(array('nom' => $nom,'id'=> $id));
+				$req = $bdd->prepare("UPDATE ".$BDD_PREFIXE."contextes SET nom=:nom, ordre=:ordre WHERE id=:id");
+				$req->execute(array(
+						'nom' => $nom,
+						'id'=> $id,
+						'ordre' => $ordre
+						));
 				$reponseJSON["messageRetour"]=":)Le contexte '".$nom."' a bien été modifié.";
 
-				$reponseJSON["contexte"]=array('id' => $id, 'nom' => $nom);
+				$reponseJSON["contexte"]=array('id' => $id, 'nom' => $nom, 'ordre' => $ordre);
 			}
 			else
 				$reponseJSON["messageRetour"]=":(Aucun 'id' de contexte n'a été transmis.";

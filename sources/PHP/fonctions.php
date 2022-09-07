@@ -1089,17 +1089,18 @@ function getTableauContextesHTML()
 							<!-- CONTENU ======================================================== -->";
 
 
-	$req = $bdd->query("SELECT nom,id FROM ".$BDD_PREFIXE."contextes");
+	$req = $bdd->query("SELECT nom,id,ordre FROM ".$BDD_PREFIXE."contextes ORDER BY ordre");
 						
 	while($data = $req->fetch())
 	{
 		$id_contexte = $data['id'];
+		$ordre_contexte = $data['ordre'];
 		$res .= "
-						<tr id=\"titre_contexte_".strval($id_contexte)."\" data-id=\"".strval($id_contexte)."\">
+						<tr id=\"titre_contexte_".strval($id_contexte)."\" data-id=\"".strval($id_contexte)."\" data-ordre=\"".strval($ordre_contexte)."\">
 							<td class=\"contexte_titre_contexte\">
 								<div class=\"contexte_titre_contexte_seul\">".$data['nom']."</div>
 								<img class=\"boutonSupprimeContexte\" src=\"./sources/images/poubelle.png\" title=\"Supprimer le contexte\" alt=\"[Suppr]\" onclick=\"supprimeContexte_ouvreBoite(".strval($id_contexte).")\"/>
-								<img class=\"boutonModifContexte\" src=\"./sources/images/icone-modif.png\" alt=\"[§]\" onclick=\"ouvreBoiteModifContexte(".strval($id_contexte).");\"/>
+								<img class=\"boutonModifContexte\" src=\"./sources/images/icone-modif.png\" alt=\"[§]\" onclick=\"ouvreBoiteModifContexte(".strval($id_contexte).",".strval($ordre_contexte).");\"/>
 							</td>
 							<td class=\"case_blanche_tab\"></td>";
 		foreach($tab AS $dom)

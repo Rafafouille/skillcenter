@@ -35,10 +35,11 @@ nouveauContexte_callback=function(reponse)
 
 // Modif un contexte ****************
 
-ouvreBoiteModifContexte = function(idCont)
+ouvreBoiteModifContexte = function(idCont,ordreCont)
 {
 	$("#modifContexte_nom").val($("#titre_contexte_"+String(idCont)+" .contexte_titre_contexte_seul").text());
 	$("#modifContexte_id").val(idCont);
+	$("#modifContexte_ordre").val(ordreCont);
 	$("#dialog-modifContexte").dialog("open");
 }
 
@@ -48,12 +49,16 @@ modifContexte = function()
 {
 	var nom = $("#modifContexte_nom").val();
 	var id = $("#modifContexte_id").val();
+	var ordre = $("#modifContexte_ordre").val();
+		if(ordre=="")
+			ordre="-1";
 	$.post(
 			'./sources/PHP/actionneurJSON.php',//Requete appelée
 			{	//Les données à passer par POST
 				action : "modifContexte",
 				nom : nom,
-				id : id
+				id : id,
+				ordre : ordre
 			},
 			modifContexte_callback,	//Fonction callback
 			"json"	//Type de réponse
