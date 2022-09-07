@@ -16,7 +16,7 @@ updateContextesFromServer_callback = function(reponse)
 	LISTE_CONTEXTES = Array()
 	reponse.contextes.forEach(function(item)
 	{
-		LISTE_CONTEXTES[item.id]={'id':item.id, 'nom':item.nom};
+		LISTE_CONTEXTES[item.id]={'id':item.id, 'nom':item.nom, 'ordre':item.ordre};
 	})
 	updateListeContexteDansMenu();
 }
@@ -33,7 +33,15 @@ updateListeContexteDansMenu = function()
 	$("#BILAN_listeContextes").append("										<option value=\"0\">Tout contexte</option>");
 	$("#BILAN_GENERAL_choix_contexte").append("										<option value=\"0\">Tout contexte</option>");
 	
+	
+	// C'est un peu moche, mais on recopie le contexte dans l'ordre... (je n'ose pas indexer LISTE_CONTEXTES directement sur l'ordre)
+	LISTE_CONTEXTES_TRIES = Array()
 	LISTE_CONTEXTES.forEach(function(item)
+	{
+		LISTE_CONTEXTES_TRIES[item.ordre]=item;
+	})
+	
+	LISTE_CONTEXTES_TRIES.forEach(function(item)
 	{
 		$("#BILAN_listeContextes").append("										<option value=\""+String(item['id'])+"\">"+item['nom']+"</option>");
 		$("#BILAN_GENERAL_choix_contexte").append("										<option value=\""+String(item['id'])+"\">"+item['nom']+"</option>");

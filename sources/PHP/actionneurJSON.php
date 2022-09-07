@@ -1706,9 +1706,9 @@ if($action == "getContextes")
 	{
 		$reponseJSON["contextes"]=array();
 		connectToBDD();
-		$req = $bdd->query("SELECT id, nom FROM ".$BDD_PREFIXE."contextes ORDER BY ordre");
+		$req = $bdd->query("SELECT id, nom, ordre FROM ".$BDD_PREFIXE."contextes ORDER BY ordre");
 		while($data = $req->fetch())
-			array_push($reponseJSON["contextes"],array("id"=>$data["id"], "nom"=>$data['nom']));
+			array_push($reponseJSON["contextes"],array("id"=>$data["id"], "nom"=>$data['nom'], "ordre"=>$data['ordre']));
 		$reponseJSON["messageRetour"]=":XLa liste des contextes a bien été récupérée.";
 	}
 	else
