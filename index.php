@@ -150,7 +150,7 @@ include("./sources/PHP/actions.php");
 					
 					<?php if($_SESSION['statut']=="admin") echo '<li><a href="#tab-contextes"><img src="./sources/images/icone-contexte.png"/><br/>Contextes</a></li>';?>
 					
-					<?php if($_SESSION['statut']=="admin") echo '<li><a href="#tab-bilan_general"><img src="./sources/images/icone-checklist-plusieurs.png"/><br/>Bilan général</a></li>';?>
+					<?php if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur") echo '<li><a href="#tab-bilan_general"><img src="./sources/images/icone-checklist-plusieurs.png"/><br/>Bilan général</a></li>';?>
 				</ul>
 				
 				
@@ -173,7 +173,7 @@ include("./sources/PHP/actions.php");
 					if($_SESSION['statut']=="admin")	//Si admin
 					include("./sources/PHP/contextes.php");//Gestion des contextes
 
-					if($_SESSION['statut']=="admin")	//Si admin
+					if($_SESSION['statut']=="admin" || $_SESSION['statut']=="evaluateur")	//Si admin
 					include("./sources/PHP/bilan_general.php");//Bilan général
 				?>
 	
